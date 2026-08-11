@@ -1,6 +1,6 @@
 Shot Caller is an interactive pool-shot assistant designed to help players visualize and plan their next move.
 
-What It Does
+~ WHAT IT DOES ~
 
 * Interactive table: Place and reposition the cue ball, object balls and optional combo/obstacles.
 * Shot selection: Choose Auto, Cut, Bank or Kick.
@@ -10,7 +10,7 @@ What It Does
 * English & Speed: Provides guidance such as center ball, follow, draw, left/right English and suggested speed.
 * Balls in Play: Select numbered balls from a racked 1–15 layout and place them on the table.
 
-Accuracy
+~ ACCURACY ~
 
 Shot Caller uses a single physical coordinate system for the table and shot calculations. Its geometry accounts for ball diameter, ghost-ball contact, cushion centerlines, pocket openings, direct routes, banks, kicks and collision clearance.
 
@@ -18,7 +18,7 @@ The goal is not just to find a mathematically possible shot. Shot Caller priorit
 
 Real-world results can still vary based on speed, spin, throw, cloth, cushion response, pocket shelf depth and table size/conditions.
 
-Controls
+~ CONTROLS ~
 
 Select a ball → tap where you want it placed.
 Choose the shot type and/or pocket. 
