@@ -16,7 +16,7 @@ Shot Caller uses a single physical coordinate system for the table and shot calc
 
 The goal is not just to find a mathematically possible shot. Shot Caller prioritizes physically playable routes and rejects paths that are blocked, impossible or inconsistent.
 
-Real-world results can still vary based on speed, spin, throw, cloth, cushion response, pocket shelf depth, and table size/conditions.
+Real-world results can still vary based on speed, spin, throw, cloth, cushion response, pocket shelf depth and table size/conditions.
 
 Controls
 
