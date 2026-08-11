@@ -6,25 +6,34 @@
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
   />
-  <meta name="theme-color" content="#101513" />
+
+  <meta name="theme-color" content="#0d1110" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <title>Shot Caller — I'll call the shots.</title>
+  <title>Shot Caller</title>
 
   <style>
     :root {
-      --bg: #101513;
-      --panel: #171d1a;
-      --panel-2: #1d2521;
-      --text: #f4f5f2;
-      --muted: #9da7a1;
-      --green: #16824f;
-      --green-light: #27b76f;
-      --green-dark: #0d5d38;
-      --red: #e44d45;
-      --gold: #e4bb61;
-      --line: rgba(255,255,255,.10);
-      --shadow: 0 18px 50px rgba(0,0,0,.30);
+      --bg: #0d1110;
+      --surface: #151b18;
+      --surface-2: #1b231f;
+      --surface-3: #222c27;
+
+      --text: #f5f7f5;
+      --muted: #9ba59f;
+
+      --green: #15945a;
+      --green-bright: #2acb79;
+      --green-dark: #0d613b;
+
+      --red: #ed554b;
+      --gold: #e4bb62;
+      --blue: #4ea3ff;
+
+      --border: rgba(255,255,255,.09);
+      --shadow: 0 18px 50px rgba(0,0,0,.32);
+
+      --radius: 17px;
     }
 
     * {
@@ -39,6 +48,7 @@
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
+
       font-family:
         Inter,
         -apple-system,
@@ -51,3569 +61,5149 @@
     }
 
     body {
-      min-height: 100vh;
       overflow-x: hidden;
     }
 
-    button,
-    input {
+    button {
       font: inherit;
     }
 
-    button {
-      cursor: pointer;
+    button:focus-visible {
+      outline: 2px solid var(--green-bright);
+      outline-offset: 2px;
     }
 
     .app {
       width: 100%;
-      max-width: 1100px;
+      max-width: 920px;
       margin: 0 auto;
+
       padding:
-        max(14px, env(safe-area-inset-top))
-        max(14px, env(safe-area-inset-right))
+        max(13px, env(safe-area-inset-top))
+        max(13px, env(safe-area-inset-right))
         max(24px, env(safe-area-inset-bottom))
-        max(14px, env(safe-area-inset-left));
+        max(13px, env(safe-area-inset-left));
     }
 
-    /* ------------------------------------------------------------
+    /* =========================================================
        HEADER
-    ------------------------------------------------------------ */
+    ========================================================= */
 
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 8px 2px 16px;
+
+      padding: 5px 2px 14px;
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
       min-width: 0;
     }
 
-    .brand-mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 35% 30%, #ffffff 0 6%, #e8ece8 7% 42%, #c4cbc5 43% 100%);
-      position: relative;
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,.08),
-        0 5px 15px rgba(0,0,0,.35);
-      flex: 0 0 auto;
-    }
-
-    .brand-mark::after {
-      content: "";
-      position: absolute;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--green);
-      top: 8px;
-      right: 8px;
-      box-shadow: 0 0 12px rgba(39,183,111,.5);
-    }
-
     .brand-name {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -.4px;
-      white-space: nowrap;
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -.7px;
     }
 
-    .tagline {
-      font-size: 11px;
-      color: var(--muted);
+    .brand-tagline {
       margin-top: 2px;
-      white-space: nowrap;
+
+      color: var(--muted);
+
+      font-size: 11px;
+      font-weight: 600;
+
+      letter-spacing: .15px;
     }
 
-    .reset-btn {
-      border: 1px solid var(--line);
-      background: var(--panel);
+    .reset-button {
+      border: 1px solid var(--border);
+      background: var(--surface);
+
       color: var(--text);
+
       border-radius: 11px;
+
       padding: 9px 13px;
+
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
-    .reset-btn:active {
+    .reset-button:active {
       transform: scale(.97);
     }
 
-    /* ------------------------------------------------------------
-       CONTROL BAR
-    ------------------------------------------------------------ */
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .controls::-webkit-scrollbar {
-      display: none;
-    }
-
-    .mode-btn,
-    .pocket-btn {
-      flex: 0 0 auto;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 9px 14px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
-
-    .mode-btn.active {
-      background: var(--green-dark);
-      border-color: rgba(39,183,111,.55);
-      color: #fff;
-    }
-
-    .pocket-btn.active {
-      background: rgba(228,187,97,.13);
-      border-color: rgba(228,187,97,.55);
-      color: var(--gold);
-    }
-
-    .pocket-controls {
-      display: none;
-      gap: 7px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-    }
-
-    .pocket-controls.visible {
-      display: flex;
-    }
-
-    /* ------------------------------------------------------------
+    /* =========================================================
        SHOT CALL
-    ------------------------------------------------------------ */
+    ========================================================= */
 
-    .shot-call {
+    .shot-card {
       position: relative;
-      margin-bottom: 13px;
-      border: 1px solid rgba(39,183,111,.22);
+
+      margin-bottom: 11px;
+
+      padding: 15px 16px 14px;
+
+      border-radius: var(--radius);
+
       background:
         linear-gradient(
           135deg,
-          rgba(39,183,111,.12),
-          rgba(39,183,111,.025) 60%
+          rgba(21,148,90,.14),
+          rgba(21,148,90,.025) 70%
         ),
-        var(--panel);
-      border-radius: 16px;
-      padding: 14px 16px;
+        var(--surface);
+
+      border: 1px solid rgba(42,203,121,.18);
+
       box-shadow: var(--shadow);
-      overflow: hidden;
     }
 
-    .shot-call::before {
+    .shot-card::before {
       content: "";
+
       position: absolute;
+
       left: 0;
       top: 0;
       bottom: 0;
+
       width: 4px;
-      background: var(--green-light);
+
+      border-radius:
+        17px 0 0 17px;
+
+      background: var(--green-bright);
     }
 
-    .shot-label {
+    .shot-eyebrow {
+      margin-bottom: 4px;
+
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1.3px;
+
       font-size: 9px;
       font-weight: 900;
-      margin-bottom: 4px;
+
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
     }
 
     .shot-title {
-      font-size: clamp(19px, 5vw, 27px);
-      line-height: 1.05;
-      font-weight: 900;
+      font-size: clamp(18px, 5vw, 26px);
+
+      font-weight: 950;
+
+      line-height: 1.04;
+
       letter-spacing: -.6px;
+
       text-transform: uppercase;
     }
 
-    .shot-subtitle {
+    .shot-description {
+      margin-top: 6px;
+
       color: var(--muted);
-      font-size: 12px;
-      margin-top: 5px;
-      line-height: 1.3;
+
+      font-size: 11px;
+
+      line-height: 1.35;
     }
 
-    /* ------------------------------------------------------------
-       TABLE
-    ------------------------------------------------------------ */
+    /* =========================================================
+       MODES
+    ========================================================= */
 
-    .table-wrap {
-      position: relative;
+    .mode-row {
+      display: flex;
+
+      gap: 7px;
+
+      margin-bottom: 9px;
+    }
+
+    .mode-button {
+      flex: 1;
+
+      min-height: 42px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 12px;
+
+      background: var(--surface);
+
+      color: var(--muted);
+
+      font-size: 11px;
+      font-weight: 900;
+
+      letter-spacing: .3px;
+    }
+
+    .mode-button.active {
+      background: var(--green-dark);
+
+      color: white;
+
+      border-color:
+        rgba(42,203,121,.5);
+    }
+
+    /* =========================================================
+       BALL SELECTOR
+    ========================================================= */
+
+    .ball-selector {
+      display: flex;
+
+      gap: 7px;
+
+      margin-bottom: 9px;
+    }
+
+    .ball-select {
+      flex: 1;
+
+      min-height: 48px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 9px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 13px;
+
+      background: var(--surface);
+
+      color: var(--muted);
+
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .ball-select.active {
+      color: white;
+
+      border-color:
+        rgba(42,203,121,.55);
+
+      background:
+        rgba(21,148,90,.17);
+    }
+
+    .mini-ball {
+      width: 18px;
+      height: 18px;
+
+      border-radius: 50%;
+
+      flex: 0 0 auto;
+    }
+
+    .mini-cue {
+      background:
+        radial-gradient(
+          circle at 35% 28%,
+          #fff 0 9%,
+          #f3f3ef 40%,
+          #aeb3ae 100%
+        );
+
+      box-shadow:
+        0 2px 5px rgba(0,0,0,.35);
+    }
+
+    .mini-object {
+      background:
+        radial-gradient(
+          circle at 33% 26%,
+          #fff9e8 0 7%,
+          #f0bf49 9% 50%,
+          #b47d17 100%
+        );
+
+      box-shadow:
+        0 2px 5px rgba(0,0,0,.35);
+    }
+
+    /* =========================================================
+       TABLE CONTAINER
+    ========================================================= */
+
+    .table-shell {
       width: 100%;
+
+      display: flex;
+      justify-content: center;
+
+      padding: 10px;
+
       border-radius: 19px;
-      padding: 14px;
+
       background:
         linear-gradient(
           145deg,
-          #252c27,
-          #151a17
+          #222b26,
+          #141916
         );
-      box-shadow:
-        var(--shadow),
-        inset 0 0 0 1px rgba(255,255,255,.05);
+
+      border: 1px solid rgba(255,255,255,.055);
+
+      box-shadow: var(--shadow);
     }
+
+    /*
+      IMPORTANT:
+
+      The canvas itself uses an aspect ratio that includes the
+      small visual rail/pocket margin.
+
+      The PLAYING SURFACE inside the canvas remains exactly 78 x 39.
+
+      Nothing is independently stretched.
+    */
 
     canvas {
       display: block;
+
       width: 100%;
       height: auto;
-      border-radius: 8px;
+
+      max-width: 100%;
+
+      border-radius: 10px;
+
       touch-action: none;
+
       user-select: none;
       -webkit-user-select: none;
     }
 
-    .placement-hint {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 22px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.60);
-      color: rgba(255,255,255,.78);
-      font-size: 10px;
-      pointer-events: none;
-      transition: opacity .2s ease;
-      white-space: nowrap;
-    }
+    /* =========================================================
+       TAP INSTRUCTION
+    ========================================================= */
 
-    .placement-hint.hidden {
-      opacity: 0;
-    }
+    .action-card {
+      margin-top: 11px;
 
-    /* ------------------------------------------------------------
-       INSTRUCTIONS
-    ------------------------------------------------------------ */
-
-    .instruction-card {
-      margin-top: 13px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .instruction-row {
       display: flex;
-      gap: 12px;
+
       align-items: center;
+
+      gap: 11px;
+
+      padding: 12px 14px;
+
+      border-radius: 15px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
     }
 
-    .instruction-ball {
-      width: 50px;
-      height: 50px;
+    .action-icon {
+      width: 40px;
+      height: 40px;
+
       flex: 0 0 auto;
-      border-radius: 50%;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+
       background:
-        radial-gradient(circle at 35% 27%, #fff 0 8%, #f0f0ee 9% 52%, #bfc3c0 100%);
-      box-shadow:
-        0 5px 15px rgba(0,0,0,.30),
-        inset -5px -6px 8px rgba(0,0,0,.12);
-      position: relative;
+        rgba(21,148,90,.16);
+
+      color: var(--green-bright);
+
+      font-size: 17px;
+      font-weight: 900;
     }
 
-    .instruction-ball::after {
-      content: "";
-      position: absolute;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--red);
-      left: 50%;
-      top: 17%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 2px rgba(228,77,69,.18);
-    }
-
-    .instruction-title {
+    .action-title {
+      font-size: 12px;
       font-weight: 850;
-      font-size: 14px;
     }
 
-    .instruction-text {
+    .action-text {
+      margin-top: 2px;
+
       color: var(--muted);
-      font-size: 11px;
-      margin-top: 3px;
+
+      font-size: 10px;
+
       line-height: 1.35;
     }
 
-    /* ------------------------------------------------------------
-       TECHNICAL DETAILS
-    ------------------------------------------------------------ */
+    /* =========================================================
+       MANUAL POCKET CONTROLS
+    ========================================================= */
+
+    .manual-pockets {
+      display: none;
+
+      gap: 6px;
+
+      margin-top: 9px;
+
+      overflow-x: auto;
+
+      scrollbar-width: none;
+    }
+
+    .manual-pockets.visible {
+      display: flex;
+    }
+
+    .manual-pockets::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pocket-button {
+      flex: 0 0 auto;
+
+      padding: 9px 12px;
+
+      border-radius: 999px;
+
+      border: 1px solid var(--border);
+
+      background: var(--surface);
+
+      color: var(--muted);
+
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .pocket-button.active {
+      background:
+        rgba(228,187,98,.13);
+
+      color: var(--gold);
+
+      border-color:
+        rgba(228,187,98,.5);
+    }
+
+    /* =========================================================
+       TECHNICAL
+    ========================================================= */
 
     details {
-      margin-top: 12px;
-      background: var(--panel);
-      border: 1px solid var(--line);
+      margin-top: 11px;
+
       border-radius: 15px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
       overflow: hidden;
     }
 
     summary {
-      list-style: none;
       cursor: pointer;
+
       padding: 13px 14px;
+
       color: var(--muted);
-      font-size: 11px;
-      font-weight: 800;
+
+      font-size: 10px;
+      font-weight: 900;
+
+      letter-spacing: .8px;
+
+      list-style: none;
     }
 
     summary::-webkit-details-marker {
       display: none;
     }
 
-    .technical {
+    .details-content {
       padding: 0 14px 14px;
-      border-top: 1px solid var(--line);
+
+      border-top: 1px solid var(--border);
     }
 
     .tech-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 8px;
-      margin-top: 12px;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 7px;
+
+      padding-top: 11px;
     }
 
-    .tech-item {
-      background: var(--panel-2);
-      border-radius: 10px;
+    .tech {
       padding: 9px;
+
+      border-radius: 10px;
+
+      background: var(--surface-2);
     }
 
     .tech-label {
       color: var(--muted);
-      font-size: 9px;
+
+      font-size: 8px;
+      font-weight: 800;
+
       text-transform: uppercase;
+
       letter-spacing: .7px;
     }
 
     .tech-value {
-      font-size: 12px;
-      font-weight: 800;
       margin-top: 3px;
+
+      font-size: 11px;
+      font-weight: 850;
     }
 
-    .model-note {
-      margin-top: 12px;
+    .physics-note {
+      margin-top: 10px;
+
       color: var(--muted);
-      font-size: 10px;
+
+      font-size: 9px;
+
       line-height: 1.45;
     }
 
-    /* ------------------------------------------------------------
-       DESKTOP
-    ------------------------------------------------------------ */
-
-    @media (min-width: 800px) {
+    @media (min-width: 700px) {
       .app {
         padding-top: 22px;
       }
 
-      header {
-        padding-bottom: 20px;
-      }
-
-      .table-wrap {
-        padding: 20px;
-      }
-
-      .instruction-card {
+      .action-card {
         display: none;
       }
 
       .tech-grid {
-        grid-template-columns: repeat(4, minmax(0,1fr));
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="app">
 
-    <header>
-      <div class="brand">
-        <div class="brand-mark"></div>
+<main class="app">
 
-        <div>
-          <div class="brand-name">Shot Caller</div>
-          <div class="tagline">i’ll call the shots.</div>
-        </div>
+  <header>
+    <div class="brand">
+      <div class="brand-name">
+        Shot Caller
       </div>
 
-      <button
-        class="reset-btn"
-        id="resetBtn"
-        type="button"
-        aria-label="Reset ball positions"
-      >
-        Reset
-      </button>
-    </header>
+      <div class="brand-tagline">
+        i’ll call the shots.
+      </div>
+    </div>
 
-    <section class="controls" aria-label="Shot controls">
-      <button
-        class="mode-btn active"
-        id="autoBtn"
-        type="button"
-      >
-        AUTO
-      </button>
+    <button
+      class="reset-button"
+      id="resetButton"
+      type="button"
+    >
+      Reset
+    </button>
+  </header>
 
-      <button
-        class="mode-btn"
-        id="manualBtn"
-        type="button"
-      >
-        MANUAL POCKET
-      </button>
+
+  <section class="shot-card">
+
+    <div class="shot-eyebrow">
+      Shot Caller
+    </div>
+
+    <div
+      class="shot-title"
+      id="shotTitle"
+    >
+      PLACE THE BALLS
+    </div>
+
+    <div
+      class="shot-description"
+      id="shotDescription"
+    >
+      Select a ball, then tap where you want it.
+    </div>
+
+  </section>
+
+
+  <section class="mode-row">
+
+    <button
+      class="mode-button active"
+      id="autoMode"
+      type="button"
+    >
+      AUTO
+    </button>
+
+    <button
+      class="mode-button"
+      id="manualMode"
+      type="button"
+    >
+      MANUAL POCKET
+    </button>
+
+  </section>
+
+
+  <section class="ball-selector">
+
+    <button
+      class="ball-select active"
+      id="cueSelect"
+      type="button"
+    >
+      <span class="mini-ball mini-cue"></span>
+      CUE BALL
+    </button>
+
+    <button
+      class="ball-select"
+      id="objectSelect"
+      type="button"
+    >
+      <span class="mini-ball mini-object"></span>
+      OBJECT BALL
+    </button>
+
+  </section>
+
+
+  <section
+    class="manual-pockets"
+    id="manualPockets"
+  ></section>
+
+
+  <section class="table-shell">
+
+    <canvas
+      id="tableCanvas"
+      aria-label="Interactive seven foot pool table"
+    ></canvas>
+
+  </section>
+
+
+  <section class="action-card">
+
+    <div class="action-icon">
+      +
+    </div>
+
+    <div>
 
       <div
-        class="pocket-controls"
-        id="pocketControls"
-        aria-label="Pocket selection"
-      ></div>
-    </section>
-
-    <section class="shot-call" aria-live="polite">
-      <div class="shot-label">Shot Caller</div>
-
-      <div
-        class="shot-title"
-        id="shotTitle"
+        class="action-title"
+        id="actionTitle"
       >
-        PLACE THE BALLS
+        Position the cue ball
       </div>
 
       <div
-        class="shot-subtitle"
-        id="shotSubtitle"
+        class="action-text"
+        id="actionText"
       >
-        Drag the cue ball and object ball into position.
+        Tap anywhere on the table to place it.
       </div>
-    </section>
 
-    <section class="table-wrap">
-      <canvas
-        id="tableCanvas"
-        aria-label="Interactive pool table"
-      ></canvas>
+    </div>
 
-      <div
-        class="placement-hint"
-        id="placementHint"
-      >
-        Drag either ball to position it
-      </div>
-    </section>
+  </section>
 
-    <section class="instruction-card">
-      <div class="instruction-row">
-        <div class="instruction-ball"></div>
 
-        <div>
-          <div class="instruction-title" id="simpleInstruction">
-            Position the balls.
+  <details>
+
+    <summary>
+      SHOT DETAILS
+    </summary>
+
+    <div class="details-content">
+
+      <div class="tech-grid">
+
+        <div class="tech">
+          <div class="tech-label">
+            Shot
           </div>
 
-          <div class="instruction-text" id="simpleSubtext">
-            Shot Caller will choose the shot.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <details>
-      <summary>SHOT DETAILS</summary>
-
-      <div class="technical">
-        <div class="tech-grid">
-          <div class="tech-item">
-            <div class="tech-label">Shot</div>
-            <div class="tech-value" id="techShot">—</div>
-          </div>
-
-          <div class="tech-item">
-            <div class="tech-label">Pocket</div>
-            <div class="tech-value" id="techPocket">—</div>
-          </div>
-
-          <div class="tech-item">
-            <div class="tech-label">Cut</div>
-            <div class="tech-value" id="techCut">—</div>
-          </div>
-
-          <div class="tech-item">
-            <div class="tech-label">Path</div>
-            <div class="tech-value" id="techPath">—</div>
+          <div
+            class="tech-value"
+            id="detailShot"
+          >
+            —
           </div>
         </div>
 
-        <div class="model-note">
-          Geometry uses a regulation 9-foot table model with a
-          2.25-inch ball. One-rail banks are solved using reflected
-          target geometry and validated against ball-center clearance,
-          cushion access, pocket-mouth clearance, and cue-ball travel.
-          Real tables can vary slightly in pocket facing and cushion
-          response, so the model deliberately favors practical shots
-          rather than claiming laboratory-level prediction.
+
+        <div class="tech">
+          <div class="tech-label">
+            Pocket
+          </div>
+
+          <div
+            class="tech-value"
+            id="detailPocket"
+          >
+            —
+          </div>
         </div>
+
+
+        <div class="tech">
+          <div class="tech-label">
+            Route
+          </div>
+
+          <div
+            class="tech-value"
+            id="detailRoute"
+          >
+            —
+          </div>
+        </div>
+
+
+        <div class="tech">
+          <div class="tech-label">
+            Status
+          </div>
+
+          <div
+            class="tech-value"
+            id="detailStatus"
+          >
+            —
+          </div>
+        </div>
+
       </div>
-    </details>
-  </main>
 
-  <script>
-    "use strict";
 
-    /* ============================================================
-       SHOT CALLER
-       Geometry / Physics Model
-       ============================================================
+      <div class="physics-note">
+        Shot Caller uses a two-dimensional geometric model of a
+        seven-foot table and regulation ball diameter. Direct shots
+        use ghost-ball geometry. One-rail banks use reflected-pocket
+        geometry and are validated against rail contact, pocket
+        approach, cue-ball reachability, and obstruction. This model
+        does not claim to simulate spin, throw, cloth speed,
+        cushion compression, or table-specific pocket facings.
+      </div>
 
-       TABLE MODEL
-       ------------------------------------------------------------
-       A regulation 9-foot pool table has a 100" x 50" playing area
-       when represented at a 2:1 ratio.
+    </div>
 
-       BALL
-       ------------------------------------------------------------
-       Regulation pool ball diameter = 2.25"
-       Radius = 1.125"
+  </details>
 
-       The model uses inches internally. Canvas pixels are simply
-       a rendering transform.
+</main>
 
-       Important distinction:
-       - Table dimensions describe the playable surface.
-       - Ball coordinates represent BALL CENTERS.
-       - Rails are therefore represented by ball-center contact lines
-         offset inward by the ball radius.
-       ============================================================ */
 
-    const TABLE = {
-      width: 100,
-      height: 50,
+<script>
+"use strict";
 
-      // Standardized planning model.
-      // Real tables vary by manufacturer.
-      ballDiameter: 2.25,
-      ballRadius: 1.125,
+/* ================================================================
+   SHOT CALLER
+   ================================================================
 
-      // Approximate pocket mouth radius used for pocket acceptance.
-      pocketRadius: 2.35,
+   MASTER COORDINATE SYSTEM
+   ---------------------------------------------------------------
 
-      // Additional safety margin around cushion/pocket geometry.
-      safety: 0.12
+   PLAYING SURFACE:
+
+       78 inches x 39 inches
+
+   This is the standard 7-foot bar-box playing-surface proportion:
+
+       78 / 39 = 2.0
+
+   ALL geometry is calculated in this coordinate system.
+
+   The canvas is only a renderer.
+
+   No shot calculation uses screen pixels.
+   No ball position uses CSS coordinates.
+   No pocket position is separately scaled.
+
+   Everything ultimately goes through:
+
+       table inches -> canvas pixels
+
+   ================================================================ */
+
+
+/* ================================================================
+   TABLE CONSTANTS
+================================================================ */
+
+const TABLE = {
+
+  /*
+   7-foot bar-box playing surface.
+  */
+  width: 78,
+  height: 39,
+
+  /*
+   Regulation pool ball.
+  */
+  ballDiameter: 2.25,
+  ballRadius: 1.125,
+
+  /*
+   Pocket model.
+
+   These are planning dimensions rather than a claim that every
+   physical table has identical pocket facings.
+  */
+  cornerPocketRadius: 2.55,
+  sidePocketRadius: 2.25,
+
+  /*
+   Pocket acceptance safety margin.
+  */
+  pocketSafety: 0.12,
+
+  /*
+   Visual border around the playing surface.
+
+   This is NOT part of the mathematical playing area.
+  */
+  visualMargin: 3.4
+};
+
+
+/*
+   Canvas coordinate extent.
+
+   The actual playing surface remains 78 x 39.
+   The extra space is only to keep the physical-looking pocket
+   openings fully visible.
+
+   Crucially, the playing surface itself remains exactly 2:1.
+*/
+const VIEW = {
+
+  width:
+    TABLE.width +
+    TABLE.visualMargin * 2,
+
+  height:
+    TABLE.height +
+    TABLE.visualMargin * 2
+};
+
+
+/*
+   Playing-surface origin inside the renderer.
+*/
+const ORIGIN = {
+
+  x: TABLE.visualMargin,
+  y: TABLE.visualMargin
+};
+
+
+/* ================================================================
+   DEFAULT POSITIONS
+================================================================ */
+
+const DEFAULTS = {
+
+  cue: {
+    x: 20,
+    y: 19.5
+  },
+
+  object: {
+    x: 57,
+    y: 19.5
+  }
+};
+
+
+/* ================================================================
+   STATE
+================================================================ */
+
+const state = {
+
+  cue: {
+    ...DEFAULTS.cue
+  },
+
+  object: {
+    ...DEFAULTS.object
+  },
+
+  /*
+     Which ball is selected for tap-to-place.
+  */
+  selectedBall: "cue",
+
+  /*
+     Auto or manual pocket.
+  */
+  mode: "auto",
+
+  manualPocket: null,
+
+  /*
+     Current calculated recommendation.
+  */
+  shot: null,
+
+  /*
+     Pointer state for optional drag support.
+  */
+  dragging: false,
+
+  pointerBall: null,
+
+  pointerId: null,
+
+  /*
+     Rendering transform.
+  */
+  render: {
+
+    scale: 1,
+
+    cssWidth: 0,
+
+    cssHeight: 0
+
+  }
+};
+
+
+/* ================================================================
+   DOM
+================================================================ */
+
+const canvas =
+  document.getElementById(
+    "tableCanvas"
+  );
+
+const ctx =
+  canvas.getContext("2d");
+
+
+const shotTitle =
+  document.getElementById(
+    "shotTitle"
+  );
+
+const shotDescription =
+  document.getElementById(
+    "shotDescription"
+  );
+
+
+const autoMode =
+  document.getElementById(
+    "autoMode"
+  );
+
+const manualMode =
+  document.getElementById(
+    "manualMode"
+  );
+
+
+const cueSelect =
+  document.getElementById(
+    "cueSelect"
+  );
+
+const objectSelect =
+  document.getElementById(
+    "objectSelect"
+  );
+
+
+const manualPockets =
+  document.getElementById(
+    "manualPockets"
+  );
+
+
+const resetButton =
+  document.getElementById(
+    "resetButton"
+  );
+
+
+const actionTitle =
+  document.getElementById(
+    "actionTitle"
+  );
+
+const actionText =
+  document.getElementById(
+    "actionText"
+  );
+
+
+const detailShot =
+  document.getElementById(
+    "detailShot"
+  );
+
+const detailPocket =
+  document.getElementById(
+    "detailPocket"
+  );
+
+const detailRoute =
+  document.getElementById(
+    "detailRoute"
+  );
+
+const detailStatus =
+  document.getElementById(
+    "detailStatus"
+  );
+
+
+/* ================================================================
+   VECTOR FUNCTIONS
+================================================================ */
+
+function v(x, y) {
+  return { x, y };
+}
+
+
+function add(a, b) {
+  return {
+    x: a.x + b.x,
+    y: a.y + b.y
+  };
+}
+
+
+function sub(a, b) {
+  return {
+    x: a.x - b.x,
+    y: a.y - b.y
+  };
+}
+
+
+function mul(a, n) {
+  return {
+    x: a.x * n,
+    y: a.y * n
+  };
+}
+
+
+function dot(a, b) {
+  return (
+    a.x * b.x +
+    a.y * b.y
+  );
+}
+
+
+function cross(a, b) {
+  return (
+    a.x * b.y -
+    a.y * b.x
+  );
+}
+
+
+function magnitude(a) {
+  return Math.hypot(
+    a.x,
+    a.y
+  );
+}
+
+
+function normalize(a) {
+
+  const m =
+    magnitude(a);
+
+  if (m < 0.000001) {
+    return {
+      x: 0,
+      y: 0
     };
+  }
+
+  return {
+    x: a.x / m,
+    y: a.y / m
+  };
+}
+
+
+function distance(a, b) {
+  return magnitude(
+    sub(a, b)
+  );
+}
+
+
+function clamp(n, min, max) {
+  return Math.max(
+    min,
+    Math.min(max, n)
+  );
+}
+
+
+function degrees(radians) {
+  return (
+    radians *
+    180 /
+    Math.PI
+  );
+}
+
+
+/* ================================================================
+   POCKETS
+================================================================
+
+   Pocket positions are tied directly to the playing surface.
+
+   Corner pockets:
+       (0,0)
+       (78,0)
+       (0,39)
+       (78,39)
+
+   Side pockets:
+       (39,0)
+       (39,39)
+
+   These are mathematical pocket-center references.
+
+   The visual pocket opening extends into the rail area, which is
+   why the entire pocket remains visible in the canvas.
+================================================================ */
+
+const POCKETS = [
+
+  {
+    id: "TL",
+    name: "LEFT CORNER",
+    x: 0,
+    y: 0,
+    type: "corner"
+  },
+
+  {
+    id: "TM",
+    name: "TOP SIDE",
+    x: TABLE.width / 2,
+    y: 0,
+    type: "side"
+  },
+
+  {
+    id: "TR",
+    name: "RIGHT CORNER",
+    x: TABLE.width,
+    y: 0,
+    type: "corner"
+  },
+
+  {
+    id: "BR",
+    name: "RIGHT CORNER",
+    x: TABLE.width,
+    y: TABLE.height,
+    type: "corner"
+  },
+
+  {
+    id: "BM",
+    name: "BOTTOM SIDE",
+    x: TABLE.width / 2,
+    y: TABLE.height,
+    type: "side"
+  },
+
+  {
+    id: "BL",
+    name: "LEFT CORNER",
+    x: 0,
+    y: TABLE.height,
+    type: "corner"
+  }
 
-    const DEFAULTS = {
-      cue: {
-        x: 25,
-        y: 25
-      },
-
-      object: {
-        x: 65,
-        y: 25
-      }
-    };
-
-    const state = {
-      cue: { ...DEFAULTS.cue },
-      object: { ...DEFAULTS.object },
-
-      mode: "auto",
-      manualPocket: null,
-
-      selectedBall: null,
-
-      shot: null,
-
-      dragging: false,
-
-      canvas: {
-        width: 1000,
-        height: 500,
-        scale: 10,
-        offsetX: 0,
-        offsetY: 0
-      }
-    };
-
-    const canvas = document.getElementById("tableCanvas");
-    const ctx = canvas.getContext("2d");
-
-    const autoBtn = document.getElementById("autoBtn");
-    const manualBtn = document.getElementById("manualBtn");
-    const pocketControls = document.getElementById("pocketControls");
-
-    const shotTitle = document.getElementById("shotTitle");
-    const shotSubtitle = document.getElementById("shotSubtitle");
-
-    const simpleInstruction =
-      document.getElementById("simpleInstruction");
-
-    const simpleSubtext =
-      document.getElementById("simpleSubtext");
-
-    const placementHint =
-      document.getElementById("placementHint");
-
-    const techShot =
-      document.getElementById("techShot");
-
-    const techPocket =
-      document.getElementById("techPocket");
-
-    const techCut =
-      document.getElementById("techCut");
-
-    const techPath =
-      document.getElementById("techPath");
-
-    const resetBtn =
-      document.getElementById("resetBtn");
-
-    /* ============================================================
-       POCKET GEOMETRY
-       ============================================================
-
-       The six pocket centers are placed at the corners and the
-       midpoint of each long rail.
-
-       Corner pocket centers sit just outside the playable rectangle
-       because the pocket mouth occupies the rail intersection.
-
-       For shot planning, pocket centers remain the target centers.
-       ============================================================ */
-
-    const POCKETS = [
-      {
-        id: "TL",
-        name: "LEFT CORNER",
-        x: 0,
-        y: 0,
-        type: "corner"
-      },
-
-      {
-        id: "TM",
-        name: "TOP SIDE",
-        x: 50,
-        y: 0,
-        type: "side"
-      },
-
-      {
-        id: "TR",
-        name: "RIGHT CORNER",
-        x: 100,
-        y: 0,
-        type: "corner"
-      },
-
-      {
-        id: "BR",
-        name: "RIGHT CORNER",
-        x: 100,
-        y: 50,
-        type: "corner"
-      },
-
-      {
-        id: "BM",
-        name: "BOTTOM SIDE",
-        x: 50,
-        y: 50,
-        type: "side"
-      },
-
-      {
-        id: "BL",
-        name: "LEFT CORNER",
-        x: 0,
-        y: 50,
-        type: "corner"
-      }
-    ];
-
-    /* ============================================================
-       VECTOR HELPERS
-       ============================================================ */
-
-    function vec(x, y) {
-      return { x, y };
-    }
-
-    function add(a, b) {
-      return {
-        x: a.x + b.x,
-        y: a.y + b.y
-      };
-    }
-
-    function sub(a, b) {
-      return {
-        x: a.x - b.x,
-        y: a.y - b.y
-      };
-    }
-
-    function mul(a, scalar) {
-      return {
-        x: a.x * scalar,
-        y: a.y * scalar
-      };
-    }
-
-    function dot(a, b) {
-      return a.x * b.x + a.y * b.y;
-    }
-
-    function length(v) {
-      return Math.hypot(v.x, v.y);
-    }
-
-    function normalize(v) {
-      const l = length(v);
-
-      if (l < 1e-9) {
-        return { x: 0, y: 0 };
-      }
-
-      return {
-        x: v.x / l,
-        y: v.y / l
-      };
-    }
-
-    function distance(a, b) {
-      return length(sub(a, b));
-    }
-
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
-    }
-
-    function deg(rad) {
-      return rad * 180 / Math.PI;
-    }
-
-    function rad(degrees) {
-      return degrees * Math.PI / 180;
-    }
-
-    function nearlyEqual(a, b, epsilon = 0.000001) {
-      return Math.abs(a - b) <= epsilon;
-    }
-
-    /* ============================================================
-       GEOMETRY
-       ============================================================ */
-
-    function pointOnSegment(point, a, b, tolerance = 0.0001) {
-      const ab = sub(b, a);
-      const ap = sub(point, a);
-
-      const ab2 = dot(ab, ab);
-
-      if (ab2 < tolerance) {
-        return distance(point, a) <= tolerance;
-      }
-
-      const t = dot(ap, ab) / ab2;
-
-      if (t < -tolerance || t > 1 + tolerance) {
-        return false;
-      }
-
-      const closest = add(a, mul(ab, t));
-
-      return distance(point, closest) <= tolerance;
-    }
-
-    function distancePointToSegment(point, a, b) {
-      const ab = sub(b, a);
-      const ab2 = dot(ab, ab);
-
-      if (ab2 === 0) {
-        return distance(point, a);
-      }
-
-      const t = clamp(
-        dot(sub(point, a), ab) / ab2,
-        0,
-        1
-      );
-
-      const projection = add(a, mul(ab, t));
-
-      return distance(point, projection);
-    }
-
-    function segmentsIntersect(a, b, c, d) {
-      const r = sub(b, a);
-      const s = sub(d, c);
-
-      const denominator = r.x * s.y - r.y * s.x;
-
-      if (Math.abs(denominator) < 1e-9) {
-        return false;
-      }
-
-      const u =
-        ((c.x - a.x) * r.y -
-          (c.y - a.y) * r.x) /
-        denominator;
-
-      const t =
-        ((c.x - a.x) * s.y -
-          (c.y - a.y) * s.x) /
-        denominator;
-
-      return (
-        t >= 0 &&
-        t <= 1 &&
-        u >= 0 &&
-        u <= 1
-      );
-    }
-
-    function lineCrossesPoint(
-      a,
-      b,
+];
+
+
+/* ================================================================
+   RAILS
+================================================================ */
+
+const RAILS = [
+
+  {
+    id: "TOP",
+    axis: "horizontal",
+    coordinate:
+      TABLE.ballRadius,
+
+    min:
+      TABLE.ballRadius + 2.2,
+
+    max:
+      TABLE.width -
+      TABLE.ballRadius -
+      2.2
+  },
+
+  {
+    id: "BOTTOM",
+    axis: "horizontal",
+    coordinate:
+      TABLE.height -
+      TABLE.ballRadius,
+
+    min:
+      TABLE.ballRadius + 2.2,
+
+    max:
+      TABLE.width -
+      TABLE.ballRadius -
+      2.2
+  },
+
+  {
+    id: "LEFT",
+    axis: "vertical",
+    coordinate:
+      TABLE.ballRadius,
+
+    min:
+      TABLE.ballRadius + 2.2,
+
+    max:
+      TABLE.height -
+      TABLE.ballRadius -
+      2.2
+  },
+
+  {
+    id: "RIGHT",
+    axis: "vertical",
+    coordinate:
+      TABLE.width -
+      TABLE.ballRadius,
+
+    min:
+      TABLE.ballRadius + 2.2,
+
+    max:
+      TABLE.height -
+      TABLE.ballRadius -
+      2.2
+  }
+
+];
+
+
+/* ================================================================
+   BASIC GEOMETRY
+================================================================ */
+
+function insideBallBounds(point) {
+
+  const r =
+    TABLE.ballRadius;
+
+  return (
+    point.x >= r &&
+    point.x <=
+      TABLE.width - r &&
+    point.y >= r &&
+    point.y <=
+      TABLE.height - r
+  );
+}
+
+
+function clampBall(point) {
+
+  const r =
+    TABLE.ballRadius;
+
+  return {
+
+    x: clamp(
+      point.x,
+      r,
+      TABLE.width - r
+    ),
+
+    y: clamp(
+      point.y,
+      r,
+      TABLE.height - r
+    )
+
+  };
+}
+
+
+function pointSegmentDistance(
+  point,
+  a,
+  b
+) {
+
+  const ab =
+    sub(b, a);
+
+  const denominator =
+    dot(ab, ab);
+
+  if (
+    denominator <
+    0.000001
+  ) {
+    return distance(
       point,
-      clearance
-    ) {
-      return distancePointToSegment(
-        point,
-        a,
-        b
-      ) <= clearance;
-    }
+      a
+    );
+  }
 
-    /* ============================================================
-       TABLE BOUNDARY / BALL POSITION
-       ============================================================ */
+  const t =
+    clamp(
+      dot(
+        sub(point, a),
+        ab
+      ) /
+      denominator,
+      0,
+      1
+    );
 
-    function isBallInsideTable(point) {
-      const r = TABLE.ballRadius;
+  const closest =
+    add(
+      a,
+      mul(ab, t)
+    );
 
-      return (
-        point.x >= r &&
-        point.x <= TABLE.width - r &&
-        point.y >= r &&
-        point.y <= TABLE.height - r
-      );
-    }
+  return distance(
+    point,
+    closest
+  );
+}
 
-    function ballsOverlap() {
-      return (
-        distance(state.cue, state.object) <
-        TABLE.ballDiameter + TABLE.safety
-      );
-    }
 
-    function clampBallPosition(point) {
-      const r = TABLE.ballRadius;
+function segmentsIntersect(
+  a,
+  b,
+  c,
+  d
+) {
 
-      return {
-        x: clamp(
-          point.x,
-          r,
-          TABLE.width - r
-        ),
+  const r =
+    sub(b, a);
 
-        y: clamp(
-          point.y,
-          r,
-          TABLE.height - r
-        )
-      };
-    }
+  const s =
+    sub(d, c);
 
-    /* ============================================================
-       POCKET VALIDATION
-       ============================================================
+  const denominator =
+    cross(r, s);
 
-       A direct object-ball path must arrive at the pocket with an
-       appropriate approach angle.
+  if (
+    Math.abs(
+      denominator
+    ) < 0.000001
+  ) {
+    return false;
+  }
 
-       Corner pockets accept a wider range of approaches.
-       Side pockets are more restrictive because the mouth is
-       effectively oriented along the long rail.
+  const t =
+    cross(
+      sub(c, a),
+      s
+    ) /
+    denominator;
 
-       This is still a geometric approximation of a real pocket
-       facing. The critical part is that a line simply pointing
-       vaguely toward a pocket is NOT automatically accepted.
-       ============================================================ */
+  const u =
+    cross(
+      sub(c, a),
+      r
+    ) /
+    denominator;
 
-    function pocketAcceptance(
-      objectPosition,
-      targetPoint,
-      pocket
-    ) {
-      const incoming =
-        normalize(
-          sub(
-            pocket,
-            targetPoint
-          )
-        );
+  return (
+    t >= 0 &&
+    t <= 1 &&
+    u >= 0 &&
+    u <= 1
+  );
+}
 
-      const pocketToObject =
-        normalize(
-          sub(
-            objectPosition,
-            pocket
-          )
-        );
 
-      const approachDot =
-        dot(
-          incoming,
-          pocketToObject
-        );
+/* ================================================================
+   BALL COLLISION / OBSTRUCTION
+================================================================ */
 
-      if (pocket.type === "corner") {
-        return approachDot > -0.25;
-      }
+function ballsAreTooClose() {
 
-      return approachDot > 0.15;
-    }
+  return (
+    distance(
+      state.cue,
+      state.object
+    ) <
+    TABLE.ballDiameter +
+    0.04
+  );
+}
 
-    function objectPathReachesPocket(
+
+function cuePathBlocked(
+  start,
+  end
+) {
+
+  /*
+     Object ball must not be inside the cue-ball travel corridor
+     before the intended contact.
+
+     Use slightly more than one ball diameter because the cue ball
+     and object ball are physical circles, not mathematical points.
+  */
+  return (
+    pointSegmentDistance(
+      state.object,
       start,
-      end,
-      pocket
+      end
+    ) <
+    TABLE.ballDiameter -
+    0.04
+  );
+}
+
+
+/*
+   At the moment this tool only has two balls.
+
+   This function is intentionally structured so additional balls can
+   later be added without rewriting the shot validator.
+*/
+function pathBlockedByOtherBalls(
+  start,
+  end,
+  ignoredBalls = []
+) {
+
+  const balls = [
+    {
+      id: "cue",
+      point: state.cue
+    },
+
+    {
+      id: "object",
+      point: state.object
+    }
+  ];
+
+  for (
+    const ball of balls
+  ) {
+
+    if (
+      ignoredBalls.includes(
+        ball.id
+      )
     ) {
-      const mouthRadius =
-        TABLE.pocketRadius;
+      continue;
+    }
 
-      const endDistance =
-        distance(end, pocket);
-
-      if (endDistance > mouthRadius) {
-        return false;
-      }
-
-      return pocketAcceptance(
+    if (
+      pointSegmentDistance(
+        ball.point,
         start,
-        end,
-        pocket
-      );
-    }
-
-    /* ============================================================
-       DIRECT SHOT GEOMETRY
-       ============================================================
-
-       For an object ball to enter a pocket, its center must travel
-       along a line aimed toward the pocket center.
-
-       The cue ball must contact the object ball at a point that
-       causes that object-ball center trajectory.
-
-       The ghost-ball center is one ball diameter behind the object
-       ball along the opposite direction of travel.
-       ============================================================ */
-
-    function getDirectShot(
-      cue,
-      objectBall,
-      pocket
+        end
+      ) <
+      TABLE.ballDiameter -
+      0.05
     ) {
-      const objectToPocket =
-        sub(pocket, objectBall);
-
-      const objectDistance =
-        length(objectToPocket);
-
-      if (objectDistance < 0.01) {
-        return null;
-      }
-
-      const objectDirection =
-        normalize(objectToPocket);
-
-      /*
-       * Ghost ball center:
-       *
-       * OB + direction * (-diameter)
-       *
-       * This is the center location the cue ball needs to occupy
-       * at impact.
-       */
-      const ghostBall =
-        sub(
-          objectBall,
-          mul(
-            objectDirection,
-            TABLE.ballDiameter
-          )
-        );
-
-      if (!isBallInsideTable(ghostBall)) {
-        return null;
-      }
-
-      const cueToGhost =
-        sub(
-          ghostBall,
-          cue
-        );
-
-      const cueDistance =
-        length(cueToGhost);
-
-      if (cueDistance < 0.01) {
-        return null;
-      }
-
-      const cueDirection =
-        normalize(cueToGhost);
-
-      /*
-       * The cue-ball path must be able to reach the ghost ball
-       * without passing through the object ball before impact.
-       */
-      const cuePathClear =
-        distancePointToSegment(
-          objectBall,
-          cue,
-          ghostBall
-        ) >=
-        TABLE.ballDiameter - TABLE.safety;
-
-      if (!cuePathClear) {
-        return null;
-      }
-
-      /*
-       * Also verify that the ghost-ball center is actually positioned
-       * behind the object ball relative to the intended shot.
-       */
-      const alignment =
-        dot(
-          normalize(
-            sub(
-              ghostBall,
-              objectBall
-            )
-          ),
-          mul(
-            objectDirection,
-            -1
-          )
-        );
-
-      if (alignment < 0.98) {
-        return null;
-      }
-
-      /*
-       * Cut angle is the angle between the cue-ball impact line and
-       * the object-ball travel direction.
-       */
-      const cutAngle =
-        deg(
-          Math.acos(
-            clamp(
-              dot(
-                cueDirection,
-                objectDirection
-              ),
-              -1,
-              1
-            )
-          )
-        );
-
-      /*
-       * Very thin cuts become less practical.
-       *
-       * We do not declare them impossible. We score them lower.
-       */
-      const difficulty =
-        1 +
-        cueDistance * 0.012 +
-        objectDistance * 0.008 +
-        Math.pow(
-          cutAngle / 90,
-          2
-        ) * 2.1;
-
-      /*
-       * Cue ball must remain inside the playable area.
-       */
-      if (
-        ghostBall.x < TABLE.ballRadius ||
-        ghostBall.x >
-          TABLE.width - TABLE.ballRadius ||
-        ghostBall.y < TABLE.ballRadius ||
-        ghostBall.y >
-          TABLE.height - TABLE.ballRadius
-      ) {
-        return null;
-      }
-
-      if (
-        !objectPathReachesPocket(
-          objectBall,
-          pocket,
-          pocket
-        )
-      ) {
-        return null;
-      }
-
-      return {
-        type: "direct",
-        pocket,
-        pocketTarget: pocket,
-        ghostBall,
-        cueDistance,
-        objectDistance,
-        cueDirection,
-        objectDirection,
-        cutAngle,
-        difficulty
-      };
-    }
-
-    /* ============================================================
-       BANK GEOMETRY
-       ============================================================
-
-       ONE-RAIL BANK METHOD
-
-       The target pocket is reflected across the effective cushion
-       centerline.
-
-       Because a BALL CENTER cannot touch the physical cushion nose,
-       the center-line reflection occurs around:
-
-         x = ballRadius
-         x = width - ballRadius
-         y = ballRadius
-         y = height - ballRadius
-
-       depending on the rail.
-
-       The reflected target is then connected to the object-ball
-       center.
-
-       This gives the required cushion contact point.
-
-       We then validate:
-       1. Contact point lies on the usable rail.
-       2. Object -> cushion path is clear.
-       3. Cushion -> pocket path is clear.
-       4. Pocket acceptance is reasonable.
-       5. Cue ball can reach the ghost ball.
-       ============================================================ */
-
-    const RAILS = [
-      {
-        id: "TOP",
-        coordinate: TABLE.ballRadius,
-        orientation: "horizontal",
-        min: TABLE.ballRadius + 2.0,
-        max: TABLE.width - TABLE.ballRadius - 2.0
-      },
-
-      {
-        id: "BOTTOM",
-        coordinate:
-          TABLE.height - TABLE.ballRadius,
-        orientation: "horizontal",
-        min: TABLE.ballRadius + 2.0,
-        max: TABLE.width - TABLE.ballRadius - 2.0
-      },
-
-      {
-        id: "LEFT",
-        coordinate: TABLE.ballRadius,
-        orientation: "vertical",
-        min: TABLE.ballRadius + 2.0,
-        max: TABLE.height - TABLE.ballRadius - 2.0
-      },
-
-      {
-        id: "RIGHT",
-        coordinate:
-          TABLE.width - TABLE.ballRadius,
-        orientation: "vertical",
-        min: TABLE.ballRadius + 2.0,
-        max: TABLE.height - TABLE.ballRadius - 2.0
-      }
-    ];
-
-    function reflectAcrossRail(point, rail) {
-      if (rail.orientation === "horizontal") {
-        return {
-          x: point.x,
-          y:
-            2 * rail.coordinate -
-            point.y
-        };
-      }
-
-      return {
-        x:
-          2 * rail.coordinate -
-          point.x,
-
-        y: point.y
-      };
-    }
-
-    function lineRailIntersection(
-      start,
-      end,
-      rail
-    ) {
-      const direction =
-        sub(end, start);
-
-      if (
-        rail.orientation === "horizontal"
-      ) {
-        if (
-          Math.abs(direction.y) <
-          0.0000001
-        ) {
-          return null;
-        }
-
-        const t =
-          (rail.coordinate - start.y) /
-          direction.y;
-
-        if (t <= 0 || t >= 1) {
-          return null;
-        }
-
-        const x =
-          start.x +
-          direction.x * t;
-
-        if (
-          x < rail.min ||
-          x > rail.max
-        ) {
-          return null;
-        }
-
-        return {
-          x,
-          y: rail.coordinate
-        };
-      }
-
-      if (
-        Math.abs(direction.x) <
-        0.0000001
-      ) {
-        return null;
-      }
-
-      const t =
-        (rail.coordinate - start.x) /
-        direction.x;
-
-      if (t <= 0 || t >= 1) {
-        return null;
-      }
-
-      const y =
-        start.y +
-        direction.y * t;
-
-      if (
-        y < rail.min ||
-        y > rail.max
-      ) {
-        return null;
-      }
-
-      return {
-        x: rail.coordinate,
-        y
-      };
-    }
-
-    function getBankShot(
-      cue,
-      objectBall,
-      pocket,
-      rail
-    ) {
-      /*
-       * Mirror the pocket.
-       */
-      const reflectedPocket =
-        reflectAcrossRail(
-          pocket,
-          rail
-        );
-
-      /*
-       * Draw line from object ball to reflected pocket.
-       *
-       * The intersection with the rail is the theoretical bank
-       * contact point.
-       */
-      const bankContact =
-        lineRailIntersection(
-          objectBall,
-          reflectedPocket,
-          rail
-        );
-
-      if (!bankContact) {
-        return null;
-      }
-
-      /*
-       * The object ball has to reach the cushion before reaching
-       * any pocket/opening geometry.
-       */
-      const objectToRail =
-        distance(
-          objectBall,
-          bankContact
-        );
-
-      if (objectToRail < TABLE.ballDiameter) {
-        return null;
-      }
-
-      /*
-       * The rail contact cannot be too close to a pocket throat.
-       * That would make the reflected-path model unreliable and is
-       * generally not a clean practical bank.
-       */
-      const minRailClearance =
-        1.7;
-
-      for (const p of POCKETS) {
-        if (
-          distance(
-            bankContact,
-            p
-          ) < minRailClearance
-        ) {
-          return null;
-        }
-      }
-
-      /*
-       * Calculate the path after the rail.
-       */
-      const postRailDirection =
-        normalize(
-          sub(
-            pocket,
-            bankContact
-          )
-        );
-
-      /*
-       * Ensure the object ball is actually approaching the rail from
-       * the playable side.
-       */
-      const preRailDirection =
-        normalize(
-          sub(
-            bankContact,
-            objectBall
-          )
-        );
-
-      if (rail.orientation === "horizontal") {
-        const expected =
-          rail.id === "TOP"
-            ? 1
-            : -1;
-
-        if (
-          Math.sign(
-            preRailDirection.y
-          ) !== expected
-        ) {
-          return null;
-        }
-
-        if (
-          Math.sign(
-            postRailDirection.y
-          ) === expected
-        ) {
-          return null;
-        }
-      } else {
-        const expected =
-          rail.id === "LEFT"
-            ? 1
-            : -1;
-
-        if (
-          Math.sign(
-            preRailDirection.x
-          ) !== expected
-        ) {
-          return null;
-        }
-
-        if (
-          Math.sign(
-            postRailDirection.x
-          ) === expected
-        ) {
-          return null;
-        }
-      }
-
-      /*
-       * The final object-ball center needs to arrive within the
-       * pocket mouth.
-       */
-      if (
-        distance(
-          bankContact,
-          pocket
-        ) < 0.01
-      ) {
-        return null;
-      }
-
-      if (
-        !pocketAcceptance(
-          objectBall,
-          bankContact,
-          pocket
-        )
-      ) {
-        return null;
-      }
-
-      /*
-       * Ghost-ball center is one ball diameter behind the object ball
-       * along the INITIAL object-ball trajectory.
-       */
-      const ghostBall =
-        sub(
-          objectBall,
-          mul(
-            preRailDirection,
-            TABLE.ballDiameter
-          )
-        );
-
-      if (!isBallInsideTable(ghostBall)) {
-        return null;
-      }
-
-      const cueToGhost =
-        sub(
-          ghostBall,
-          cue
-        );
-
-      const cueDistance =
-        length(cueToGhost);
-
-      if (cueDistance < 0.01) {
-        return null;
-      }
-
-      const cueDirection =
-        normalize(cueToGhost);
-
-      /*
-       * The cue ball must reach the ghost ball without crossing
-       * through the object ball.
-       */
-      const cuePathClear =
-        distancePointToSegment(
-          objectBall,
-          cue,
-          ghostBall
-        ) >=
-        TABLE.ballDiameter - TABLE.safety;
-
-      if (!cuePathClear) {
-        return null;
-      }
-
-      /*
-       * Calculate cut angle against initial object-ball travel.
-       */
-      const cutAngle =
-        deg(
-          Math.acos(
-            clamp(
-              dot(
-                cueDirection,
-                preRailDirection
-              ),
-              -1,
-              1
-            )
-          )
-        );
-
-      /*
-       * Bank scoring:
-       *
-       * Banks are deliberately not punished so heavily that an
-       * obvious practical bank always loses to an ugly cut.
-       *
-       * However, extremely shallow/long banks still score poorly.
-       */
-      const railAngle =
-        deg(
-          Math.atan2(
-            Math.abs(
-              bankContact.y -
-              objectBall.y
-            ),
-            Math.abs(
-              bankContact.x -
-              objectBall.x
-            )
-          )
-        );
-
-      const bankDistance =
-        objectToRail +
-        distance(
-          bankContact,
-          pocket
-        );
-
-      const difficulty =
-        2.25 +
-        cueDistance * 0.012 +
-        bankDistance * 0.008 +
-        Math.pow(
-          cutAngle / 90,
-          2
-        ) * 1.7 +
-        Math.abs(
-          railAngle - 45
-        ) / 90 * 0.25;
-
-      /*
-       * Avoid banks that leave the ball path dangerously close to
-       * the opposite rails/corners.
-       */
-      if (
-        !isBankPathInsideTable(
-          objectBall,
-          bankContact,
-          pocket
-        )
-      ) {
-        return null;
-      }
-
-      return {
-        type: "bank",
-        pocket,
-        rail,
-        reflectedPocket,
-        bankContact,
-        ghostBall,
-        cueDistance,
-        objectDistance:
-          bankDistance,
-        cueDirection,
-        objectDirection:
-          preRailDirection,
-        cutAngle,
-        bankDistance,
-        difficulty
-      };
-    }
-
-    function isBankPathInsideTable(
-      objectBall,
-      bankContact,
-      pocket
-    ) {
-      /*
-       * We validate sampled points along both legs.
-       *
-       * This prevents a mathematically connected line from
-       * wandering outside the playable area.
-       */
-      const segments = [
-        [objectBall, bankContact],
-        [bankContact, pocket]
-      ];
-
-      const margin =
-        TABLE.ballRadius * 0.98;
-
-      for (const [a, b] of segments) {
-        for (let i = 0; i <= 20; i++) {
-          const t = i / 20;
-
-          const p = add(
-            a,
-            mul(
-              sub(b, a),
-              t
-            )
-          );
-
-          /*
-           * Pocket target can intentionally approach the boundary,
-           * so the final point receives a little extra tolerance.
-           */
-          if (i === 20) {
-            continue;
-          }
-
-          if (
-            p.x < -0.01 ||
-            p.x > TABLE.width + 0.01 ||
-            p.y < -0.01 ||
-            p.y > TABLE.height + 0.01
-          ) {
-            return false;
-          }
-        }
-      }
-
-      /*
-       * Ensure the bank contact itself is a legitimate ball-center
-       * cushion position.
-       */
-      if (
-        bankContact.x <
-          -0.01 ||
-        bankContact.x >
-          TABLE.width + 0.01 ||
-        bankContact.y <
-          -0.01 ||
-        bankContact.y >
-          TABLE.height + 0.01
-      ) {
-        return false;
-      }
-
       return true;
     }
+  }
 
-    /* ============================================================
-       COLLISION / BLOCKING
-       ============================================================ */
+  return false;
+}
 
-    function pathBlockedByBall(
-      a,
-      b,
-      ball,
-      clearance
-    ) {
-      return (
-        distancePointToSegment(
-          ball,
-          a,
-          b
-        ) < clearance
-      );
-    }
 
-    function shotCuePathClear(shot) {
-      if (!shot) {
-        return false;
-      }
+/* ================================================================
+   POCKET ACCEPTANCE
+================================================================
 
-      /*
-       * Cue ball -> ghost ball.
-       *
-       * The object ball should not be crossed before impact.
-       */
-      return !pathBlockedByBall(
-        state.cue,
-        shot.ghostBall,
-        state.object,
-        TABLE.ballDiameter - TABLE.safety
-      );
-    }
+   This is deliberately conservative.
 
-    /* ============================================================
-       SHOT SCORING
-       ============================================================ */
+   A line that merely points at a pocket is not enough.
 
-    function scoreShot(
-      shot
-    ) {
-      if (!shot) {
-        return Infinity;
-      }
+   The object-ball center must enter the pocket acceptance region
+   with a reasonable approach direction.
 
-      let score =
-        shot.difficulty;
+   This is geometric pocket acceptance, NOT a claim to simulate
+   the exact facings of a particular physical table.
+================================================================ */
 
-      /*
-       * Favor reasonable cut angles.
-       *
-       * Straight-ish shots are generally easier.
-       */
-      if (
-        shot.cutAngle < 20
-      ) {
-        score -= 0.75;
-      }
+function pocketRadius(
+  pocket
+) {
 
-      if (
-        shot.cutAngle > 65
-      ) {
-        score +=
-          (shot.cutAngle - 65) *
-          0.08;
-      }
+  return pocket.type === "corner"
+    ? TABLE.cornerPocketRadius
+    : TABLE.sidePocketRadius;
+}
 
-      /*
-       * Banks receive a strategy bonus when they are genuinely
-       * clean and direct.
-       */
-      if (
-        shot.type === "bank"
-      ) {
-        const bankQuality =
-          1 -
-          Math.min(
-            1,
-            shot.bankDistance / 100
-          );
 
-        score -=
-          bankQuality *
-          0.55;
-      }
+function pocketAcceptsPath(
+  start,
+  pocket,
+  incomingPoint
+) {
 
-      /*
-       * Very thin direct cuts are heavily discouraged.
-       */
-      if (
-        shot.type === "direct" &&
-        shot.cutAngle > 70
-      ) {
-        score += 1.2;
-      }
-
-      /*
-       * Long cue-ball travel adds difficulty.
-       */
-      if (
-        shot.cueDistance > 70
-      ) {
-        score +=
-          (shot.cueDistance - 70) *
-          0.025;
-      }
-
-      return score;
-    }
-
-    /* ============================================================
-       GENERATE SHOTS
-       ============================================================ */
-
-    function getCandidateShotsForPocket(
+  const mouth =
+    pocketRadius(
       pocket
-    ) {
-      const candidates = [];
-
-      const direct =
-        getDirectShot(
-          state.cue,
-          state.object,
-          pocket
-        );
-
-      if (
-        direct &&
-        shotCuePathClear(direct)
-      ) {
-        direct.score =
-          scoreShot(direct);
-
-        candidates.push(direct);
-      }
-
-      /*
-       * Evaluate all four one-rail options.
-       */
-      for (const rail of RAILS) {
-        const bank =
-          getBankShot(
-            state.cue,
-            state.object,
-            pocket,
-            rail
-          );
-
-        if (
-          bank &&
-          shotCuePathClear(bank)
-        ) {
-          bank.score =
-            scoreShot(bank);
-
-          candidates.push(bank);
-        }
-      }
-
-      return candidates.sort(
-        (a, b) =>
-          a.score - b.score
-      );
-    }
-
-    function chooseBestShot() {
-      if (ballsOverlap()) {
-        return null;
-      }
-
-      if (
-        state.mode === "manual" &&
-        state.manualPocket
-      ) {
-        const candidates =
-          getCandidateShotsForPocket(
-            state.manualPocket
-          );
-
-        return (
-          candidates.length
-            ? candidates[0]
-            : null
-        );
-      }
-
-      /*
-       * AUTO:
-       *
-       * Evaluate every pocket.
-       *
-       * This is the important strategic layer:
-       * the app does not make the player pick a pocket first.
-       */
-      const allCandidates = [];
-
-      for (const pocket of POCKETS) {
-        const candidates =
-          getCandidateShotsForPocket(
-            pocket
-          );
-
-        for (const candidate of candidates) {
-          allCandidates.push(
-            candidate
-          );
-        }
-      }
-
-      if (!allCandidates.length) {
-        return null;
-      }
-
-      /*
-       * Strategic adjustment:
-       *
-       * If there is a clean bank that is materially competitive
-       * with the best direct shot, don't automatically dismiss it.
-       *
-       * This is intentionally different from simply saying
-       * "banks are better."
-       */
-      allCandidates.sort(
-        (a, b) =>
-          a.score - b.score
-      );
-
-      const bestOverall =
-        allCandidates[0];
-
-      const cleanBanks =
-        allCandidates.filter(
-          shot =>
-            shot.type === "bank" &&
-            shot.cutAngle < 55 &&
-            shot.bankDistance < 85
-        );
-
-      if (cleanBanks.length) {
-        const bestBank =
-          cleanBanks[0];
-
-        /*
-         * A clean bank can win if it is close enough in difficulty
-         * to the mathematically easiest direct option.
-         */
-        if (
-          bestBank.score <=
-          bestOverall.score + 0.85
-        ) {
-          return bestBank;
-        }
-      }
-
-      return bestOverall;
-    }
-
-    /* ============================================================
-       USER-FACING TEXT
-       ============================================================ */
-
-    function updateShot() {
-      state.shot =
-        chooseBestShot();
-
-      updateInterface();
-      draw();
-    }
-
-    function updateInterface() {
-      if (ballsOverlap()) {
-        shotTitle.textContent =
-          "MOVE THE BALLS";
-
-        shotSubtitle.textContent =
-          "The balls need enough space to make a legal shot.";
-
-        simpleInstruction.textContent =
-          "Separate the balls.";
-
-        simpleSubtext.textContent =
-          "Shot Caller needs a clear cue-ball path.";
-
-        techShot.textContent = "Blocked";
-        techPocket.textContent = "—";
-        techCut.textContent = "—";
-        techPath.textContent = "—";
-
-        return;
-      }
-
-      if (!state.shot) {
-        shotTitle.textContent =
-          "NO CLEAN SHOT";
-
-        shotSubtitle.textContent =
-          "Try another position or choose a different pocket.";
-
-        simpleInstruction.textContent =
-          "No practical route.";
-
-        simpleSubtext.textContent =
-          "Shot Caller could not find a legal direct or one-rail path.";
-
-        techShot.textContent = "None";
-        techPocket.textContent = "None";
-        techCut.textContent = "—";
-        techPath.textContent = "—";
-
-        return;
-      }
-
-      const shot =
-        state.shot;
-
-      const pocket =
-        shot.pocket;
-
-      if (shot.type === "bank") {
-        shotTitle.textContent =
-          `BANK → ${shot.rail.id} RAIL → ${pocket.name}`;
-
-        shotSubtitle.textContent =
-          "Send the object ball to the rail point shown, then into the pocket.";
-      } else {
-        shotTitle.textContent =
-          `CUT → ${pocket.name}`;
-
-        shotSubtitle.textContent =
-          "Aim the object ball along the highlighted path.";
-      }
-
-      if (shot.type === "bank") {
-        simpleInstruction.textContent =
-          `Bank off the ${shot.rail.id.toLowerCase()} rail.`;
-
-        simpleSubtext.textContent =
-          "Use the marked cue-ball contact point, then send the object ball through the rail mark.";
-      } else {
-        simpleInstruction.textContent =
-          `Shoot the ${pocket.name.toLowerCase()}.`;
-
-        simpleSubtext.textContent =
-          "Use the marked cue-ball contact point and follow the object-ball path.";
-      }
-
-      techShot.textContent =
-        shot.type === "bank"
-          ? "One-rail bank"
-          : "Direct / cut";
-
-      techPocket.textContent =
-        pocket.name;
-
-      techCut.textContent =
-        `${shot.cutAngle.toFixed(1)}°`;
-
-      techPath.textContent =
-        shot.type === "bank"
-          ? `${shot.bankDistance.toFixed(1)} in`
-          : `${shot.objectDistance.toFixed(1)} in`;
-    }
-
-    /* ============================================================
-       POCKET UI
-       ============================================================ */
-
-    function buildPocketButtons() {
-      pocketControls.innerHTML = "";
-
-      for (const pocket of POCKETS) {
-        const button =
-          document.createElement("button");
-
-        button.type = "button";
-        button.className = "pocket-btn";
-
-        button.textContent =
-          pocket.name;
-
-        button.dataset.pocket =
-          pocket.id;
-
-        button.addEventListener(
-          "click",
-          () => {
-            state.manualPocket =
-              pocket;
-
-            for (
-              const child
-              of pocketControls.children
-            ) {
-              child.classList.remove(
-                "active"
-              );
-            }
-
-            button.classList.add(
-              "active"
-            );
-
-            updateShot();
-          }
-        );
-
-        pocketControls.appendChild(
-          button
-        );
-      }
-    }
-
-    function updateModeUI() {
-      const manual =
-        state.mode === "manual";
-
-      autoBtn.classList.toggle(
-        "active",
-        !manual
-      );
-
-      manualBtn.classList.toggle(
-        "active",
-        manual
-      );
-
-      pocketControls.classList.toggle(
-        "visible",
-        manual
-      );
-
-      if (!manual) {
-        state.manualPocket = null;
-
-        for (
-          const child
-          of pocketControls.children
-        ) {
-          child.classList.remove(
-            "active"
-          );
-        }
-      }
-    }
-
-    autoBtn.addEventListener(
-      "click",
-      () => {
-        state.mode = "auto";
-        updateModeUI();
-        updateShot();
-      }
     );
 
-    manualBtn.addEventListener(
-      "click",
-      () => {
-        state.mode = "manual";
-
-        if (!state.manualPocket) {
-          state.manualPocket =
-            POCKETS[2];
-
-          const button =
-            pocketControls.querySelector(
-              `[data-pocket="${state.manualPocket.id}"]`
-            );
-
-          if (button) {
-            button.classList.add(
-              "active"
-            );
-          }
-        }
-
-        updateModeUI();
-        updateShot();
-      }
-    );
-
-    resetBtn.addEventListener(
-      "click",
-      () => {
-        state.cue = {
-          ...DEFAULTS.cue
-        };
-
-        state.object = {
-          ...DEFAULTS.object
-        };
-
-        state.selectedBall = null;
-
-        updateShot();
-      }
-    );
-
-    /* ============================================================
-       CANVAS / RESPONSIVE SCALING
-       ============================================================ */
-
-    function resizeCanvas() {
-      const rect =
-        canvas.getBoundingClientRect();
-
-      const dpr =
-        Math.min(
-          window.devicePixelRatio || 1,
-          2
-        );
-
-      const cssWidth =
-        rect.width;
-
-      const cssHeight =
-        cssWidth *
-        TABLE.height /
-        TABLE.width;
-
-      canvas.style.height =
-        `${cssHeight}px`;
-
-      canvas.width =
-        Math.round(
-          cssWidth * dpr
-        );
-
-      canvas.height =
-        Math.round(
-          cssHeight * dpr
-        );
-
-      /*
-       * Coordinate system remains:
-       *
-       * x = inches
-       * y = inches
-       *
-       * scale = pixels / inch.
-       */
-      state.canvas.scale =
-        cssWidth /
-        TABLE.width;
-
-      state.canvas.width =
-        cssWidth;
-
-      state.canvas.height =
-        cssHeight;
-
-      ctx.setTransform(
-        dpr *
-          state.canvas.scale,
-        0,
-        0,
-        dpr *
-          state.canvas.scale,
-        0,
-        0
-      );
-
-      draw();
-    }
-
-    window.addEventListener(
-      "resize",
-      resizeCanvas
-    );
-
-    /* ============================================================
-       DRAWING
-       ============================================================ */
-
-    function draw() {
-      const s =
-        state.canvas.scale;
-
-      /*
-       * Canvas is transformed to inches.
-       *
-       * Clear using physical canvas dimensions before re-applying
-       * the inch coordinate transform.
-       */
-      ctx.setTransform(
-        1,
-        0,
-        0,
-        1,
-        0,
-        0
-      );
-
-      ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-      const dpr =
-        Math.min(
-          window.devicePixelRatio || 1,
-          2
-        );
-
-      ctx.setTransform(
-        dpr * s,
-        0,
-        0,
-        dpr * s,
-        0,
-        0
-      );
-
-      drawTable();
-      drawDiamonds();
-      drawShot();
-      drawBalls();
-    }
-
-    function drawTable() {
-      /*
-       * Outer wood.
-       */
-      const woodGradient =
-        ctx.createLinearGradient(
-          0,
-          0,
-          TABLE.width,
-          TABLE.height
-        );
-
-      woodGradient.addColorStop(
-        0,
-        "#684b2e"
-      );
-
-      woodGradient.addColorStop(
-        0.5,
-        "#8a633c"
-      );
-
-      woodGradient.addColorStop(
-        1,
-        "#513923"
-      );
-
-      ctx.fillStyle =
-        woodGradient;
-
-      roundRect(
-        0,
-        0,
-        TABLE.width,
-        TABLE.height,
-        2.8
-      );
-
-      ctx.fill();
-
-      /*
-       * Cushion / rail.
-       */
-      ctx.fillStyle =
-        "#25352c";
-
-      roundRect(
-        1.7,
-        1.7,
-        TABLE.width - 3.4,
-        TABLE.height - 3.4,
-        2.2
-      );
-
-      ctx.fill();
-
-      /*
-       * Cloth.
-       */
-      const cloth =
-        ctx.createLinearGradient(
-          0,
-          0,
-          TABLE.width,
-          TABLE.height
-        );
-
-      cloth.addColorStop(
-        0,
-        "#117443"
-      );
-
-      cloth.addColorStop(
-        0.5,
-        "#0f824a"
-      );
-
-      cloth.addColorStop(
-        1,
-        "#0c693d"
-      );
-
-      ctx.fillStyle =
-        cloth;
-
-      roundRect(
-        TABLE.ballRadius,
-        TABLE.ballRadius,
-        TABLE.width -
-          TABLE.ballRadius * 2,
-        TABLE.height -
-          TABLE.ballRadius * 2,
-        1.15
-      );
-
-      ctx.fill();
-
-      /*
-       * Subtle cloth center highlight.
-       */
-      const glow =
-        ctx.createRadialGradient(
-          TABLE.width / 2,
-          TABLE.height / 2,
-          0,
-          TABLE.width / 2,
-          TABLE.height / 2,
-          55
-        );
-
-      glow.addColorStop(
-        0,
-        "rgba(255,255,255,.035)"
-      );
-
-      glow.addColorStop(
-        1,
-        "rgba(255,255,255,0)"
-      );
-
-      ctx.fillStyle =
-        glow;
-
-      ctx.fillRect(
-        TABLE.ballRadius,
-        TABLE.ballRadius,
-        TABLE.width -
-          TABLE.ballRadius * 2,
-        TABLE.height -
-          TABLE.ballRadius * 2
-      );
-
-      /*
-       * Pocket holes.
-       */
-      for (const pocket of POCKETS) {
-        drawPocket(
-          pocket
-        );
-      }
-    }
-
-    function drawPocket(
+  if (
+    distance(
+      incomingPoint,
       pocket
-    ) {
-      const radius =
-        pocket.type === "corner"
-          ? 2.55
-          : 2.25;
-
-      /*
-       * Shadow.
-       */
-      ctx.beginPath();
-
-      ctx.arc(
-        pocket.x,
-        pocket.y,
-        radius + 0.45,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        "rgba(0,0,0,.35)";
-
-      ctx.fill();
-
-      /*
-       * Pocket.
-       */
-      ctx.beginPath();
-
-      ctx.arc(
-        pocket.x,
-        pocket.y,
-        radius,
-        0,
-        Math.PI * 2
-      );
-
-      const pocketGradient =
-        ctx.createRadialGradient(
-          pocket.x - .4,
-          pocket.y - .4,
-          .2,
-          pocket.x,
-          pocket.y,
-          radius
-        );
-
-      pocketGradient.addColorStop(
-        0,
-        "#080909"
-      );
-
-      pocketGradient.addColorStop(
-        1,
-        "#010202"
-      );
-
-      ctx.fillStyle =
-        pocketGradient;
-
-      ctx.fill();
-
-      /*
-       * Highlight ring.
-       */
-      ctx.strokeStyle =
-        "rgba(255,255,255,.08)";
-
-      ctx.lineWidth =
-        .18;
-
-      ctx.stroke();
-    }
-
-    function drawDiamonds() {
-      ctx.fillStyle =
-        "rgba(231,203,151,.82)";
-
-      const positionsX = [
-        12.5,
-        25,
-        37.5,
-        62.5,
-        75,
-        87.5
-      ];
-
-      for (const x of positionsX) {
-        drawDiamond(
-          x,
-          0.75,
-          .32
-        );
-
-        drawDiamond(
-          x,
-          TABLE.height - .75,
-          .32
-        );
-      }
-
-      const positionsY = [
-        12.5,
-        25,
-        37.5
-      ];
-
-      for (const y of positionsY) {
-        drawDiamond(
-          .75,
-          y,
-          .32
-        );
-
-        drawDiamond(
-          TABLE.width - .75,
-          y,
-          .32
-        );
-      }
-    }
-
-    function drawDiamond(
-      x,
-      y,
-      size
-    ) {
-      ctx.beginPath();
-
-      ctx.moveTo(
-        x,
-        y - size
-      );
-
-      ctx.lineTo(
-        x + size,
-        y
-      );
-
-      ctx.lineTo(
-        x,
-        y + size
-      );
-
-      ctx.lineTo(
-        x - size,
-        y
-      );
-
-      ctx.closePath();
-
-      ctx.fill();
-    }
-
-    /* ============================================================
-       SHOT VISUALIZATION
-       ============================================================ */
-
-    function drawShot() {
-      const shot =
-        state.shot;
-
-      if (!shot) {
-        return;
-      }
-
-      /*
-       * Suggested pocket.
-       */
-      drawTargetPocket(
-        shot.pocket
-      );
-
-      if (shot.type === "direct") {
-        drawDirectShot(
-          shot
-        );
-      } else {
-        drawBankShot(
-          shot
-        );
-      }
-
-      /*
-       * Ghost ball.
-       */
-      drawGhostBall(
-        shot.ghostBall
-      );
-
-      /*
-       * Cue-ball contact point.
-       */
-      drawCueContact(
-        state.cue,
-        shot.cueDirection
-      );
-
-      /*
-       * Object-ball contact point.
-       */
-      drawObjectContact(
-        state.object,
-        shot.objectDirection
-      );
-    }
-
-    function drawTargetPocket(
-      pocket
-    ) {
-      const pulse =
-        1 +
-        Math.sin(
-          performance.now() / 320
-        ) * 0.08;
-
-      ctx.beginPath();
-
-      ctx.arc(
-        pocket.x,
-        pocket.y,
-        (TABLE.pocketRadius + .55) *
-          pulse,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.strokeStyle =
-        "rgba(228,187,97,.90)";
-
-      ctx.lineWidth =
-        .42;
-
-      ctx.stroke();
-
-      ctx.beginPath();
-
-      ctx.arc(
-        pocket.x,
-        pocket.y,
-        1.2,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        "rgba(228,187,97,.90)";
-
-      ctx.fill();
-    }
-
-    function drawDirectShot(
-      shot
-    ) {
-      /*
-       * Cue ball -> ghost ball.
-       */
-      drawDashedLine(
-        state.cue,
-        shot.ghostBall,
-        "rgba(255,255,255,.48)",
-        .28,
-        1.6
-      );
-
-      /*
-       * Object ball -> pocket.
-       */
-      drawSolidLine(
-        state.object,
-        shot.pocket,
-        "rgba(255,255,255,.95)",
-        .48
-      );
-
-      /*
-       * Direction arrow.
-       */
-      drawArrow(
-        state.object,
-        shot.pocket,
-        "rgba(255,255,255,.95)",
-        .55
-      );
-    }
-
-    function drawBankShot(
-      shot
-    ) {
-      /*
-       * Cue -> ghost.
-       */
-      drawDashedLine(
-        state.cue,
-        shot.ghostBall,
-        "rgba(255,255,255,.48)",
-        .28,
-        1.6
-      );
-
-      /*
-       * Object -> bank contact.
-       */
-      drawSolidLine(
-        state.object,
-        shot.bankContact,
-        "rgba(255,255,255,.96)",
-        .46
-      );
-
-      /*
-       * Bank contact -> pocket.
-       */
-      drawSolidLine(
-        shot.bankContact,
-        shot.pocket,
-        "rgba(255,255,255,.96)",
-        .46
-      );
-
-      /*
-       * Bank point.
-       */
-      ctx.beginPath();
-
-      ctx.arc(
-        shot.bankContact.x,
-        shot.bankContact.y,
-        .72,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        "#e4bb61";
-
-      ctx.fill();
-
-      ctx.beginPath();
-
-      ctx.arc(
-        shot.bankContact.x,
-        shot.bankContact.y,
-        1.08,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.strokeStyle =
-        "rgba(228,187,97,.55)";
-
-      ctx.lineWidth =
-        .22;
-
-      ctx.stroke();
-
-      /*
-       * Direction arrow after bank.
-       */
-      drawArrow(
-        shot.bankContact,
-        shot.pocket,
-        "rgba(255,255,255,.95)",
-        .55
-      );
-    }
-
-    function drawGhostBall(
-      point
-    ) {
-      ctx.beginPath();
-
-      ctx.arc(
-        point.x,
-        point.y,
-        TABLE.ballRadius,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        "rgba(255,255,255,.10)";
-
-      ctx.fill();
-
-      ctx.strokeStyle =
-        "rgba(255,255,255,.38)";
-
-      ctx.lineWidth =
-        .18;
-
-      ctx.setLineDash([
-        .8,
-        .7
-      ]);
-
-      ctx.stroke();
-
-      ctx.setLineDash([]);
-    }
-
-    function drawCueContact(
+    ) >
+    mouth
+  ) {
+    return false;
+  }
+
+  /*
+     Direction the object ball is travelling when it reaches the
+     pocket.
+  */
+  const incomingDirection =
+    normalize(
+      sub(
+        incomingPoint,
+        start
+      )
+    );
+
+  /*
+     Direction from incoming point into the pocket.
+  */
+  const intoPocket =
+    normalize(
+      sub(
+        pocket,
+        incomingPoint
+      )
+    );
+
+  if (
+    magnitude(
+      incomingDirection
+    ) <
+    0.5 ||
+    magnitude(
+      intoPocket
+    ) <
+    0.5
+  ) {
+    return false;
+  }
+
+  const alignment =
+    dot(
+      incomingDirection,
+      intoPocket
+    );
+
+  /*
+     Corner pockets tolerate a wider range of approaches.
+     Side pockets are intentionally stricter.
+  */
+  if (
+    pocket.type === "corner"
+  ) {
+    return alignment > 0.15;
+  }
+
+  return alignment > 0.50;
+}
+
+
+/* ================================================================
+   DIRECT SHOTS
+================================================================ */
+
+function directShot(
+  pocket
+) {
+
+  const object =
+    state.object;
+
+  const cue =
+    state.cue;
+
+  const objectToPocket =
+    sub(
+      pocket,
+      object
+    );
+
+  const objectDistance =
+    magnitude(
+      objectToPocket
+    );
+
+  if (
+    objectDistance <
+    0.001
+  ) {
+    return null;
+  }
+
+  const objectDirection =
+    normalize(
+      objectToPocket
+    );
+
+  /*
+     Ghost-ball center.
+
+     The cue ball center is one full ball diameter behind the object
+     ball center along the object's intended travel line.
+  */
+  const ghostBall =
+    sub(
+      object,
+      mul(
+        objectDirection,
+        TABLE.ballDiameter
+      )
+    );
+
+  if (
+    !insideBallBounds(
+      ghostBall
+    )
+  ) {
+    return null;
+  }
+
+  const cueToGhost =
+    sub(
+      ghostBall,
+      cue
+    );
+
+  const cueDistance =
+    magnitude(
+      cueToGhost
+    );
+
+  if (
+    cueDistance <
+    0.001
+  ) {
+    return null;
+  }
+
+  const cueDirection =
+    normalize(
+      cueToGhost
+    );
+
+  /*
+     Cue ball cannot travel through the object ball before reaching
+     the ghost-ball position.
+  */
+  if (
+    cuePathBlocked(
       cue,
-      direction
+      ghostBall
+    )
+  ) {
+    return null;
+  }
+
+  /*
+     Pocket acceptance.
+  */
+  if (
+    !pocketAcceptsPath(
+      object,
+      pocket,
+      pocket
+    )
+  ) {
+    return null;
+  }
+
+  /*
+     Thinness of the cut.
+
+     This is not displayed as a fake "difficulty score"; it is only
+     used internally to rank physically plausible candidates.
+  */
+  const alignment =
+    clamp(
+      dot(
+        cueDirection,
+        objectDirection
+      ),
+      -1,
+      1
+    );
+
+  const cutAngle =
+    degrees(
+      Math.acos(
+        alignment
+      )
+    );
+
+  /*
+     Reject pathological near-grazing cuts.
+
+     A real player can make thin cuts, but this product's objective
+     is practical shot selection for a newer player.
+  */
+  if (
+    cutAngle >
+    82
+  ) {
+    return null;
+  }
+
+  return {
+
+    type: "direct",
+
+    pocket,
+
+    ghostBall,
+
+    cueDirection,
+
+    objectDirection,
+
+    cueDistance,
+
+    objectDistance,
+
+    cutAngle
+
+  };
+}
+
+
+/* ================================================================
+   RAIL REFLECTION
+================================================================ */
+
+function reflectPoint(
+  point,
+  rail
+) {
+
+  if (
+    rail.axis ===
+    "horizontal"
+  ) {
+
+    return {
+
+      x: point.x,
+
+      y:
+        2 *
+        rail.coordinate -
+        point.y
+
+    };
+
+  }
+
+  return {
+
+    x:
+      2 *
+      rail.coordinate -
+      point.x,
+
+    y: point.y
+
+  };
+}
+
+
+/* ================================================================
+   LINE / RAIL INTERSECTION
+================================================================ */
+
+function lineToRail(
+  start,
+  target,
+  rail
+) {
+
+  const direction =
+    sub(
+      target,
+      start
+    );
+
+  if (
+    rail.axis ===
+    "horizontal"
+  ) {
+
+    if (
+      Math.abs(
+        direction.y
+      ) <
+      0.000001
     ) {
-      /*
-       * Cue tip hits the BACK side of the cue ball relative to the
-       * intended cue-ball travel direction.
-       *
-       * Example:
-       * cue ball moving right ->
-       * contact point is on left side of cue ball.
-       */
-      const contact =
-        add(
-          cue,
-          mul(
-            direction,
-            -TABLE.ballRadius * .78
-          )
-        );
-
-      ctx.beginPath();
-
-      ctx.arc(
-        contact.x,
-        contact.y,
-        .34,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        "#e44d45";
-
-      ctx.fill();
-
-      ctx.beginPath();
-
-      ctx.arc(
-        contact.x,
-        contact.y,
-        .58,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.strokeStyle =
-        "rgba(228,77,69,.38)";
-
-      ctx.lineWidth =
-        .18;
-
-      ctx.stroke();
-    }
-
-    function drawObjectContact(
-      objectBall,
-      objectDirection
-    ) {
-      /*
-       * The object-ball contact point is the point on the object ball
-       * where the cue ball physically contacts it.
-       *
-       * It lies opposite the object's direction of travel.
-       */
-      const contact =
-        add(
-          objectBall,
-          mul(
-            objectDirection,
-            -TABLE.ballRadius
-          )
-        );
-
-      ctx.beginPath();
-
-      ctx.arc(
-        contact.x,
-        contact.y,
-        .27,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        "rgba(228,77,69,.96)";
-
-      ctx.fill();
-
-      ctx.beginPath();
-
-      ctx.arc(
-        contact.x,
-        contact.y,
-        .52,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.strokeStyle =
-        "rgba(228,77,69,.34)";
-
-      ctx.lineWidth =
-        .16;
-
-      ctx.stroke();
-    }
-
-    function drawBalls() {
-      drawCueBall(
-        state.cue
-      );
-
-      drawObjectBall(
-        state.object
-      );
-    }
-
-    function drawCueBall(
-      point
-    ) {
-      drawBall(
-        point,
-        TABLE.ballRadius,
-        "cue"
-      );
-    }
-
-    function drawObjectBall(
-      point
-    ) {
-      drawBall(
-        point,
-        TABLE.ballRadius,
-        "object"
-      );
-    }
-
-    function drawBall(
-      point,
-      radius,
-      type
-    ) {
-      const gradient =
-        ctx.createRadialGradient(
-          point.x - radius * .35,
-          point.y - radius * .40,
-          radius * .05,
-          point.x,
-          point.y,
-          radius
-        );
-
-      if (type === "cue") {
-        gradient.addColorStop(
-          0,
-          "#ffffff"
-        );
-
-        gradient.addColorStop(
-          .55,
-          "#f3f3f0"
-        );
-
-        gradient.addColorStop(
-          1,
-          "#aeb4b0"
-        );
-      } else {
-        gradient.addColorStop(
-          0,
-          "#fffef7"
-        );
-
-        gradient.addColorStop(
-          .55,
-          "#f0eee5"
-        );
-
-        gradient.addColorStop(
-          1,
-          "#aaa89f"
-        );
-      }
-
-      ctx.beginPath();
-
-      ctx.arc(
-        point.x,
-        point.y,
-        radius,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        gradient;
-
-      ctx.fill();
-
-      ctx.strokeStyle =
-        "rgba(0,0,0,.25)";
-
-      ctx.lineWidth =
-        .15;
-
-      ctx.stroke();
-
-      /*
-       * Tiny visual orientation mark.
-       */
-      ctx.beginPath();
-
-      ctx.arc(
-        point.x -
-          radius * .34,
-        point.y -
-          radius * .38,
-        radius * .12,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        "rgba(255,255,255,.65)";
-
-      ctx.fill();
-    }
-
-    function drawSolidLine(
-      a,
-      b,
-      color,
-      width
-    ) {
-      ctx.beginPath();
-
-      ctx.moveTo(
-        a.x,
-        a.y
-      );
-
-      ctx.lineTo(
-        b.x,
-        b.y
-      );
-
-      ctx.strokeStyle =
-        color;
-
-      ctx.lineWidth =
-        width;
-
-      ctx.lineCap =
-        "round";
-
-      ctx.stroke();
-    }
-
-    function drawDashedLine(
-      a,
-      b,
-      color,
-      width,
-      dash
-    ) {
-      ctx.beginPath();
-
-      ctx.moveTo(
-        a.x,
-        a.y
-      );
-
-      ctx.lineTo(
-        b.x,
-        b.y
-      );
-
-      ctx.strokeStyle =
-        color;
-
-      ctx.lineWidth =
-        width;
-
-      ctx.lineCap =
-        "round";
-
-      ctx.setLineDash([
-        dash,
-        dash
-      ]);
-
-      ctx.stroke();
-
-      ctx.setLineDash([]);
-    }
-
-    function drawArrow(
-      a,
-      b,
-      color,
-      width
-    ) {
-      const direction =
-        normalize(
-          sub(b, a)
-        );
-
-      const arrowLength =
-        2.2;
-
-      const arrowWidth =
-        .75;
-
-      const tip =
-        b;
-
-      const back =
-        sub(
-          tip,
-          mul(
-            direction,
-            arrowLength
-          )
-        );
-
-      const perpendicular = {
-        x: -direction.y,
-        y: direction.x
-      };
-
-      const left =
-        add(
-          back,
-          mul(
-            perpendicular,
-            arrowWidth
-          )
-        );
-
-      const right =
-        add(
-          back,
-          mul(
-            perpendicular,
-            -arrowWidth
-          )
-        );
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        left.x,
-        left.y
-      );
-
-      ctx.lineTo(
-        tip.x,
-        tip.y
-      );
-
-      ctx.lineTo(
-        right.x,
-        right.y
-      );
-
-      ctx.strokeStyle =
-        color;
-
-      ctx.lineWidth =
-        width;
-
-      ctx.lineJoin =
-        "round";
-
-      ctx.stroke();
-    }
-
-    function roundRect(
-      x,
-      y,
-      width,
-      height,
-      radius
-    ) {
-      const r =
-        Math.min(
-          radius,
-          width / 2,
-          height / 2
-        );
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        x + r,
-        y
-      );
-
-      ctx.arcTo(
-        x + width,
-        y,
-        x + width,
-        y + height,
-        r
-      );
-
-      ctx.arcTo(
-        x + width,
-        y + height,
-        x,
-        y + height,
-        r
-      );
-
-      ctx.arcTo(
-        x,
-        y + height,
-        x,
-        y,
-        r
-      );
-
-      ctx.arcTo(
-        x,
-        y,
-        x + width,
-        y,
-        r
-      );
-
-      ctx.closePath();
-    }
-
-    /* ============================================================
-       POINTER / TOUCH INTERACTION
-       ============================================================ */
-
-    function canvasPointFromEvent(
-      event
-    ) {
-      const rect =
-        canvas.getBoundingClientRect();
-
-      const x =
-        (event.clientX -
-          rect.left) /
-        rect.width *
-        TABLE.width;
-
-      const y =
-        (event.clientY -
-          rect.top) /
-        rect.height *
-        TABLE.height;
-
-      return {
-        x,
-        y
-      };
-    }
-
-    function getBallAtPoint(
-      point
-    ) {
-      const objectDistance =
-        distance(
-          point,
-          state.object
-        );
-
-      const cueDistance =
-        distance(
-          point,
-          state.cue
-        );
-
-      const threshold =
-        TABLE.ballRadius * 1.65;
-
-      if (
-        cueDistance <= threshold &&
-        cueDistance <= objectDistance
-      ) {
-        return "cue";
-      }
-
-      if (
-        objectDistance <= threshold
-      ) {
-        return "object";
-      }
-
       return null;
     }
 
-    function onPointerDown(
-      event
+    const t =
+      (
+        rail.coordinate -
+        start.y
+      ) /
+      direction.y;
+
+    if (
+      t <= 0 ||
+      t >= 1
     ) {
-      event.preventDefault();
+      return null;
+    }
 
-      const point =
-        canvasPointFromEvent(
-          event
+    const x =
+      start.x +
+      direction.x *
+      t;
+
+    if (
+      x <
+      rail.min ||
+      x >
+      rail.max
+    ) {
+      return null;
+    }
+
+    return {
+
+      x,
+
+      y:
+        rail.coordinate
+
+    };
+  }
+
+  if (
+    Math.abs(
+      direction.x
+    ) <
+    0.000001
+  ) {
+    return null;
+  }
+
+  const t =
+    (
+      rail.coordinate -
+      start.x
+    ) /
+    direction.x;
+
+  if (
+    t <= 0 ||
+    t >= 1
+  ) {
+    return null;
+  }
+
+  const y =
+    start.y +
+    direction.y *
+    t;
+
+  if (
+    y <
+    rail.min ||
+    y >
+    rail.max
+  ) {
+    return null;
+  }
+
+  return {
+
+    x:
+      rail.coordinate,
+
+    y
+
+  };
+}
+
+
+/* ================================================================
+   BANK SHOTS
+================================================================
+
+   REAL REFLECTION METHOD
+
+   Target pocket is reflected across the effective ball-center rail
+   line.
+
+   The line from the object ball to that reflected target gives the
+   required cushion contact.
+
+   This is NOT a decorative angle line.
+================================================================ */
+
+function bankShot(
+  pocket,
+  rail
+) {
+
+  const object =
+    state.object;
+
+  const cue =
+    state.cue;
+
+  /*
+     Reflect target pocket across the effective cushion center line.
+  */
+  const reflectedPocket =
+    reflectPoint(
+      pocket,
+      rail
+    );
+
+  /*
+     Find where object -> reflected pocket intersects the cushion.
+  */
+  const contact =
+    lineToRail(
+      object,
+      reflectedPocket,
+      rail
+    );
+
+  if (!contact) {
+    return null;
+  }
+
+  /*
+     Contact point must be well inside the rail section.
+
+     Don't recommend banks that are effectively hitting a pocket
+     throat.
+  */
+  const pocketClearance =
+    1.8;
+
+  for (
+    const otherPocket
+    of POCKETS
+  ) {
+
+    if (
+      distance(
+        contact,
+        otherPocket
+      ) <
+      pocketClearance
+    ) {
+      return null;
+    }
+  }
+
+  /*
+     Object -> rail.
+  */
+  const firstLeg =
+    sub(
+      contact,
+      object
+    );
+
+  const firstDistance =
+    magnitude(
+      firstLeg
+    );
+
+  if (
+    firstDistance <
+    TABLE.ballDiameter * 1.2
+  ) {
+    return null;
+  }
+
+  const firstDirection =
+    normalize(
+      firstLeg
+    );
+
+  /*
+     Rail -> pocket.
+  */
+  const secondLeg =
+    sub(
+      pocket,
+      contact
+    );
+
+  const secondDistance =
+    magnitude(
+      secondLeg
+    );
+
+  if (
+    secondDistance <
+    TABLE.ballDiameter
+  ) {
+    return null;
+  }
+
+  const secondDirection =
+    normalize(
+      secondLeg
+    );
+
+  /*
+     Verify the path really hits the selected rail from inside the
+     table and leaves it toward the pocket.
+  */
+  if (
+    rail.axis ===
+    "horizontal"
+  ) {
+
+    if (
+      rail.id === "TOP" &&
+      firstDirection.y <= 0
+    ) {
+      return null;
+    }
+
+    if (
+      rail.id === "BOTTOM" &&
+      firstDirection.y >= 0
+    ) {
+      return null;
+    }
+
+  } else {
+
+    if (
+      rail.id === "LEFT" &&
+      firstDirection.x <= 0
+    ) {
+      return null;
+    }
+
+    if (
+      rail.id === "RIGHT" &&
+      firstDirection.x >= 0
+    ) {
+      return null;
+    }
+
+  }
+
+  /*
+     Pocket acceptance after the bank.
+  */
+  if (
+    !pocketAcceptsPath(
+      contact,
+      pocket,
+      pocket
+    )
+  ) {
+    return null;
+  }
+
+  /*
+     Ghost ball for the FIRST object-ball direction.
+  */
+  const ghostBall =
+    sub(
+      object,
+      mul(
+        firstDirection,
+        TABLE.ballDiameter
+      )
+    );
+
+  if (
+    !insideBallBounds(
+      ghostBall
+    )
+  ) {
+    return null;
+  }
+
+  /*
+     Cue -> ghost.
+  */
+  const cueToGhost =
+    sub(
+      ghostBall,
+      cue
+    );
+
+  const cueDistance =
+    magnitude(
+      cueToGhost
+    );
+
+  if (
+    cueDistance <
+    0.001
+  ) {
+    return null;
+  }
+
+  const cueDirection =
+    normalize(
+      cueToGhost
+    );
+
+  /*
+     Cue path cannot cross the object ball.
+  */
+  if (
+    cuePathBlocked(
+      cue,
+      ghostBall
+    )
+  ) {
+    return null;
+  }
+
+  /*
+     Cut angle.
+  */
+  const cutAlignment =
+    clamp(
+      dot(
+        cueDirection,
+        firstDirection
+      ),
+      -1,
+      1
+    );
+
+  const cutAngle =
+    degrees(
+      Math.acos(
+        cutAlignment
+      )
+    );
+
+  /*
+     Don't surface near-grazing banks as recommendations.
+  */
+  if (
+    cutAngle >
+    78
+  ) {
+    return null;
+  }
+
+  /*
+     A bank should not be absurdly long compared with the table.
+  */
+  const totalBankDistance =
+    firstDistance +
+    secondDistance;
+
+  if (
+    totalBankDistance >
+    TABLE.width *
+    1.65
+  ) {
+    return null;
+  }
+
+  return {
+
+    type: "bank",
+
+    pocket,
+
+    rail,
+
+    reflectedPocket,
+
+    bankContact:
+      contact,
+
+    ghostBall,
+
+    cueDirection,
+
+    objectDirection:
+      firstDirection,
+
+    cueDistance,
+
+    objectDistance:
+      totalBankDistance,
+
+    cutAngle,
+
+    firstDistance,
+
+    secondDistance
+
+  };
+}
+
+
+/* ================================================================
+   SHOT VALIDATION
+================================================================ */
+
+function validateShot(
+  shot
+) {
+
+  if (!shot) {
+    return false;
+  }
+
+  /*
+     Cue ball must be separated from object ball.
+  */
+  if (
+    ballsAreTooClose()
+  ) {
+    return false;
+  }
+
+  /*
+     Cue path must be clear.
+  */
+  if (
+    cuePathBlocked(
+      state.cue,
+      shot.ghostBall
+    )
+  ) {
+    return false;
+  }
+
+  /*
+     Ghost ball must be physically reachable.
+  */
+  if (
+    !insideBallBounds(
+      shot.ghostBall
+    )
+  ) {
+    return false;
+  }
+
+  /*
+     Bank contact must remain on the usable cushion.
+  */
+  if (
+    shot.type === "bank"
+  ) {
+
+    const rail =
+      shot.rail;
+
+    const contact =
+      shot.bankContact;
+
+    if (
+      rail.axis ===
+      "horizontal"
+    ) {
+
+      if (
+        Math.abs(
+          contact.y -
+          rail.coordinate
+        ) >
+        0.001
+      ) {
+        return false;
+      }
+
+      if (
+        contact.x <
+          rail.min ||
+        contact.x >
+          rail.max
+      ) {
+        return false;
+      }
+
+    } else {
+
+      if (
+        Math.abs(
+          contact.x -
+          rail.coordinate
+        ) >
+        0.001
+      ) {
+        return false;
+      }
+
+      if (
+        contact.y <
+          rail.min ||
+        contact.y >
+          rail.max
+      ) {
+        return false;
+      }
+
+    }
+
+    /*
+       Verify reflected geometry independently.
+
+       This catches rendering/logic regressions where the displayed
+       contact could theoretically drift from the actual calculation.
+    */
+    const reflected =
+      reflectPoint(
+        shot.pocket,
+        rail
+      );
+
+    const expected =
+      lineToRail(
+        state.object,
+        reflected,
+        rail
+      );
+
+    if (
+      !expected ||
+      distance(
+        expected,
+        contact
+      ) >
+      0.01
+    ) {
+      return false;
+    }
+
+  }
+
+  return true;
+}
+
+
+/* ================================================================
+   INTERNAL SHOT RANKING
+================================================================
+
+   There are intentionally no user-visible "difficulty scores."
+
+   Ranking is an internal strategy decision.
+
+   Lower = better.
+
+   The ranking considers:
+     - cue travel
+     - object travel
+     - cut thinness
+     - bank length
+     - bank practicality
+
+   Banks are NOT automatically preferred simply because they are
+   banks.
+
+   But a clean, obvious bank is protected from being discarded by
+   an ugly direct cut.
+================================================================ */
+
+function shotScore(
+  shot
+) {
+
+  const cutPenalty =
+    Math.pow(
+      shot.cutAngle / 90,
+      2
+    ) * 4;
+
+  const cuePenalty =
+    shot.cueDistance *
+    0.025;
+
+  const objectPenalty =
+    shot.objectDistance *
+    0.014;
+
+  if (
+    shot.type ===
+    "direct"
+  ) {
+
+    return (
+      cutPenalty +
+      cuePenalty +
+      objectPenalty
+    );
+
+  }
+
+  /*
+     Bank-specific scoring.
+
+     Banks have an inherent execution cost, but clean banks receive
+     a meaningful reduction so an obvious bank doesn't lose to a
+     nonsensical thin cut.
+  */
+  const bankBase =
+    2.1;
+
+  const bankLength =
+    shot.objectDistance *
+    0.012;
+
+  const contactPenalty =
+    Math.abs(
+      shot.firstDistance -
+      shot.secondDistance
+    ) /
+    TABLE.width *
+    0.35;
+
+  return (
+    bankBase +
+    cutPenalty * 0.72 +
+    cuePenalty +
+    bankLength +
+    contactPenalty
+  );
+}
+
+
+/* ================================================================
+   CANDIDATES FOR POCKET
+================================================================ */
+
+function candidatesForPocket(
+  pocket
+) {
+
+  const candidates = [];
+
+  const direct =
+    directShot(
+      pocket
+    );
+
+  if (
+    direct &&
+    validateShot(
+      direct
+    )
+  ) {
+
+    direct.score =
+      shotScore(
+        direct
+      );
+
+    candidates.push(
+      direct
+    );
+  }
+
+
+  for (
+    const rail
+    of RAILS
+  ) {
+
+    const bank =
+      bankShot(
+        pocket,
+        rail
+      );
+
+    if (
+      bank &&
+      validateShot(
+        bank
+      )
+    ) {
+
+      bank.score =
+        shotScore(
+          bank
         );
 
-      const selected =
-        getBallAtPoint(
-          point
-        );
+      candidates.push(
+        bank
+      );
+    }
 
-      if (selected) {
-        state.selectedBall =
-          selected;
+  }
 
-        state.dragging = true;
+
+  return candidates.sort(
+    (a, b) =>
+      a.score -
+      b.score
+  );
+}
+
+
+/* ================================================================
+   STRATEGIC AUTO SELECTION
+================================================================ */
+
+function chooseShot() {
+
+  if (
+    ballsAreTooClose()
+  ) {
+    return null;
+  }
+
+
+  /*
+     Manual pocket:
+     choose the best route to that pocket.
+  */
+  if (
+    state.mode ===
+      "manual" &&
+    state.manualPocket
+  ) {
+
+    const candidates =
+      candidatesForPocket(
+        state.manualPocket
+      );
+
+    return (
+      candidates.length
+        ? candidates[0]
+        : null
+    );
+  }
+
+
+  /*
+     AUTO:
+     evaluate all six pockets.
+  */
+  const all = [];
+
+  for (
+    const pocket
+    of POCKETS
+  ) {
+
+    const candidates =
+      candidatesForPocket(
+        pocket
+      );
+
+    for (
+      const candidate
+      of candidates
+    ) {
+
+      all.push(
+        candidate
+      );
+
+    }
+
+  }
+
+
+  if (
+    !all.length
+  ) {
+    return null;
+  }
+
+
+  all.sort(
+    (a, b) =>
+      a.score -
+      b.score
+  );
+
+
+  const best =
+    all[0];
+
+
+  /*
+     IMPORTANT BANK STRATEGY
+
+     If a clean one-rail bank is reasonably competitive with the
+     mathematical best direct shot, retain the bank.
+
+     This prevents the classic failure where a very thin side-pocket
+     cut beats an obvious long corner bank just because its raw
+     geometric score is slightly smaller.
+  */
+  const cleanBanks =
+    all.filter(
+      shot => {
+
+        if (
+          shot.type !==
+          "bank"
+        ) {
+          return false;
+        }
+
+        if (
+          shot.cutAngle >
+          58
+        ) {
+          return false;
+        }
+
+        if (
+          shot.objectDistance >
+          TABLE.width *
+          1.35
+        ) {
+          return false;
+        }
+
+        return true;
+      }
+    );
+
+
+  if (
+    cleanBanks.length
+  ) {
+
+    cleanBanks.sort(
+      (a, b) =>
+        a.score -
+        b.score
+    );
+
+    const bestBank =
+      cleanBanks[0];
+
+
+    /*
+       The bank gets priority if it is within a reasonable
+       practical window of the best overall route.
+
+       This is deliberately not "always choose bank."
+    */
+    if (
+      bestBank.score <=
+      best.score +
+      1.15
+    ) {
+
+      return bestBank;
+
+    }
+
+  }
+
+
+  return best;
+}
+
+
+/* ================================================================
+   UPDATE SHOT
+================================================================ */
+
+function calculate() {
+
+  state.shot =
+    chooseShot();
+
+  updateInterface();
+
+  draw();
+}
+
+
+/* ================================================================
+   INTERFACE
+================================================================ */
+
+function updateInterface() {
+
+  /*
+     Ball placement state.
+  */
+  if (
+    !insideBallBounds(
+      state.cue
+    ) ||
+    !insideBallBounds(
+      state.object
+    )
+  ) {
+
+    shotTitle.textContent =
+      "PLACE THE BALLS";
+
+    shotDescription.textContent =
+      "Select a ball, then tap where you want it.";
+
+    return;
+  }
+
+
+  if (
+    ballsAreTooClose()
+  ) {
+
+    shotTitle.textContent =
+      "SEPARATE THE BALLS";
+
+    shotDescription.textContent =
+      "The balls need room for a legal shot.";
+
+    detailShot.textContent =
+      "Blocked";
+
+    detailPocket.textContent =
+      "—";
+
+    detailRoute.textContent =
+      "—";
+
+    detailStatus.textContent =
+      "Invalid";
+
+    updateAction();
+
+    return;
+  }
+
+
+  if (
+    !state.shot
+  ) {
+
+    shotTitle.textContent =
+      "NO CLEAN SHOT";
+
+    shotDescription.textContent =
+      state.mode === "manual"
+        ? "No practical direct or one-rail route reaches that pocket."
+        : "No practical direct or one-rail route was found.";
+
+    detailShot.textContent =
+      "None";
+
+    detailPocket.textContent =
+      "None";
+
+    detailRoute.textContent =
+      "—";
+
+    detailStatus.textContent =
+      "No route";
+
+    updateAction();
+
+    return;
+  }
+
+
+  const shot =
+    state.shot;
+
+
+  if (
+    shot.type ===
+    "bank"
+  ) {
+
+    shotTitle.textContent =
+      `BANK → ${shot.rail.id} RAIL → ${shot.pocket.name}`;
+
+    shotDescription.textContent =
+      "Use the marked rail point, then send the object ball into the highlighted pocket.";
+
+    detailShot.textContent =
+      "One-rail bank";
+
+    detailRoute.textContent =
+      `${shot.rail.id} rail`;
+
+  } else {
+
+    shotTitle.textContent =
+      `CUT → ${shot.pocket.name}`;
+
+    shotDescription.textContent =
+      "Use the marked aim point on the object ball and send it along the highlighted path.";
+
+    detailShot.textContent =
+      "Direct / cut";
+
+    detailRoute.textContent =
+      "Direct";
+
+  }
+
+
+  detailPocket.textContent =
+    shot.pocket.name;
+
+  detailStatus.textContent =
+    "Validated";
+
+
+  updateAction();
+}
+
+
+function updateAction() {
+
+  if (
+    state.selectedBall ===
+    "cue"
+  ) {
+
+    actionTitle.textContent =
+      "Position the cue ball";
+
+    actionText.textContent =
+      "Tap anywhere on the table to place it.";
+
+  } else {
+
+    actionTitle.textContent =
+      "Position the object ball";
+
+    actionText.textContent =
+      "Tap anywhere on the table to place it.";
+
+  }
+}
+
+
+/* ================================================================
+   BALL SELECTION
+================================================================ */
+
+function selectBall(
+  ball
+) {
+
+  state.selectedBall =
+    ball;
+
+  cueSelect.classList.toggle(
+    "active",
+    ball === "cue"
+  );
+
+  objectSelect.classList.toggle(
+    "active",
+    ball === "object"
+  );
+
+  updateAction();
+
+  draw();
+}
+
+
+cueSelect.addEventListener(
+  "click",
+  () => {
+    selectBall(
+      "cue"
+    );
+  }
+);
+
+
+objectSelect.addEventListener(
+  "click",
+  () => {
+    selectBall(
+      "object"
+    );
+  }
+);
+
+
+/* ================================================================
+   MODE
+================================================================ */
+
+autoMode.addEventListener(
+  "click",
+  () => {
+
+    state.mode =
+      "auto";
+
+    state.manualPocket =
+      null;
+
+    autoMode.classList.add(
+      "active"
+    );
+
+    manualMode.classList.remove(
+      "active"
+    );
+
+    manualPockets.classList.remove(
+      "visible"
+    );
+
+    calculate();
+
+  }
+);
+
+
+manualMode.addEventListener(
+  "click",
+  () => {
+
+    state.mode =
+      "manual";
+
+    manualMode.classList.add(
+      "active"
+    );
+
+    autoMode.classList.remove(
+      "active"
+    );
+
+    manualPockets.classList.add(
+      "visible"
+    );
+
+    if (
+      !state.manualPocket
+    ) {
+
+      state.manualPocket =
+        POCKETS[2];
+
+    }
+
+    updatePocketButtons();
+
+    calculate();
+
+  }
+);
+
+
+/* ================================================================
+   MANUAL POCKET BUTTONS
+================================================================ */
+
+function createPocketButtons() {
+
+  manualPockets.innerHTML =
+    "";
+
+  for (
+    const pocket
+    of POCKETS
+  ) {
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    button.type =
+      "button";
+
+    button.className =
+      "pocket-button";
+
+    button.dataset.pocket =
+      pocket.id;
+
+    button.textContent =
+      pocket.name;
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        state.manualPocket =
+          pocket;
+
+        updatePocketButtons();
+
+        calculate();
+
+      }
+    );
+
+    manualPockets.appendChild(
+      button
+    );
+
+  }
+
+}
+
+
+function updatePocketButtons() {
+
+  for (
+    const button
+    of manualPockets.children
+  ) {
+
+    button.classList.toggle(
+      "active",
+      state.manualPocket &&
+      button.dataset.pocket ===
+        state.manualPocket.id
+    );
+
+  }
+
+}
+
+
+/* ================================================================
+   RESET
+================================================================ */
+
+resetButton.addEventListener(
+  "click",
+  () => {
+
+    state.cue = {
+      ...DEFAULTS.cue
+    };
+
+    state.object = {
+      ...DEFAULTS.object
+    };
+
+    state.selectedBall =
+      "cue";
+
+    state.mode =
+      "auto";
+
+    state.manualPocket =
+      null;
+
+    autoMode.classList.add(
+      "active"
+    );
+
+    manualMode.classList.remove(
+      "active"
+    );
+
+    manualPockets.classList.remove(
+      "visible"
+    );
+
+    selectBall(
+      "cue"
+    );
+
+    calculate();
+
+  }
+);
+
+
+/* ================================================================
+   CANVAS COORDINATE TRANSFORMATION
+================================================================
+
+   SCREEN -> VIEW INCHES
+
+   The transform includes the visual margin.
+
+   The playing surface is always:
+
+       x = ORIGIN.x ... ORIGIN.x + 78
+       y = ORIGIN.y ... ORIGIN.y + 39
+
+================================================================ */
+
+function screenToView(
+  event
+) {
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  const x =
+    (
+      event.clientX -
+      rect.left
+    ) /
+    rect.width *
+    VIEW.width;
+
+  const y =
+    (
+      event.clientY -
+      rect.top
+    ) /
+    rect.height *
+    VIEW.height;
+
+  return {
+    x,
+    y
+  };
+}
+
+
+function viewToTable(
+  point
+) {
+
+  return {
+
+    x:
+      point.x -
+      ORIGIN.x,
+
+    y:
+      point.y -
+      ORIGIN.y
+
+  };
+}
+
+
+function tableToView(
+  point
+) {
+
+  return {
+
+    x:
+      point.x +
+      ORIGIN.x,
+
+    y:
+      point.y +
+      ORIGIN.y
+
+  };
+}
+
+
+/* ================================================================
+   MOBILE BALL HIT TARGETS
+================================================================
+
+   Visible ball radius:
+       1.125"
+
+   Touch radius:
+       ~3.75"
+
+   On a phone this creates a much larger invisible selection area
+   while preserving physically proportional visual balls.
+================================================================ */
+
+function hitBall(
+  tablePoint
+) {
+
+  const touchRadius =
+    3.75;
+
+
+  const cueDistance =
+    distance(
+      tablePoint,
+      state.cue
+    );
+
+
+  const objectDistance =
+    distance(
+      tablePoint,
+      state.object
+    );
+
+
+  if (
+    cueDistance <=
+      touchRadius &&
+    cueDistance <=
+      objectDistance
+  ) {
+
+    return "cue";
+
+  }
+
+
+  if (
+    objectDistance <=
+    touchRadius
+  ) {
+
+    return "object";
+
+  }
+
+
+  return null;
+}
+
+
+/* ================================================================
+   TAP-TO-PLACE
+================================================================ */
+
+function placeSelectedBall(
+  tablePoint
+) {
+
+  const target =
+    clampBall(
+      tablePoint
+    );
+
+
+  /*
+     Prevent the selected ball from being placed on top of the
+     other ball.
+
+     Instead of silently moving it somewhere else, we simply reject
+     the placement. This keeps the tap behavior predictable.
+  */
+  const otherBall =
+    state.selectedBall ===
+    "cue"
+      ? state.object
+      : state.cue;
+
+
+  if (
+    distance(
+      target,
+      otherBall
+    ) <
+    TABLE.ballDiameter +
+    0.02
+  ) {
+
+    return false;
+
+  }
+
+
+  if (
+    state.selectedBall ===
+    "cue"
+  ) {
+
+    state.cue =
+      target;
+
+  } else {
+
+    state.object =
+      target;
+
+  }
+
+
+  return true;
+}
+
+
+/* ================================================================
+   POINTER INTERACTION
+================================================================
+
+   Primary interaction:
+
+       1. Tap/select ball.
+       2. Tap destination.
+
+   Secondary interaction:
+
+       Select ball and drag it.
+
+   Pointer capture prevents the interaction from being lost when
+   the finger moves outside the original element.
+================================================================ */
+
+canvas.addEventListener(
+  "pointerdown",
+  event => {
+
+    event.preventDefault();
+
+    const viewPoint =
+      screenToView(
+        event
+      );
+
+    const tablePoint =
+      viewToTable(
+        viewPoint
+      );
+
+
+    /*
+       First determine whether the user touched a ball.
+    */
+    const touchedBall =
+      hitBall(
+        tablePoint
+      );
+
+
+    if (
+      touchedBall
+    ) {
+
+      selectBall(
+        touchedBall
+      );
+
+      state.dragging =
+        true;
+
+      state.pointerBall =
+        touchedBall;
+
+      state.pointerId =
+        event.pointerId;
+
+      try {
 
         canvas.setPointerCapture(
           event.pointerId
         );
 
-        placementHint.classList.add(
-          "hidden"
-        );
-      }
+      } catch (_) {}
+
+      return;
     }
 
-    function onPointerMove(
-      event
-    ) {
-      if (
-        !state.dragging ||
-        !state.selectedBall
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-
-      const point =
-        canvasPointFromEvent(
-          event
-        );
-
-      const clamped =
-        clampBallPosition(
-          point
-        );
-
-      /*
-       * Do not allow the balls to overlap.
-       */
-      if (
-        state.selectedBall === "cue"
-      ) {
-        const maxDistance =
-          TABLE.ballDiameter +
-          TABLE.safety;
-
-        if (
-          distance(
-            clamped,
-            state.object
-          ) <
-          maxDistance
-        ) {
-          const away =
-            normalize(
-              sub(
-                clamped,
-                state.object
-              )
-            );
-
-          const adjusted =
-            add(
-              state.object,
-              mul(
-                away,
-                maxDistance
-              )
-            );
-
-          state.cue =
-            clampBallPosition(
-              adjusted
-            );
-        } else {
-          state.cue =
-            clamped;
-        }
-      } else {
-        const maxDistance =
-          TABLE.ballDiameter +
-          TABLE.safety;
-
-        if (
-          distance(
-            clamped,
-            state.cue
-          ) <
-          maxDistance
-        ) {
-          const away =
-            normalize(
-              sub(
-                clamped,
-                state.cue
-              )
-            );
-
-          const adjusted =
-            add(
-              state.cue,
-              mul(
-                away,
-                maxDistance
-              )
-            );
-
-          state.object =
-            clampBallPosition(
-              adjusted
-            );
-        } else {
-          state.object =
-            clamped;
-        }
-      }
-
-      updateShot();
-    }
-
-    function onPointerUp(
-      event
-    ) {
-      if (!state.dragging) {
-        return;
-      }
-
-      event.preventDefault();
-
-      state.dragging =
-        false;
-
-      state.selectedBall =
-        null;
-
-      try {
-        canvas.releasePointerCapture(
-          event.pointerId
-        );
-      } catch (_) {
-        // Pointer may already have been released.
-      }
-
-      updateShot();
-    }
-
-    canvas.addEventListener(
-      "pointerdown",
-      onPointerDown,
-      { passive: false }
-    );
-
-    canvas.addEventListener(
-      "pointermove",
-      onPointerMove,
-      { passive: false }
-    );
-
-    canvas.addEventListener(
-      "pointerup",
-      onPointerUp,
-      { passive: false }
-    );
-
-    canvas.addEventListener(
-      "pointercancel",
-      onPointerUp,
-      { passive: false }
-    );
-
-    /* ============================================================
-       INITIALIZATION
-       ============================================================ */
-
-    buildPocketButtons();
-    updateModeUI();
 
     /*
-     * Resize after layout has rendered.
-     */
-    requestAnimationFrame(() => {
-      resizeCanvas();
-      updateShot();
-    });
+       Otherwise this is the second tap:
+       place the currently selected ball.
+    */
+    if (
+      tablePoint.x >= 0 &&
+      tablePoint.x <= TABLE.width &&
+      tablePoint.y >= 0 &&
+      tablePoint.y <= TABLE.height
+    ) {
 
-    /*
-     * The pocket highlight has a subtle pulse.
-     */
-    function animationLoop() {
-      if (state.shot) {
-        draw();
+      const placed =
+        placeSelectedBall(
+          tablePoint
+        );
+
+      if (
+        placed
+      ) {
+
+        calculate();
+
       }
 
-      requestAnimationFrame(
-        animationLoop
+    }
+
+  },
+  {
+    passive: false
+  }
+);
+
+
+/* ================================================================
+   OPTIONAL DRAG
+================================================================ */
+
+canvas.addEventListener(
+  "pointermove",
+  event => {
+
+    if (
+      !state.dragging ||
+      state.pointerId !==
+        event.pointerId
+    ) {
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    const viewPoint =
+      screenToView(
+        event
       );
+
+    const tablePoint =
+      viewToTable(
+        viewPoint
+      );
+
+
+    const target =
+      clampBall(
+        tablePoint
+      );
+
+
+    const otherBall =
+      state.pointerBall ===
+      "cue"
+        ? state.object
+        : state.cue;
+
+
+    if (
+      distance(
+        target,
+        otherBall
+      ) >=
+      TABLE.ballDiameter +
+      0.02
+    ) {
+
+      if (
+        state.pointerBall ===
+        "cue"
+      ) {
+
+        state.cue =
+          target;
+
+      } else {
+
+        state.object =
+          target;
+
+      }
+
+      calculate();
+
     }
 
-    requestAnimationFrame(
-      animationLoop
+  },
+  {
+    passive: false
+  }
+);
+
+
+/* ================================================================
+   POINTER END
+================================================================ */
+
+function endPointer(
+  event
+) {
+
+  if (
+    event.pointerId !==
+    state.pointerId
+  ) {
+
+    return;
+
+  }
+
+
+  state.dragging =
+    false;
+
+  state.pointerBall =
+    null;
+
+  state.pointerId =
+    null;
+
+
+  try {
+
+    canvas.releasePointerCapture(
+      event.pointerId
     );
-  </script>
+
+  } catch (_) {}
+
+
+  calculate();
+}
+
+
+canvas.addEventListener(
+  "pointerup",
+  endPointer
+);
+
+
+canvas.addEventListener(
+  "pointercancel",
+  endPointer
+);
+
+
+/* ================================================================
+   CANVAS RESIZE
+================================================================ */
+
+function resizeCanvas() {
+
+  const shell =
+    canvas.parentElement;
+
+  const availableWidth =
+    shell.clientWidth -
+    20;
+
+
+  /*
+     The entire VIEW is scaled uniformly.
+
+     Nothing inside the table gets a separate scale.
+  */
+  const scale =
+    availableWidth /
+    VIEW.width;
+
+
+  state.render.scale =
+    scale;
+
+  state.render.cssWidth =
+    VIEW.width *
+    scale;
+
+  state.render.cssHeight =
+    VIEW.height *
+    scale;
+
+
+  const dpr =
+    Math.min(
+      window.devicePixelRatio ||
+      1,
+      2
+    );
+
+
+  canvas.style.width =
+    `${state.render.cssWidth}px`;
+
+  canvas.style.height =
+    `${state.render.cssHeight}px`;
+
+
+  canvas.width =
+    Math.round(
+      state.render.cssWidth *
+      dpr
+    );
+
+  canvas.height =
+    Math.round(
+      state.render.cssHeight *
+      dpr
+    );
+
+
+  draw();
+
+}
+
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
+
+/* ================================================================
+   DRAWING
+================================================================ */
+
+function beginWorld() {
+
+  const dpr =
+    Math.min(
+      window.devicePixelRatio ||
+      1,
+      2
+    );
+
+  const s =
+    state.render.scale;
+
+
+  ctx.setTransform(
+    dpr * s,
+    0,
+    0,
+    dpr * s,
+    0,
+    0
+  );
+
+}
+
+
+/* ================================================================
+   DRAW TABLE
+================================================================ */
+
+function draw() {
+
+  const dpr =
+    Math.min(
+      window.devicePixelRatio ||
+      1,
+      2
+    );
+
+
+  ctx.setTransform(
+    1,
+    0,
+    0,
+    1,
+    0,
+    0
+  );
+
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  beginWorld();
+
+
+  drawTableFrame();
+
+  drawDiamonds();
+
+  drawShot();
+
+  drawBalls();
+
+}
+
+
+/* ================================================================
+   TABLE FRAME
+================================================================ */
+
+function drawTableFrame() {
+
+  /*
+     Dark background behind table.
+  */
+  ctx.fillStyle =
+    "#0c100e";
+
+  ctx.fillRect(
+    0,
+    0,
+    VIEW.width,
+    VIEW.height
+  );
+
+
+  /*
+     Wooden table body.
+  */
+  const outerX =
+    ORIGIN.x -
+    2.2;
+
+  const outerY =
+    ORIGIN.y -
+    2.2;
+
+  const outerW =
+    TABLE.width +
+    4.4;
+
+  const outerH =
+    TABLE.height +
+    4.4;
+
+
+  const wood =
+    ctx.createLinearGradient(
+      outerX,
+      outerY,
+      outerX + outerW,
+      outerY + outerH
+    );
+
+
+  wood.addColorStop(
+    0,
+    "#735132"
+  );
+
+  wood.addColorStop(
+    .45,
+    "#936b43"
+  );
+
+  wood.addColorStop(
+    1,
+    "#553a24"
+  );
+
+
+  ctx.fillStyle =
+    wood;
+
+
+  roundedRect(
+    outerX,
+    outerY,
+    outerW,
+    outerH,
+    2.3
+  );
+
+  ctx.fill();
+
+
+  /*
+     Rail / cushion area.
+  */
+  const railX =
+    ORIGIN.x -
+    1.15;
+
+  const railY =
+    ORIGIN.y -
+    1.15;
+
+  const railW =
+    TABLE.width +
+    2.3;
+
+  const railH =
+    TABLE.height +
+    2.3;
+
+
+  ctx.fillStyle =
+    "#293a31";
+
+
+  roundedRect(
+    railX,
+    railY,
+    railW,
+    railH,
+    1.55
+  );
+
+  ctx.fill();
+
+
+  /*
+     Actual playable cloth.
+
+     EXACTLY 78 x 39.
+  */
+  const cloth =
+    ctx.createLinearGradient(
+      ORIGIN.x,
+      ORIGIN.y,
+      ORIGIN.x +
+        TABLE.width,
+      ORIGIN.y +
+        TABLE.height
+    );
+
+
+  cloth.addColorStop(
+    0,
+    "#0e7142"
+  );
+
+  cloth.addColorStop(
+    .5,
+    "#11864d"
+  );
+
+  cloth.addColorStop(
+    1,
+    "#0c683d"
+  );
+
+
+  ctx.fillStyle =
+    cloth;
+
+
+  roundedRect(
+    ORIGIN.x,
+    ORIGIN.y,
+    TABLE.width,
+    TABLE.height,
+    1.0
+  );
+
+  ctx.fill();
+
+
+  /*
+     Subtle cloth illumination.
+  */
+  const glow =
+    ctx.createRadialGradient(
+      ORIGIN.x +
+        TABLE.width / 2,
+      ORIGIN.y +
+        TABLE.height / 2,
+      0,
+
+      ORIGIN.x +
+        TABLE.width / 2,
+      ORIGIN.y +
+        TABLE.height / 2,
+      48
+    );
+
+
+  glow.addColorStop(
+    0,
+    "rgba(255,255,255,.035)"
+  );
+
+  glow.addColorStop(
+    1,
+    "rgba(255,255,255,0)"
+  );
+
+
+  ctx.fillStyle =
+    glow;
+
+
+  ctx.fillRect(
+    ORIGIN.x,
+    ORIGIN.y,
+    TABLE.width,
+    TABLE.height
+  );
+
+
+  /*
+     Pockets.
+  */
+  for (
+    const pocket
+    of POCKETS
+  ) {
+
+    drawPocket(
+      pocket
+    );
+
+  }
+
+}
+
+
+/* ================================================================
+   POCKETS
+================================================================ */
+
+function drawPocket(
+  pocket
+) {
+
+  const center =
+    tableToView(
+      pocket
+    );
+
+
+  const radius =
+    pocketRadius(
+      pocket
+    );
+
+
+  /*
+     Shadow / recess.
+  */
+  ctx.beginPath();
+
+  ctx.arc(
+    center.x,
+    center.y,
+    radius +
+    .55,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "rgba(0,0,0,.38)";
+
+  ctx.fill();
+
+
+  /*
+     Pocket opening.
+  */
+  ctx.beginPath();
+
+  ctx.arc(
+    center.x,
+    center.y,
+    radius,
+    0,
+    Math.PI * 2
+  );
+
+
+  const pocketGradient =
+    ctx.createRadialGradient(
+      center.x - .4,
+      center.y - .4,
+      .1,
+
+      center.x,
+      center.y,
+      radius
+    );
+
+
+  pocketGradient.addColorStop(
+    0,
+    "#050606"
+  );
+
+  pocketGradient.addColorStop(
+    1,
+    "#000000"
+  );
+
+
+  ctx.fillStyle =
+    pocketGradient;
+
+  ctx.fill();
+
+
+  /*
+     Selected pocket highlight.
+  */
+  if (
+    state.shot &&
+    state.shot.pocket.id ===
+      pocket.id
+  ) {
+
+    ctx.beginPath();
+
+    ctx.arc(
+      center.x,
+      center.y,
+      radius +
+      .75,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.strokeStyle =
+      "#e4bb62";
+
+    ctx.lineWidth =
+      .45;
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+      center.x,
+      center.y,
+      .85,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fillStyle =
+      "#e4bb62";
+
+    ctx.fill();
+
+  }
+
+}
+
+
+/* ================================================================
+   DIAMONDS
+================================================================
+
+   These are visual sight markers only.
+
+   They are NOT fed into the bank calculation.
+
+   The bank engine uses the actual table coordinate system.
+================================================================ */
+
+function drawDiamonds() {
+
+  ctx.fillStyle =
+    "rgba(232,205,156,.82)";
+
+
+  /*
+     Five visual reference diamonds on each long rail.
+  */
+  const longRailX = [
+
+    13,
+
+    26,
+
+    39,
+
+    52,
+
+    65
+
+  ];
+
+
+  for (
+    const x
+    of longRailX
+  ) {
+
+    drawDiamond(
+      ORIGIN.x + x,
+      ORIGIN.y - .78,
+      .30
+    );
+
+    drawDiamond(
+      ORIGIN.x + x,
+      ORIGIN.y +
+        TABLE.height +
+        .78,
+      .30
+    );
+
+  }
+
+
+  /*
+     Two diamonds on each short rail, placed away from the
+     pockets.
+  */
+  const shortRailY = [
+
+    13,
+
+    26
+
+  ];
+
+
+  for (
+    const y
+    of shortRailY
+  ) {
+
+    drawDiamond(
+      ORIGIN.x - .78,
+      ORIGIN.y + y,
+      .30
+    );
+
+    drawDiamond(
+      ORIGIN.x +
+        TABLE.width +
+        .78,
+      ORIGIN.y + y,
+      .30
+    );
+
+  }
+
+}
+
+
+function drawDiamond(
+  x,
+  y,
+  size
+) {
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x,
+    y - size
+  );
+
+  ctx.lineTo(
+    x + size,
+    y
+  );
+
+  ctx.lineTo(
+    x,
+    y + size
+  );
+
+  ctx.lineTo(
+    x - size,
+    y
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+}
+
+
+/* ================================================================
+   SHOT DRAWING
+================================================================ */
+
+function drawShot() {
+
+  if (
+    !state.shot
+  ) {
+    return;
+  }
+
+
+  const shot =
+    state.shot;
+
+
+  /*
+     Target pocket.
+  */
+  drawPocketHighlight(
+    shot.pocket
+  );
+
+
+  /*
+     Cue -> ghost.
+  */
+  drawDashedWorldLine(
+    state.cue,
+    shot.ghostBall,
+    "rgba(255,255,255,.48)",
+    .25
+  );
+
+
+  if (
+    shot.type ===
+    "direct"
+  ) {
+
+    drawSolidWorldLine(
+      state.object,
+      shot.pocket,
+      "rgba(255,255,255,.94)",
+      .43
+    );
+
+
+    drawArrow(
+      state.object,
+      shot.pocket
+    );
+
+  } else {
+
+    drawSolidWorldLine(
+      state.object,
+      shot.bankContact,
+      "rgba(255,255,255,.94)",
+      .43
+    );
+
+
+    drawSolidWorldLine(
+      shot.bankContact,
+      shot.pocket,
+      "rgba(255,255,255,.94)",
+      .43
+    );
+
+
+    drawArrow(
+      shot.bankContact,
+      shot.pocket
+    );
+
+
+    /*
+       Actual mathematical rail contact.
+    */
+    drawBankContact(
+      shot.bankContact
+    );
+
+  }
+
+
+  /*
+     Ghost ball.
+  */
+  drawGhostBall(
+    shot.ghostBall
+  );
+
+
+  /*
+     Cue-ball contact.
+  */
+  drawCueAimPoint(
+    state.cue,
+    shot.cueDirection
+  );
+
+
+  /*
+     Object-ball enlarged AIM HERE marker.
+  */
+  drawObjectAimPoint(
+    state.object,
+    shot.objectDirection
+  );
+
+}
+
+
+/* ================================================================
+   POCKET HIGHLIGHT
+================================================================ */
+
+function drawPocketHighlight(
+  pocket
+) {
+
+  const center =
+    tableToView(
+      pocket
+    );
+
+
+  const pulse =
+    1 +
+    Math.sin(
+      performance.now() /
+      300
+    ) *
+    .06;
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    center.x,
+    center.y,
+    (
+      pocketRadius(
+        pocket
+      ) +
+      .75
+    ) *
+    pulse,
+    0,
+    Math.PI * 2
+  );
+
+
+  ctx.strokeStyle =
+    "#e4bb62";
+
+  ctx.lineWidth =
+    .45;
+
+  ctx.stroke();
+
+}
+
+
+/* ================================================================
+   WORLD LINES
+================================================================ */
+
+function drawSolidWorldLine(
+  a,
+  b,
+  color,
+  width
+) {
+
+  const A =
+    tableToView(
+      a
+    );
+
+  const B =
+    tableToView(
+      b
+    );
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    A.x,
+    A.y
+  );
+
+  ctx.lineTo(
+    B.x,
+    B.y
+  );
+
+  ctx.strokeStyle =
+    color;
+
+  ctx.lineWidth =
+    width;
+
+  ctx.lineCap =
+    "round";
+
+  ctx.stroke();
+
+}
+
+
+function drawDashedWorldLine(
+  a,
+  b,
+  color,
+  width
+) {
+
+  const A =
+    tableToView(
+      a
+    );
+
+  const B =
+    tableToView(
+      b
+    );
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    A.x,
+    A.y
+  );
+
+  ctx.lineTo(
+    B.x,
+    B.y
+  );
+
+  ctx.strokeStyle =
+    color;
+
+  ctx.lineWidth =
+    width;
+
+  ctx.lineCap =
+    "round";
+
+  ctx.setLineDash([
+    .8,
+    .7
+  ]);
+
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+
+}
+
+
+/* ================================================================
+   BANK CONTACT
+================================================================ */
+
+function drawBankContact(
+  point
+) {
+
+  const p =
+    tableToView(
+      point
+    );
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    .72,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "#e4bb62";
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    1.08,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.strokeStyle =
+    "rgba(228,187,98,.55)";
+
+  ctx.lineWidth =
+    .20;
+
+  ctx.stroke();
+
+}
+
+
+/* ================================================================
+   GHOST BALL
+================================================================ */
+
+function drawGhostBall(
+  point
+) {
+
+  const p =
+    tableToView(
+      point
+    );
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    TABLE.ballRadius,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.07)";
+
+  ctx.fill();
+
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,.38)";
+
+  ctx.lineWidth =
+    .18;
+
+  ctx.setLineDash([
+    .75,
+    .65
+  ]);
+
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+
+}
+
+
+/* ================================================================
+   CUE BALL AIM POINT
+================================================================
+
+   IMPORTANT:
+
+   This is the point on the actual cue ball where the cue tip
+   should contact the ball.
+
+   It is NOT a giant directional line.
+================================================================ */
+
+function drawCueAimPoint(
+  cue,
+  cueDirection
+) {
+
+  const point =
+    add(
+      cue,
+      mul(
+        cueDirection,
+        -TABLE.ballRadius *
+        .72
+      )
+    );
+
+
+  const p =
+    tableToView(
+      point
+    );
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    .32,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "#ed554b";
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    .58,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.strokeStyle =
+    "rgba(237,85,75,.40)";
+
+  ctx.lineWidth =
+    .17;
+
+  ctx.stroke();
+
+}
+
+
+/* ================================================================
+   OBJECT BALL AIM VISUALIZATION
+================================================================
+
+   THIS IS THE IMPORTANT NEW USER-FACING ELEMENT.
+
+   The object ball gets:
+
+       1. A clearly colored ball.
+       2. A large "AIM HERE" contact/ghost relationship.
+       3. A precise point on the object-ball circumference.
+       4. A visible ghost-ball position.
+
+   The marker is proportional to the actual ball rather than being
+   an arbitrarily huge dot.
+================================================================ */
+
+function drawObjectAimPoint(
+  object,
+  objectDirection
+) {
+
+  /*
+     Actual cue/object contact location.
+  */
+  const contact =
+    add(
+      object,
+      mul(
+        objectDirection,
+        -TABLE.ballRadius
+      )
+    );
+
+
+  const p =
+    tableToView(
+      contact
+    );
+
+
+  /*
+     Outer aim ring.
+  */
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    .78,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.strokeStyle =
+    "#ed554b";
+
+  ctx.lineWidth =
+    .24;
+
+  ctx.stroke();
+
+
+  /*
+     Center point.
+  */
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    .29,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "#ed554b";
+
+  ctx.fill();
+
+
+  /*
+     Small radial indicator pointing toward the incoming cue ball.
+  */
+  const outward =
+    mul(
+      objectDirection,
+      -1
+    );
+
+  const lineStart =
+    add(
+      contact,
+      mul(
+        outward,
+        .4
+      )
+    );
+
+  const lineEnd =
+    add(
+      contact,
+      mul(
+        outward,
+        1.15
+      )
+    );
+
+
+  drawSolidWorldLine(
+    lineStart,
+    lineEnd,
+    "#ed554b",
+    .20
+  );
+
+}
+
+
+/* ================================================================
+   ARROW
+================================================================ */
+
+function drawArrow(
+  from,
+  to
+) {
+
+  const direction =
+    normalize(
+      sub(
+        to,
+        from
+      )
+    );
+
+
+  const tip =
+    tableToView(
+      to
+    );
+
+
+  const base =
+    sub(
+      to,
+      mul(
+        direction,
+        2.0
+      )
+    );
+
+
+  const perpendicular = {
+    x:
+      -direction.y,
+
+    y:
+      direction.x
+  };
+
+
+  const left =
+    add(
+      base,
+      mul(
+        perpendicular,
+        .72
+      )
+    );
+
+
+  const right =
+    add(
+      base,
+      mul(
+        perpendicular,
+        -.72
+      )
+    );
+
+
+  const L =
+    tableToView(
+      left
+    );
+
+  const R =
+    tableToView(
+      right
+    );
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    L.x,
+    L.y
+  );
+
+  ctx.lineTo(
+    tip.x,
+    tip.y
+  );
+
+  ctx.lineTo(
+    R.x,
+    R.y
+  );
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,.94)";
+
+  ctx.lineWidth =
+    .42;
+
+  ctx.lineCap =
+    "round";
+
+  ctx.lineJoin =
+    "round";
+
+  ctx.stroke();
+
+}
+
+
+/* ================================================================
+   BALLS
+================================================================ */
+
+function drawBalls() {
+
+  drawBall(
+    state.cue,
+    "cue"
+  );
+
+  drawBall(
+    state.object,
+    "object"
+  );
+
+}
+
+
+/* ================================================================
+   BALL RENDERING
+================================================================ */
+
+function drawBall(
+  point,
+  type
+) {
+
+  const p =
+    tableToView(
+      point
+    );
+
+
+  const r =
+    TABLE.ballRadius;
+
+
+  /*
+     Selected-ball outer ring.
+  */
+  if (
+    state.selectedBall ===
+    type
+  ) {
+
+    ctx.beginPath();
+
+    ctx.arc(
+      p.x,
+      p.y,
+      r + .55,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.strokeStyle =
+      "rgba(42,203,121,.78)";
+
+    ctx.lineWidth =
+      .22;
+
+    ctx.stroke();
+
+  }
+
+
+  const gradient =
+    ctx.createRadialGradient(
+      p.x -
+        r * .34,
+      p.y -
+        r * .38,
+      r * .05,
+
+      p.x,
+      p.y,
+      r
+    );
+
+
+  if (
+    type ===
+    "cue"
+  ) {
+
+    gradient.addColorStop(
+      0,
+      "#ffffff"
+    );
+
+    gradient.addColorStop(
+      .48,
+      "#f4f4f1"
+    );
+
+    gradient.addColorStop(
+      1,
+      "#aeb4ae"
+    );
+
+  } else {
+
+    /*
+       Deliberately NOT WHITE.
+
+       Gold/yellow object ball makes the distinction obvious.
+    */
+    gradient.addColorStop(
+      0,
+      "#fff6c9"
+    );
+
+    gradient.addColorStop(
+      .45,
+      "#f0c24f"
+    );
+
+    gradient.addColorStop(
+      1,
+      "#a86f12"
+    );
+
+  }
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    r,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    gradient;
+
+  ctx.fill();
+
+
+  ctx.strokeStyle =
+    "rgba(0,0,0,.28)";
+
+  ctx.lineWidth =
+    .14;
+
+  ctx.stroke();
+
+
+  /*
+     Highlight.
+  */
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x -
+      r * .34,
+    p.y -
+      r * .38,
+    r * .13,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.68)";
+
+  ctx.fill();
+
+}
+
+
+/* ================================================================
+   ROUNDED RECT
+================================================================ */
+
+function roundedRect(
+  x,
+  y,
+  width,
+  height,
+  radius
+) {
+
+  const r =
+    Math.min(
+      radius,
+      width / 2,
+      height / 2
+    );
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x + r,
+    y
+  );
+
+  ctx.arcTo(
+    x + width,
+    y,
+    x + width,
+    y + height,
+    r
+  );
+
+  ctx.arcTo(
+    x + width,
+    y + height,
+    x,
+    y + height,
+    r
+  );
+
+  ctx.arcTo(
+    x,
+    y + height,
+    x,
+    y,
+    r
+  );
+
+  ctx.arcTo(
+    x,
+    y,
+    x + width,
+    y,
+    r
+  );
+
+  ctx.closePath();
+
+}
+
+
+/* ================================================================
+   INITIALIZATION
+================================================================ */
+
+createPocketButtons();
+
+selectBall(
+  "cue"
+);
+
+
+requestAnimationFrame(
+  () => {
+
+    resizeCanvas();
+
+    calculate();
+
+  }
+);
+
+
+/*
+   Keep the selected pocket highlight alive without recalculating
+   the shot every frame.
+*/
+function animationLoop() {
+
+  if (
+    state.shot
+  ) {
+
+    draw();
+
+  }
+
+  requestAnimationFrame(
+    animationLoop
+  );
+
+}
+
+
+requestAnimationFrame(
+  animationLoop
+);
+
+</script>
+
 </body>
 </html>
