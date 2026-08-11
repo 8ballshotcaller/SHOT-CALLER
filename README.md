@@ -1,20 +1,25 @@
-Shot Caller~
+Shot Caller is an interactive pool-shot assistant designed to help players visualize and plan their next move.
 
-A mobile-first pool shot planning tool designed to help players choose practical shots based on the actual layout of the table.
+What It Does
 
-Place the cue ball and object ball on the table, select a pocket or let Shot Caller choose for you, then get a calculated shot route with visual guidance for the cue-ball aim and object-ball path.
+* Interactive table: Place and reposition the cue ball, object balls and optional combo/obstacles.
+* Shot selection: Choose Auto, Cut, Bank or Kick.
+* Pocket selection: Let Shot Caller recommend the best pocket or select one manually.
+* Shot visualization: Displays the calculated cue-ball path, object-ball path, bank/kick route and contact point.
+* Where to Hit: Shows the recommended contact point to aim for.
+* English & Speed: Provides guidance such as center ball, follow, draw, left/right English and suggested speed.
+* Balls in Play: Select numbered balls from a racked 1–15 layout and place them on the table.
 
-Shot Caller also supports adding an 8-ball as an obstruction or another one of yours for combination.
+Accuracy
 
-Features~
+Shot Caller uses a single physical coordinate system for the table and shot calculations. Its geometry accounts for ball diameter, ghost-ball contact, cushion centerlines, pocket openings, direct routes, banks, kicks and collision clearance.
 
-* Mobile-first 2:1 pool table
-* Interactive ball placement
-* Direct and cut-shot calculations
-* One-rail bank calculations
-* Pocket selection and automatic pocket suggestions
-* Cue-ball and object-ball aiming guides
-* Optional 8-ball obstruction
-* Physical table geometry shared between the visualization and shot calculations
+The goal is not just to find a mathematically possible shot. Shot Caller prioritizes physically playable routes and rejects paths that are blocked, impossible or inconsistent.
 
-Shot Caller is built to make pool-shot planning visual, practical and easy to use.
+Real-world results can still vary based on speed, spin, throw, cloth, cushion response, pocket shelf depth, and table size/conditions.
+
+Controls
+
+Select a ball → tap where you want it placed.
+Choose the shot type and/or pocket. 
+The table then updates the recommended route and the instructions in real time.
