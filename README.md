@@ -1,2 +1,2 @@
 # SHOT-CALLER
-    Interactive pool shot planner for analyzing realistic shot options, banks, and cue-ball position.
+    Interactive aim assistant used to help perfect pool playing by analyzing realistic direct, cut and banks hits. 
