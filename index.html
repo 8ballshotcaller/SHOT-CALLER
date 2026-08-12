@@ -1,5 +1,3 @@
-You’re right. I was failing to actually give you the code. Here is the full single-file replacement. Copy everything in this one block into index.html.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +8,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
   />
   <meta name="theme-color" content="#0b0d10" />
   <title>Shot Caller</title>
+
   <style>
     :root {
       --bg: #0b0d10;
@@ -31,10 +30,12 @@ You’re right. I was failing to actually give you the code. Here is the full si
       --white: #ffffff;
       --shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
     }
+
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
+
     html,
     body {
       margin: 0;
@@ -46,25 +47,31 @@ You’re right. I was failing to actually give you the code. Here is the full si
         Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Helvetica, Arial, sans-serif;
     }
+
     body {
       overflow-x: hidden;
     }
+
     button,
     select {
       font: inherit;
     }
+
     button {
       cursor: pointer;
     }
+
     .app {
       width: min(100%, 900px);
       margin: 0 auto;
       padding: 18px 14px 35px;
     }
+
     .header {
       text-align: center;
       margin-bottom: 18px;
     }
+
     .brand {
       font-size: clamp(27px, 7vw, 42px);
       line-height: 1;
@@ -72,12 +79,14 @@ You’re right. I was failing to actually give you the code. Here is the full si
       letter-spacing: -1.5px;
       margin: 0;
     }
+
     .subtitle {
       margin-top: 7px;
       color: var(--muted);
       font-size: 13px;
       font-weight: 500;
     }
+
     .panel {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -85,19 +94,23 @@ You’re right. I was failing to actually give you the code. Here is the full si
       box-shadow: var(--shadow);
       overflow: hidden;
     }
+
     .controls {
       padding: 14px;
       display: grid;
       gap: 12px;
     }
+
     .control-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
+
     .control-group {
       min-width: 0;
     }
+
     .label {
       display: block;
       color: var(--muted);
@@ -106,6 +119,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
       letter-spacing: 0.4px;
       margin-bottom: 6px;
     }
+
     select {
       width: 100%;
       appearance: none;
@@ -122,9 +136,11 @@ You’re right. I was failing to actually give you the code. Here is the full si
       padding: 0 32px 0 12px;
       outline: none;
     }
+
     select:focus {
       border-color: var(--green);
     }
+
     .table-wrap {
       width: 100%;
       padding: 12px;
@@ -132,6 +148,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
+
     /*
       The actual playing surface is always 2:1.
       The wrapper uses width-based sizing so it cannot get cut off on mobile.
@@ -149,6 +166,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
       touch-action: none;
       user-select: none;
     }
+
     .cloth {
       position: relative;
       width: 100%;
@@ -166,6 +184,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
         inset 0 0 18px rgba(0, 0, 0, 0.3);
       overflow: visible;
     }
+
     .pocket {
       position: absolute;
       width: clamp(17px, 4.8vw, 28px);
@@ -178,12 +197,14 @@ You’re right. I was failing to actually give you the code. Here is the full si
         inset 0 2px 4px rgba(255, 255, 255, 0.08),
         0 1px 2px rgba(0, 0, 0, 0.6);
     }
+
     .pocket.tl { left: 0; top: 0; }
     .pocket.tc { left: 50%; top: 0; }
     .pocket.tr { left: 100%; top: 0; }
     .pocket.bl { left: 0; top: 100%; }
     .pocket.bc { left: 50%; top: 100%; }
     .pocket.br { left: 100%; top: 100%; }
+
     .playing-line {
       position: absolute;
       pointer-events: none;
@@ -193,22 +214,27 @@ You’re right. I was failing to actually give you the code. Here is the full si
       opacity: 0.95;
       border-radius: 2px;
     }
+
     .line-object {
       background: #43e06f;
       box-shadow: 0 0 5px rgba(67, 224, 111, 0.55);
     }
+
     .line-aim {
       background: rgba(255, 255, 255, 0.88);
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.35);
     }
+
     .line-bank {
       background: #f4c84e;
       box-shadow: 0 0 5px rgba(244, 200, 78, 0.45);
     }
+
     .line-kick {
       background: #4ea1ff;
       box-shadow: 0 0 5px rgba(78, 161, 255, 0.45);
     }
+
     .contact-dot {
       position: absolute;
       width: 8px;
@@ -220,6 +246,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
       z-index: 8;
       pointer-events: none;
     }
+
     .ball {
       position: absolute;
       width: clamp(18px, 4.7%, 29px);
@@ -240,6 +267,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
         0 2px 4px rgba(0, 0, 0, 0.5);
       touch-action: none;
     }
+
     .ball.selected {
       outline: 2px solid #fff;
       outline-offset: 3px;
@@ -249,13 +277,16 @@ You’re right. I was failing to actually give you the code. Here is the full si
         inset 2px 2px 4px rgba(255, 255, 255, 0.42),
         0 2px 4px rgba(0, 0, 0, 0.5);
     }
+
     .ball.target {
       outline: 2px solid var(--yellow);
       outline-offset: 3px;
     }
+
     .cue-ball {
       background: #f7f7f7;
     }
+
     .one { background: #f5c542; }
     .two { background: #4b75c8; color: #fff; }
     .three { background: #d93632; color: #fff; }
@@ -271,6 +302,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
     .thirteen { background: #ee8c21; }
     .fourteen { background: #238a56; color: #fff; }
     .fifteen { background: #a02b30; color: #fff; }
+
     .ball.stripe::before {
       content: "";
       position: absolute;
@@ -281,12 +313,15 @@ You’re right. I was failing to actually give you the code. Here is the full si
       background: rgba(255, 255, 255, 0.93);
       z-index: -1;
     }
+
     .ball.stripe {
       overflow: hidden;
     }
+
     .result {
       padding: 16px;
     }
+
     .result-header {
       display: flex;
       align-items: center;
@@ -294,6 +329,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
       gap: 12px;
       margin-bottom: 14px;
     }
+
     .result-title {
       margin: 0;
       font-size: 20px;
@@ -301,6 +337,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
       font-weight: 800;
       letter-spacing: -0.3px;
     }
+
     .shot-type {
       flex: 0 0 auto;
       padding: 6px 9px;
@@ -311,12 +348,14 @@ You’re right. I was failing to actually give you the code. Here is the full si
       font-size: 11px;
       font-weight: 800;
     }
+
     .shot-card {
       background: var(--panel-2);
       border: 1px solid var(--border);
       border-radius: 13px;
       overflow: hidden;
     }
+
     .shot-row {
       display: grid;
       grid-template-columns: 115px 1fr;
@@ -325,24 +364,29 @@ You’re right. I was failing to actually give you the code. Here is the full si
       border-bottom: 1px solid var(--border);
       align-items: center;
     }
+
     .shot-row:last-child {
       border-bottom: 0;
     }
+
     .shot-label {
       color: var(--muted);
       font-size: 11px;
       font-weight: 700;
       line-height: 1.25;
     }
+
     .shot-value {
       color: var(--text);
       font-size: 14px;
       font-weight: 700;
       line-height: 1.35;
     }
+
     .shot-value.green {
       color: var(--green);
     }
+
     .instructions {
       margin-top: 13px;
       padding: 12px 13px;
@@ -350,33 +394,39 @@ You’re right. I was failing to actually give you the code. Here is the full si
       background: rgba(67, 224, 111, 0.055);
       border-radius: 0 10px 10px 0;
     }
+
     .instructions-title {
       margin: 0 0 4px;
       font-size: 12px;
       font-weight: 800;
     }
+
     .instructions-text {
       margin: 0;
       color: #b6bec6;
       font-size: 13px;
       line-height: 1.45;
     }
+
     .legend {
       margin-top: 13px;
       display: grid;
       gap: 7px;
     }
+
     .legend-title {
       margin: 0 0 2px;
       color: var(--muted);
       font-size: 11px;
       font-weight: 800;
     }
+
     .legend-items {
       display: flex;
       flex-wrap: wrap;
       gap: 12px 16px;
     }
+
     .legend-item {
       display: inline-flex;
       align-items: center;
@@ -385,29 +435,36 @@ You’re right. I was failing to actually give you the code. Here is the full si
       font-size: 11px;
       font-weight: 600;
     }
+
     .legend-line {
       width: 24px;
       height: 3px;
       border-radius: 3px;
     }
+
     .legend-line.object {
       background: var(--green);
     }
+
     .legend-line.aim {
       background: #fff;
     }
+
     .legend-line.bank {
       background: var(--yellow);
     }
+
     .legend-line.kick {
       background: var(--blue);
     }
+
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       padding: 0 16px 16px;
     }
+
     .action {
       min-height: 42px;
       border-radius: 10px;
@@ -417,11 +474,13 @@ You’re right. I was failing to actually give you the code. Here is the full si
       font-size: 13px;
       font-weight: 700;
     }
+
     .action.primary {
       background: var(--green);
       color: #06110a;
       border-color: var(--green);
     }
+
     .help {
       text-align: center;
       color: var(--muted);
@@ -429,33 +488,41 @@ You’re right. I was failing to actually give you the code. Here is the full si
       line-height: 1.45;
       margin: 12px 5px 0;
     }
+
     @media (min-width: 650px) {
       .app {
         padding-top: 28px;
       }
+
       .controls {
         grid-template-columns: repeat(3, 1fr);
         align-items: end;
       }
+
       .control-row {
         display: contents;
       }
+
       .actions {
         grid-template-columns: 160px 160px;
         justify-content: end;
       }
     }
+
     @media (max-width: 390px) {
       .app {
         padding-left: 9px;
         padding-right: 9px;
       }
+
       .table-wrap {
         padding: 8px;
       }
+
       .result {
         padding: 13px;
       }
+
       .shot-row {
         grid-template-columns: 96px 1fr;
         gap: 8px;
@@ -463,12 +530,14 @@ You’re right. I was failing to actually give you the code. Here is the full si
     }
   </style>
 </head>
+
 <body>
   <main class="app">
     <header class="header">
       <h1 class="brand">Shot Caller</h1>
       <div class="subtitle">Pool shot planning assistant</div>
     </header>
+
     <section class="panel">
       <div class="controls">
         <div class="control-group">
@@ -481,6 +550,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
             <option value="combination">Combination</option>
           </select>
         </div>
+
         <div class="control-group">
           <label class="label" for="shotMode">Shot type</label>
           <select id="shotMode">
@@ -491,6 +561,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
             <option value="combo">Combination</option>
           </select>
         </div>
+
         <div class="control-group">
           <label class="label" for="difficulty">Difficulty</label>
           <select id="difficulty">
@@ -500,6 +571,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
           </select>
         </div>
       </div>
+
       <div class="table-wrap">
         <div class="table" id="table">
           <div class="cloth" id="cloth">
@@ -509,35 +581,42 @@ You’re right. I was failing to actually give you the code. Here is the full si
             <div class="pocket bl"></div>
             <div class="pocket bc"></div>
             <div class="pocket br"></div>
+
             <div id="lines"></div>
             <div id="balls"></div>
             <div id="contactDot" class="contact-dot" style="display:none;"></div>
           </div>
         </div>
       </div>
+
       <div class="result">
         <div class="result-header">
           <h2 class="result-title">Recommended shot</h2>
           <span class="shot-type" id="shotType">Cut</span>
         </div>
+
         <div class="shot-card">
           <div class="shot-row">
             <div class="shot-label">Where to hit</div>
             <div class="shot-value green" id="whereToHit">Center</div>
           </div>
+
           <div class="shot-row">
             <div class="shot-label">Object ball path</div>
             <div class="shot-value" id="objectPath">Straight toward the selected pocket</div>
           </div>
+
           <div class="shot-row">
             <div class="shot-label">Cue ball path</div>
             <div class="shot-value" id="cuePath">Follow the white line</div>
           </div>
+
           <div class="shot-row">
             <div class="shot-label">Speed</div>
             <div class="shot-value" id="speed">Medium</div>
           </div>
         </div>
+
         <div class="instructions">
           <h3 class="instructions-title">How to play it</h3>
           <p class="instructions-text" id="instructions">
@@ -545,6 +624,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
             balls to adjust their positions. The recommended route updates automatically.
           </p>
         </div>
+
         <div class="legend">
           <h3 class="legend-title">Path guide</h3>
           <div class="legend-items">
@@ -567,31 +647,38 @@ You’re right. I was failing to actually give you the code. Here is the full si
           </div>
         </div>
       </div>
+
       <div class="actions">
         <button class="action" id="resetBtn">Reset table</button>
         <button class="action primary" id="suggestBtn">Suggest shot</button>
       </div>
     </section>
+
     <p class="help">
       Drag balls anywhere on the table. Tap a ball to make it the target.
     </p>
   </main>
+
   <script>
     const cloth = document.getElementById("cloth");
     const ballsLayer = document.getElementById("balls");
     const linesLayer = document.getElementById("lines");
     const contactDot = document.getElementById("contactDot");
+
     const ballsInPlay = document.getElementById("ballsInPlay");
     const shotMode = document.getElementById("shotMode");
     const difficulty = document.getElementById("difficulty");
+
     const shotType = document.getElementById("shotType");
     const whereToHit = document.getElementById("whereToHit");
     const objectPath = document.getElementById("objectPath");
     const cuePath = document.getElementById("cuePath");
     const speed = document.getElementById("speed");
     const instructions = document.getElementById("instructions");
+
     const resetBtn = document.getElementById("resetBtn");
     const suggestBtn = document.getElementById("suggestBtn");
+
     const pockets = [
       { x: 0, y: 0 },
       { x: 50, y: 0 },
@@ -600,6 +687,7 @@ You’re right. I was failing to actually give you the code. Here is the full si
       { x: 50, y: 100 },
       { x: 100, y: 100 }
     ];
+
     const ballDefinitions = [
       { n: 1, cls: "one" },
       { n: 2, cls: "two" },
@@ -617,18 +705,24 @@ You’re right. I was failing to actually give you the code. Here is the full si
       { n: 14, cls: "fourteen stripe" },
       { n: 15, cls: "fifteen stripe" }
     ];
+
     let balls = [];
     let selectedBallId = null;
     let draggingBallId = null;
     let dragOffset = { x: 0, y: 0 };
+
     let ballIdCounter = 1;
+
     const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
     function distance(a, b) {
       return Math.hypot(a.x - b.x, a.y - b.y);
     }
+
     function angleBetween(a, b) {
       return Math.atan2(b.y - a.y, b.x - a.x);
     }
+
     function pointAt(start, end, distanceValue) {
       const d = distance(start, end) || 1;
       return {
@@ -636,27 +730,36 @@ You’re right. I was failing to actually give you the code. Here is the full si
         y: start.y + ((end.y - start.y) / d) * distanceValue
       };
     }
+
     function getBallById(id) {
       return balls.find((b) => b.id === id);
     }
+
     function getTargetBalls() {
       const mode = ballsInPlay.value;
+
       if (mode === "solids") {
         return balls.filter((b) => b.number >= 1 && b.number <= 7);
       }
+
       if (mode === "stripes") {
         return balls.filter((b) => b.number >= 9 && b.number <= 15);
       }
+
       if (mode === "eight") {
         return balls.filter((b) => b.number === 8);
       }
+
       if (mode === "combination") {
         return balls.filter((b) => b.number !== 0);
       }
+
       return balls.filter((b) => b.number !== 0);
     }
+
     function createInitialBalls() {
       ballIdCounter = 1;
+
       balls = [
         {
           id: ballIdCounter++,
@@ -694,106 +797,147 @@ You’re right. I was failing to actually give you the code. Here is the full si
           y: 50
         }
       ];
+
       selectedBallId = 2;
       renderBalls();
       updateRecommendation();
     }
+
     function createBallElement(ball) {
       const el = document.createElement("div");
+
       el.className = `ball ${ball.className}`;
       if (ball.id === selectedBallId) {
         el.classList.add("selected");
       }
+
       el.textContent = ball.number === 0 ? "" : ball.number;
+
       el.style.left = `${ball.x}%`;
       el.style.top = `${ball.y}%`;
+
       el.dataset.id = ball.id;
+
       el.addEventListener("pointerdown", (event) => {
         event.preventDefault();
+
         selectedBallId = ball.id;
         draggingBallId = ball.id;
+
         const rect = cloth.getBoundingClientRect();
         const px = ((event.clientX - rect.left) / rect.width) * 100;
         const py = ((event.clientY - rect.top) / rect.height) * 100;
+
         dragOffset = {
           x: ball.x - px,
           y: ball.y - py
         };
+
         renderBalls();
         updateRecommendation();
+
         el.setPointerCapture?.(event.pointerId);
       });
+
       return el;
     }
+
     function renderBalls() {
       ballsLayer.innerHTML = "";
+
       balls.forEach((ball) => {
         ballsLayer.appendChild(createBallElement(ball));
       });
     }
+
     cloth.addEventListener("pointermove", (event) => {
       if (!draggingBallId) return;
+
       const ball = getBallById(draggingBallId);
       if (!ball) return;
+
       const rect = cloth.getBoundingClientRect();
+
       let x = ((event.clientX - rect.left) / rect.width) * 100;
       let y = ((event.clientY - rect.top) / rect.height) * 100;
+
       x += dragOffset.x;
       y += dragOffset.y;
+
       const marginX = 2.3;
       const marginY = 4.8;
+
       ball.x = clamp(x, marginX, 100 - marginX);
       ball.y = clamp(y, marginY, 100 - marginY);
+
       renderBalls();
       updateRecommendation();
     });
+
     window.addEventListener("pointerup", () => {
       draggingBallId = null;
     });
+
     function nearestPocket(ball) {
       let best = null;
       let bestDistance = Infinity;
+
       for (const pocket of pockets) {
         const d = distance(ball, pocket);
+
         if (d < bestDistance) {
           bestDistance = d;
           best = pocket;
         }
       }
+
       return {
         pocket: best,
         distance: bestDistance
       };
     }
+
     function chooseTarget() {
       const available = getTargetBalls();
+
       if (!available.length) return null;
+
       if (selectedBallId) {
         const selected = getBallById(selectedBallId);
+
         if (selected && selected.number !== 0) {
           return selected;
         }
       }
+
       const cue = balls.find((b) => b.number === 0);
+
       if (!cue) return available[0];
+
       let best = available[0];
       let bestScore = Infinity;
+
       available.forEach((ball) => {
         const pocketInfo = nearestPocket(ball);
         const score = distance(cue, ball) + pocketInfo.distance * 0.7;
+
         if (score < bestScore) {
           bestScore = score;
           best = ball;
         }
       });
+
       return best;
     }
+
     function choosePocket(target, cue) {
       let bestPocket = pockets[0];
       let bestScore = Infinity;
+
       pockets.forEach((pocket) => {
         const cueToTarget = distance(cue, target);
         const targetToPocket = distance(target, pocket);
+
         /*
           Favor realistic pockets while avoiding extreme crossing routes.
         */
@@ -801,45 +945,60 @@ You’re right. I was failing to actually give you the code. Here is the full si
           Math.abs(
             angleBetween(cue, target) - angleBetween(target, pocket)
           ) % (Math.PI * 2);
+
         const normalizedAngle =
           shotAngle > Math.PI ? Math.PI * 2 - shotAngle : shotAngle;
+
         const anglePenalty = normalizedAngle * 10;
+
         const score = targetToPocket + anglePenalty + cueToTarget * 0.15;
+
         if (score < bestScore) {
           bestScore = score;
           bestPocket = pocket;
         }
       });
+
       return bestPocket;
     }
+
     function clearLines() {
       linesLayer.innerHTML = "";
       contactDot.style.display = "none";
     }
+
     function drawLine(start, end, className, widthMultiplier = 1) {
       const rect = cloth.getBoundingClientRect();
+
       const sx = (start.x / 100) * rect.width;
       const sy = (start.y / 100) * rect.height;
       const ex = (end.x / 100) * rect.width;
       const ey = (end.y / 100) * rect.height;
+
       const dx = ex - sx;
       const dy = ey - sy;
+
       const length = Math.hypot(dx, dy);
       const angle = Math.atan2(dy, dx);
+
       if (length < 2) return;
+
       const line = document.createElement("div");
       line.className = `playing-line ${className}`;
       line.style.left = `${sx}px`;
       line.style.top = `${sy}px`;
       line.style.width = `${length * widthMultiplier}px`;
       line.style.transform = `rotate(${angle}rad)`;
+
       linesLayer.appendChild(line);
     }
+
     function setContactDot(point) {
       contactDot.style.display = "block";
       contactDot.style.left = `${point.x}%`;
       contactDot.style.top = `${point.y}%`;
     }
+
     function calculateCut(cue, target, pocket) {
       /*
         Ghost-ball approximation:
@@ -850,61 +1009,85 @@ You’re right. I was failing to actually give you the code. Here is the full si
         x: pocket.x - target.x,
         y: pocket.y - target.y
       };
+
       const targetPocketDistance =
         Math.hypot(targetToPocket.x, targetToPocket.y) || 1;
+
       const ux = targetToPocket.x / targetPocketDistance;
       const uy = targetToPocket.y / targetPocketDistance;
+
       const ballDiameter = 4.4;
+
       const ghostBall = {
         x: target.x - ux * ballDiameter,
         y: target.y - uy * ballDiameter
       };
+
       const cueAngle = angleBetween(cue, ghostBall);
+
       return {
         ghostBall,
         cueAngle
       };
     }
+
     function chooseShotType(cue, target, pocket) {
       const requested = shotMode.value;
+
       if (requested === "cut") return "Cut";
       if (requested === "bank") return "Bank";
       if (requested === "kick") return "Kick";
       if (requested === "combo") return "Combination";
+
       if (ballsInPlay.value === "combination") {
         return "Combination";
       }
+
       const targetPocketDistance = distance(target, pocket);
       const cueTargetDistance = distance(cue, target);
+
       if (targetPocketDistance < 25 && cueTargetDistance < 35) {
         return "Cut";
       }
+
       if (targetPocketDistance > 48) {
         return "Bank";
       }
+
       return "Cut";
     }
+
     function updateRecommendation() {
       clearLines();
+
       const cue = balls.find((b) => b.number === 0);
       let target = chooseTarget();
+
       if (!cue || !target) {
         return;
       }
+
       if (target.number === 0) {
         target = balls.find((b) => b.number !== 0);
       }
+
       if (!target) return;
+
       const pocket = choosePocket(target, cue);
       const type = chooseShotType(cue, target, pocket);
+
       target.classList?.remove?.("target");
+
       renderBalls();
+
       const renderedTarget = document.querySelector(
         `.ball[data-id="${target.id}"]`
       );
+
       if (renderedTarget) {
         renderedTarget.classList.add("target");
       }
+
       if (type === "Bank") {
         drawBankShot(cue, target, pocket);
       } else if (type === "Kick") {
@@ -914,55 +1097,77 @@ You’re right. I was failing to actually give you the code. Here is the full si
       } else {
         drawCutShot(cue, target, pocket);
       }
+
       updateText(cue, target, pocket, type);
     }
+
     function drawCutShot(cue, target, pocket) {
       const calc = calculateCut(cue, target, pocket);
+
       /*
         Green line = actual object-ball path.
         White line = cue-ball approach path.
       */
       drawLine(target, pocket, "line-object");
+
       drawLine(cue, calc.ghostBall, "line-aim");
+
       setContactDot(calc.ghostBall);
     }
+
     function drawBankShot(cue, target, pocket) {
       const railPoint = findBankPoint(target, pocket);
+
       drawLine(target, railPoint, "line-bank");
       drawLine(railPoint, pocket, "line-bank");
+
       const calc = calculateCut(cue, target, railPoint);
       drawLine(cue, calc.ghostBall, "line-aim");
+
       setContactDot(calc.ghostBall);
     }
+
     function drawKickShot(cue, target, pocket) {
       const railPoint = findKickPoint(cue, target);
+
       drawLine(cue, railPoint, "line-kick");
       drawLine(railPoint, target, "line-kick");
       drawLine(target, pocket, "line-object");
+
       setContactDot(target);
     }
+
     function drawCombinationShot(cue, target, pocket) {
       const objectBalls = balls
         .filter((b) => b.number !== 0 && b.id !== target.id)
         .sort((a, b) => distance(cue, a) - distance(cue, b));
+
       const firstBall = objectBalls[0];
+
       if (!firstBall) {
         drawCutShot(cue, target, pocket);
         return;
       }
+
       /*
         Combination routing:
         cue -> first object ball -> target object ball -> pocket.
       */
       drawLine(firstBall, target, "line-object");
       drawLine(target, pocket, "line-object");
+
       const firstContact = calculateCut(cue, firstBall, target);
+
       drawLine(cue, firstContact.ghostBall, "line-aim");
+
       setContactDot(firstContact.ghostBall);
     }
+
     function findBankPoint(target, pocket) {
       const candidates = [];
+
       const cushionInset = 2;
+
       /*
         Reflect the pocket across each rail to find a corresponding
         bank point on the opposite geometry.
@@ -985,22 +1190,29 @@ You’re right. I was failing to actually give you the code. Here is the full si
           y: 200 - pocket.y
         }
       ];
+
       reflected.forEach((r, index) => {
         let bx;
         let by;
+
         if (index === 0 || index === 1) {
           bx = index === 0 ? cushionInset : 100 - cushionInset;
+
           const t =
             (bx - target.x) /
             ((r.x - target.x) || 0.0001);
+
           by = target.y + (r.y - target.y) * t;
         } else {
           by = index === 2 ? cushionInset : 100 - cushionInset;
+
           const t =
             (by - target.y) /
             ((r.y - target.y) || 0.0001);
+
           bx = target.x + (r.x - target.x) * t;
         }
+
         if (
           Number.isFinite(bx) &&
           Number.isFinite(by) &&
@@ -1012,11 +1224,91 @@ You’re right. I was failing to actually give you the code. Here is the full si
           candidates.push({ x: bx, y: by });
         }
       });
+
       if (!candidates.length) {
         return {
           x: clamp((target.x + pocket.x) / 2, 3, 97),
           y: clamp((target.y + pocket.y) / 2, 5, 95)
         };
       }
+
       candidates.sort((a, b) => {
-       
+        return distance(target, a) - distance(target, b);
+      });
+
+      return candidates[0];
+    }
+
+    function findKickPoint(cue, target) {
+      const midX = (cue.x + target.x) / 2;
+      const midY = (cue.y + target.y) / 2;
+
+      if (Math.abs(cue.x - target.x) > Math.abs(cue.y - target.y)) {
+        return {
+          x: clamp(midX, 3, 97),
+          y: cue.y < target.y ? 3 : 97
+        };
+      }
+
+      return {
+        x: cue.x < target.x ? 3 : 97,
+        y: clamp(midY, 5, 95)
+      };
+    }
+
+    function updateText(cue, target, pocket, type) {
+      shotType.textContent = type;
+
+      if (type === "Combination") {
+        whereToHit.textContent = "Hit the first ball full enough to send the target ball on";
+        objectPath.textContent = "First object ball transfers the target ball toward the pocket";
+        cuePath.textContent = "Use a controlled line into the first object ball";
+        speed.textContent =
+          difficulty.value === "aggressive" ? "Medium-firm" : "Medium";
+        instructions.textContent =
+          "Play the first object ball into the target ball, then let the target ball continue toward the pocket. Favor a full enough hit to keep the combination predictable.";
+        return;
+      }
+
+      const angle = Math.abs(
+        (angleBetween(cue, target) - angleBetween(target, pocket)) *
+          (180 / Math.PI)
+      );
+
+      const normalizedAngle = Math.min(angle, 360 - angle);
+
+      let hit;
+
+      if (normalizedAngle < 12) {
+        hit = "Full";
+      } else if (normalizedAngle < 28) {
+        hit = "Three-quarter";
+      } else if (normalizedAngle < 48) {
+        hit = "Half";
+      } else if (normalizedAngle < 68) {
+        hit = "Quarter";
+      } else {
+        hit = "Thin";
+      }
+
+      whereToHit.textContent = `${hit} hit`;
+
+      if (type === "Bank") {
+        objectPath.textContent = "Send the object ball to the rail, then into the pocket";
+        cuePath.textContent = "Aim through the contact point for the bank";
+        speed.textContent =
+          difficulty.value === "aggressive" ? "Firm" : "Medium-firm";
+        instructions.textContent =
+          "Aim for the bank contact point rather than the pocket itself. Use enough speed to reach the rail and still hold the correct rebound line.";
+      } else if (type === "Kick") {
+        objectPath.textContent = "Contact the object ball after the cue ball reaches the rail";
+        cuePath.textContent = "Use the rail contact point shown in blue";
+        speed.textContent =
+          difficulty.value === "conservative" ? "Soft-medium" : "Medium";
+        instructions.textContent =
+          "Send the cue ball to the indicated rail contact point first. Let the rebound carry it into the object ball.";
+      } else {
+        objectPath.textContent = "Toward the selected pocket";
+        cuePath.textContent = "Follow the white aiming line into the contact point";
+        speed.textContent =
+          difficulty.value === "
