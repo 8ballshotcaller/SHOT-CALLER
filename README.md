@@ -1,11 +1,11 @@
-Shot Caller is an interactive pool-shot assistant designed to help players visualize and plan their next move.
+Shot Caller is an interactive pool-shot assistant designed to help players visualize their next move.
 
 ~ WHAT IT DOES ~
 
-* Interactive table: Place and reposition the cue ball, object balls and optional combo/obstacles.
+* Table View: Place and reposition the cue ball, object balls and optional combo/obstacles.
 * Shot selection: Choose Auto, Cut, Bank or Kick.
-* Pocket selection: Let Shot Caller recommend the best pocket or select one manually.
-* Shot visualization: Displays the calculated cue-ball path, object-ball path, bank/kick route and contact point.
+* Pocket selection: Let Shot Caller recommend the best pocket with auto or select one manually.
+* Shot visualizer: Displays the suggested cue-ball path, object-ball path, bank/kick route and contact point.
 * Where to Hit: Shows the recommended contact point to aim for.
 * English & Speed: Provides guidance such as center ball, follow, draw, left/right English and suggested speed.
 * Balls in Play: Select numbered balls from a racked 1–15 layout and place them on the table.
