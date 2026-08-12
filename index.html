@@ -1,553 +1,535 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#070a0c">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Shot Caller</title>
 
 <style>
 :root{
-  --bg:#070a0c;
-  --panel:#11171a;
-  --panel2:#0b1013;
-  --line:rgba(255,255,255,.075);
-  --text:#f5f7f8;
-  --muted:#89949b;
-  --lime:#d9ff3f;
-  --red:#ff4652;
-  --green:#42d995;
-  --white:#f5f7f8;
+  --bg:#0b0d10;
+  --panel:#15191e;
+  --panel2:#1b2026;
+  --border:#2b323a;
+  --text:#f3f5f7;
+  --muted:#9ba4ae;
+  --green:#159447;
+  --green2:#20b35a;
+  --neon:#b7ff38;
+  --gold:#ffd45a;
+  --red:#ff5c5c;
+  --blue:#55aaff;
+  --felt:#126b38;
+  --felt-dark:#0c4d2a;
+  --wood:#6f4021;
 }
 
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
+*{box-sizing:border-box}
 
 html,body{
   margin:0;
+  padding:0;
+  width:100%;
   min-height:100%;
-  background:
-    radial-gradient(circle at 50% -10%,#26343a 0,#11191d 35%,#07090b 78%);
+  background:var(--bg);
   color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
-body{padding:7px}
+body{
+  overflow-x:hidden;
+}
 
 button{
   font:inherit;
-  cursor:pointer;
+  color:inherit;
 }
 
 .app{
-  width:min(1200px,100%);
-  margin:auto;
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  padding:18px 14px 40px;
 }
 
-.header{
-  height:48px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+header{
+  text-align:center;
+  margin-bottom:18px;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-
-.brand-name{
-  font-size:22px;
-  font-weight:950;
-  letter-spacing:-.06em;
-  line-height:.9;
-}
-
-.brand-tag{
-  margin-top:4px;
-  color:var(--muted);
-  font-size:9px;
+header h1{
+  margin:0;
+  font-size:31px;
+  line-height:1;
   font-weight:800;
-  letter-spacing:.04em;
+  letter-spacing:-.8px;
 }
 
-.reset{
-  border:1px solid var(--line);
-  background:#141a1e;
-  color:#e9edef;
-  border-radius:9px;
-  padding:8px 13px;
-  font-size:12px;
-  font-weight:850;
-}
+/* =========================
+   TABLE
+========================= */
 
-.layout{
-  display:grid;
-  grid-template-columns:minmax(0,1.55fr) minmax(330px,.72fr);
-  gap:9px;
-}
-
-.card{
-  background:rgba(17,23,26,.98);
-  border:1px solid var(--line);
-  border-radius:15px;
-  box-shadow:0 18px 45px rgba(0,0,0,.25);
-}
-
-.table-card{
-  padding:9px;
-  min-width:0;
-}
-
-.table-stage{
+.table-wrap{
   width:100%;
-  aspect-ratio:2/1;
+  display:flex;
+  justify-content:center;
+  margin-bottom:16px;
+}
+
+.table{
   position:relative;
-}
-
-#table{
-  position:absolute;
-  inset:0;
   width:100%;
-  height:100%;
-  display:block;
+  aspect-ratio:2 / 1;
+  max-width:860px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.035),transparent 20%),
+    linear-gradient(315deg,rgba(0,0,0,.12),transparent 35%),
+    var(--wood);
+  border-radius:16px;
+  padding:clamp(10px,2.1vw,19px);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 0 0 2px rgba(255,255,255,.08),
+    inset 0 0 0 5px rgba(0,0,0,.18);
   touch-action:none;
 }
 
-.table-help{
-  padding:9px 2px 2px;
-  color:#b2bcc1;
-  font-size:11px;
-  font-weight:700;
-  line-height:1.35;
-}
-
-.legend{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px 15px;
-  padding:8px 2px 1px;
-  font-size:10px;
-  font-weight:800;
-  color:#aeb7bd;
-}
-
-.legend-item{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
-.legend-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  flex:0 0 auto;
-}
-
-.legend-green .legend-dot{background:var(--green)}
-.legend-white .legend-dot{background:#fff}
-.legend-red .legend-dot{background:var(--red)}
-
-.side{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.full-card{
+.felt{
+  position:relative;
   width:100%;
-}
-
-.section{
-  padding:13px 14px;
-}
-
-.section-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  min-height:23px;
-  gap:10px;
-}
-
-.section-title{
-  font-size:13px;
-  font-weight:950;
-  letter-spacing:-.02em;
-}
-
-.section-accent{
-  color:var(--lime);
-  font-size:10px;
-  font-weight:950;
-  letter-spacing:.01em;
-}
-
-.section-action{
-  border:1px solid rgba(255,255,255,.12);
-  background:#171e22;
-  color:#d5dde1;
+  height:100%;
   border-radius:8px;
-  min-height:30px;
-  padding:5px 12px;
-  font-size:10px;
-  font-weight:900;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.025),transparent 55%),
+    linear-gradient(145deg,var(--felt),var(--felt-dark));
+  box-shadow:
+    inset 0 0 0 2px rgba(0,0,0,.35),
+    inset 0 0 25px rgba(0,0,0,.2);
+  overflow:visible;
 }
 
-.section-action:hover{
-  background:#20292e;
-}
-
-.section-action.active{
-  background:var(--lime);
-  border-color:var(--lime);
-  color:#10150b;
-}
-
-.where-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:9px;
-}
-
-.ball-panel{
-  background:#0a0e10;
-  border:1px solid rgba(255,255,255,.055);
-  border-radius:11px;
-  padding:8px;
-  min-width:0;
-}
-
-.ball-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:6px;
-}
-
-.ball-label{
-  color:#aeb7bd;
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.07em;
-}
-
-.ball-view{
-  width:100%;
-  aspect-ratio:1;
-  display:block;
-}
-
-.controls{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:6px;
-  margin-top:9px;
-}
-
-.stat{
-  min-width:0;
-  background:#0b1013;
-  border:1px solid rgba(255,255,255,.055);
-  border-radius:9px;
-  padding:9px;
-}
-
-.stat-label{
-  color:var(--muted);
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.07em;
-}
-
-.stat-value{
-  margin-top:4px;
-  font-size:11px;
-  font-weight:900;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.pro-instruction{
-  margin-top:9px;
-  padding:11px 12px;
-  border-left:3px solid var(--lime);
-  background:#0b1013;
-  border-radius:0 9px 9px 0;
-  color:#e3e8ea;
-  font-size:11px;
-  line-height:1.55;
-  font-weight:700;
-}
-
-.status{
-  margin-top:8px;
-  color:#9aa5ab;
-  font-size:10px;
-  line-height:1.4;
-}
-
-.pockets{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:6px;
-  margin-top:9px;
-}
+/* Realistic pocket openings.
+   Corner pockets are circular-ish openings centered on the corners.
+   Side pockets are semicircular openings centered on the rails. */
 
 .pocket{
-  min-height:38px;
-  border-radius:9px;
-  border:1px solid rgba(255,255,255,.08);
-  background:#101519;
-  color:#b8c1c6;
-  font-size:10px;
-  font-weight:850;
-}
-
-.pocket.selected{
-  background:rgba(217,255,63,.10);
-  border-color:var(--lime);
-  color:var(--lime);
-}
-
-.shot-type-section{
-  border-top:1px solid rgba(255,255,255,.055);
-  margin-top:14px;
-  padding-top:13px;
-}
-
-.modes{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:6px;
-  margin-top:9px;
-}
-
-.mode{
-  border:1px solid rgba(255,255,255,.09);
-  background:#101519;
-  color:#b8c1c6;
-  border-radius:9px;
-  min-height:38px;
-  padding:8px 4px;
-  font-size:10px;
-  font-weight:900;
-}
-
-.mode.active{
-  background:var(--lime);
-  color:#10150b;
-  border-color:var(--lime);
-}
-
-.rack{
-  position:relative;
-  margin:11px auto 3px;
-  width:min(230px,78vw);
-  aspect-ratio:1.58/1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.rack-row{
-  display:flex;
-  gap:3px;
   position:absolute;
+  z-index:2;
+  background:
+    radial-gradient(circle at 45% 40%,#090909,#000 68%);
+  box-shadow:
+    inset 0 2px 5px rgba(255,255,255,.06),
+    0 1px 3px rgba(0,0,0,.6);
+  pointer-events:none;
+}
+
+.pocket.corner{
+  width:clamp(24px,5.2%,48px);
+  height:clamp(24px,10.4%,48px);
+  border-radius:50%;
+}
+
+.pocket.side{
+  width:clamp(30px,7%,58px);
+  height:clamp(15px,5.8%,29px);
+  border-radius:50% 50% 0 0;
+}
+
+.pocket.tl{left:-1.1%;top:-2.5%}
+.pocket.tr{right:-1.1%;top:-2.5%}
+.pocket.bl{left:-1.1%;bottom:-2.5%}
+.pocket.br{right:-1.1%;bottom:-2.5%}
+
+.pocket.tm{
   left:50%;
+  top:-2.5%;
   transform:translateX(-50%);
 }
 
-.rack-row.r1{top:1%}
-.rack-row.r2{top:17%}
-.rack-row.r3{top:33%}
-.rack-row.r4{top:49%}
-.rack-row.r5{top:65%}
+.pocket.bm{
+  left:50%;
+  bottom:-2.5%;
+  transform:translateX(-50%) rotate(180deg);
+}
 
-.rack-ball{
-  width:31px;
-  height:31px;
+/* =========================
+   BALLS
+========================= */
+
+.ball{
+  position:absolute;
+  z-index:10;
+  width:clamp(17px,4.2%,34px);
+  aspect-ratio:1;
   border-radius:50%;
-  border:1px solid rgba(255,255,255,.25);
-  position:relative;
-  display:grid;
-  place-items:center;
-  padding:0;
-  overflow:hidden;
+  transform:translate(-50%,-50%);
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
   box-shadow:
-    inset -3px -4px 5px rgba(0,0,0,.25),
-    0 2px 4px rgba(0,0,0,.25);
-  font-size:9px;
-  font-weight:950;
-  color:#111;
-}
-
-.rack-ball.stripe{
-  background:
-    linear-gradient(
-      to bottom,
-      var(--ball-color) 0 30%,
-      #f4f4f4 30% 70%,
-      var(--ball-color) 70% 100%
-    );
-}
-
-.rack-ball.solid{
-  background:var(--ball-color);
-}
-
-.rack-ball span{
-  width:14px;
-  height:14px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:#fff;
-  color:#111;
-  font-size:7px;
-  font-weight:950;
-  border:1px solid rgba(0,0,0,.25);
-}
-
-.rack-ball.selected{
-  outline:3px solid var(--lime);
-  outline-offset:2px;
-  z-index:2;
-}
-
-.rack-ball.on-table{
-  opacity:.42;
-}
-
-.rack-ball.object-ball{
-  opacity:1;
-}
-
-.ball-role-title{
-  color:#aeb7bd;
-  font-size:10px;
-  font-weight:850;
-  margin-top:5px;
-}
-
-.ball-role{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  margin-top:7px;
-}
-
-.role-button{
-  border:1px solid rgba(255,255,255,.08);
-  background:#101519;
-  color:#b8c1c6;
-  border-radius:9px;
-  min-height:38px;
-  padding:7px 4px;
-  font-size:10px;
-  font-weight:900;
-}
-
-.role-button.active{
-  background:rgba(217,255,63,.10);
-  border-color:var(--lime);
-  color:var(--lime);
-}
-
-.blocker-type{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  margin-top:7px;
-}
-
-.blocker-button{
-  border:1px solid rgba(255,255,255,.07);
-  background:#0d1316;
-  color:#929da3;
-  border-radius:8px;
-  min-height:34px;
-  padding:6px 4px;
-  font-size:9px;
-  font-weight:850;
-}
-
-.blocker-button.active{
-  border-color:rgba(217,255,63,.5);
-  background:rgba(217,255,63,.07);
-  color:#d9ff3f;
-}
-
-.rack-help{
-  color:#89949b;
-  font-size:10px;
-  line-height:1.5;
-  padding:7px 8px 0;
-}
-
-.rack-help strong{
-  color:#dfe5e7;
-  font-weight:850;
-}
-
-.table-ball-actions{
+    inset -3px -4px 5px rgba(0,0,0,.35),
+    inset 2px 2px 4px rgba(255,255,255,.35),
+    0 2px 5px rgba(0,0,0,.5);
   display:flex;
+  align-items:center;
   justify-content:center;
-  gap:5px;
-  margin-top:8px;
+  font-size:clamp(7px,1.25vw,11px);
+  font-weight:800;
+  color:#111;
 }
 
-.remove-selected{
-  border:1px solid rgba(255,70,82,.3);
-  background:rgba(255,70,82,.08);
-  color:#ff8a91;
+.ball:active{
+  cursor:grabbing;
+}
+
+.ball.cue{
+  background:#f4f4ed;
+}
+
+.ball.target{
+  outline:3px solid var(--neon);
+  outline-offset:2px;
+}
+
+.ball.blocking{
+  outline:2px solid rgba(255,255,255,.65);
+  outline-offset:2px;
+}
+
+.ball.selected{
+  box-shadow:
+    0 0 0 3px var(--gold),
+    0 0 14px rgba(255,212,90,.65),
+    inset -3px -4px 5px rgba(0,0,0,.35);
+}
+
+.ball-delete{
+  position:absolute;
+  z-index:30;
+  width:22px;
+  height:22px;
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:50%;
+  background:#17191c;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  line-height:1;
+  font-weight:700;
+  transform:translate(7px,-31px);
+  cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,.5);
+  touch-action:manipulation;
+}
+
+.ball-delete:hover{
+  background:#292d32;
+}
+
+.ball-delete:active{
+  transform:translate(7px,-31px) scale(.92);
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.section{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:15px;
+  margin-bottom:12px;
+}
+
+.section-title{
+  margin:0 0 12px;
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+
+.role-buttons{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.role-btn{
+  min-height:43px;
+  padding:9px 8px;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  border-radius:9px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.role-btn.active{
+  border-color:var(--neon);
+  background:rgba(183,255,56,.1);
+  color:var(--neon);
+}
+
+.role-btn.cue.active{
+  border-color:#fff;
+  color:#fff;
+  background:rgba(255,255,255,.08);
+}
+
+.role-btn.opponent.active{
+  border-color:var(--blue);
+  color:var(--blue);
+  background:rgba(85,170,255,.1);
+}
+
+.instructions{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+  margin-top:12px;
+}
+
+.instructions strong{
+  color:#dce1e5;
+}
+
+.ball-list{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+
+.ball-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:39px;
+  padding:8px 10px;
+  background:var(--panel2);
+  border:1px solid var(--border);
   border-radius:8px;
-  min-height:34px;
-  padding:7px 12px;
-  font-size:9px;
-  font-weight:900;
+  font-size:13px;
 }
 
-.remove-selected:disabled{
-  opacity:.35;
+.ball-row-left{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
 }
 
-.empty{
-  color:#667178;
-  font-size:9px;
-  padding:5px 0;
+.mini-ball{
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  flex:none;
+  border:1px solid rgba(255,255,255,.25);
 }
 
-@media(max-width:850px){
-  .layout{
+.row-role{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.remove-btn{
+  width:27px;
+  height:27px;
+  border:1px solid #3b4148;
+  background:#20242a;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.remove-btn:hover{
+  border-color:var(--red);
+  color:var(--red);
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.action-btn{
+  min-height:42px;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  border-radius:9px;
+  cursor:pointer;
+  font-weight:750;
+}
+
+.action-btn.primary{
+  background:var(--green);
+  border-color:var(--green2);
+}
+
+.action-btn:hover{
+  filter:brightness(1.1);
+}
+
+.auto-row{
+  display:flex;
+  gap:9px;
+}
+
+.auto-btn{
+  flex:1;
+  min-height:42px;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  border-radius:9px;
+  cursor:pointer;
+  font-weight:750;
+}
+
+.auto-btn.active{
+  border-color:var(--neon);
+  color:var(--neon);
+}
+
+/* =========================
+   SHOT OUTPUT
+========================= */
+
+.shot-card{
+  background:linear-gradient(145deg,#171c21,#12161a);
+  border:1px solid #303841;
+  border-radius:13px;
+  padding:16px;
+  margin-bottom:12px;
+}
+
+.output-title{
+  margin:0 0 13px;
+  font-size:15px;
+  font-weight:800;
+}
+
+.shot-main{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.info-box{
+  background:#0e1216;
+  border:1px solid #283039;
+  border-radius:9px;
+  padding:12px;
+}
+
+.info-label{
+  color:var(--muted);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  margin-bottom:5px;
+}
+
+.info-value{
+  font-size:15px;
+  font-weight:800;
+}
+
+.where-hit{
+  border:1px solid rgba(183,255,56,.45);
+  background:rgba(183,255,56,.06);
+  border-radius:10px;
+  padding:13px;
+  margin-bottom:10px;
+}
+
+.where-hit .label{
+  color:var(--neon);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  margin-bottom:6px;
+}
+
+.where-hit .value{
+  font-size:16px;
+  font-weight:800;
+}
+
+.description{
+  border:1px solid #2a3239;
+  background:#101419;
+  border-radius:10px;
+  padding:13px;
+}
+
+.description .label{
+  font-size:11px;
+  color:var(--muted);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  margin-bottom:6px;
+}
+
+.description p{
+  margin:0;
+  font-size:14px;
+  line-height:1.55;
+}
+
+.route-label{
+  color:#dce2e7;
+  font-weight:800;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+  .app{
+    padding:15px 10px 28px;
+  }
+
+  header{
+    margin-bottom:14px;
+  }
+
+  header h1{
+    font-size:28px;
+  }
+
+  .table{
+    border-radius:12px;
+    padding:10px;
+  }
+
+  .section,
+  .shot-card{
+    padding:13px;
+  }
+
+  .shot-main{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .role-buttons{
     grid-template-columns:1fr;
   }
-}
 
-@media(max-width:520px){
-  body{padding:5px}
-
-  .header{height:45px}
-
-  .brand-name{font-size:20px}
-
-  .section{padding:12px}
-
-  .where-grid{gap:5px}
-
-  .controls{
-    grid-template-columns:repeat(2,1fr);
+  .role-btn{
+    min-height:40px;
   }
 
-  .rack-ball{
-    width:27px;
-    height:27px;
+  .instructions{
+    font-size:11.5px;
   }
 }
 </style>
@@ -557,2846 +539,766 @@ button{
 
 <div class="app">
 
-<header class="header">
-  <div class="brand">
-    <div>
-      <div class="brand-name">Shot Caller</div>
-      <div class="brand-tag">Billiards Shot Planner</div>
+  <header>
+    <h1>Shot Caller</h1>
+  </header>
+
+  <div class="table-wrap">
+    <div class="table" id="table">
+      <div class="felt" id="felt">
+
+        <div class="pocket corner tl"></div>
+        <div class="pocket side tm"></div>
+        <div class="pocket corner tr"></div>
+
+        <div class="pocket side bm"></div>
+
+        <div class="pocket corner bl"></div>
+        <div class="pocket corner br"></div>
+
+        <div id="balls"></div>
+
+      </div>
     </div>
   </div>
 
-  <button class="reset" id="reset">Reset</button>
-</header>
+  <section class="section">
 
-<main class="layout">
+    <h2 class="section-title">Ball Placement</h2>
 
-<section class="card table-card">
+    <div class="role-buttons">
 
-  <div class="table-stage">
-    <canvas id="table"></canvas>
-  </div>
+      <button class="role-btn cue active" data-role="cue">
+        Cue Ball
+      </button>
 
-  <div class="table-help">
-    Select a ball, then tap where you want to place or move it.
-  </div>
+      <button class="role-btn active" data-role="target">
+        Target Ball
+      </button>
 
-  <div class="legend">
+      <button class="role-btn opponent" data-role="blocking">
+        Blocking Ball
+      </button>
 
-    <span class="legend-item legend-green">
-      <span class="legend-dot"></span>
-      <span>Cue-ball path</span>
-    </span>
-
-    <span class="legend-item legend-white">
-      <span class="legend-dot"></span>
-      <span>Object-ball path</span>
-    </span>
-
-    <span class="legend-item legend-red">
-      <span class="legend-dot"></span>
-      <span>Rail route</span>
-    </span>
-
-  </div>
-
-</section>
-
-<aside class="side">
-
-<!-- ==========================================================
-     SHOT RESULT
-     =========================================================== -->
-
-<section class="card full-card section">
-
-  <div class="section-head">
-    <div class="section-title">
-      Contact Point
     </div>
 
-    <div class="section-accent">
-      Ball <span id="whereBall">—</span>
+    <div class="instructions">
+      <strong>Target Ball:</strong> The ball you are trying to pocket.<br>
+      <strong>Blocking Ball:</strong> A ball that can interfere with the cue-ball or object-ball path.<br>
+      You can place multiple blocking balls, including both your balls and your opponent's balls.<br>
+      Select a ball, choose its role, then tap the table to place it.
     </div>
-  </div>
 
-  <div class="where-grid">
+    <div class="ball-list" id="ballList"></div>
 
-    <div class="ball-panel">
+  </section>
 
-      <div class="ball-head">
-        <div class="ball-label">Cue Ball</div>
+  <section class="section">
+
+    <h2 class="section-title">Table Setup</h2>
+
+    <div class="auto-row">
+      <button class="auto-btn" id="autoBtn">Auto Arrange</button>
+      <button class="auto-btn" id="clearBtn">Clear Balls</button>
+    </div>
+
+  </section>
+
+  <section class="shot-card">
+
+    <h2 class="output-title">Shot Recommendation</h2>
+
+    <div class="shot-main">
+
+      <div class="info-box">
+        <div class="info-label">Shot Type</div>
+        <div class="info-value" id="shotType">Straight Shot</div>
       </div>
 
-      <canvas class="ball-view" id="cueView"></canvas>
-
-    </div>
-
-    <div class="ball-panel">
-
-      <div class="ball-head">
-        <div class="ball-label">Object Ball</div>
+      <div class="info-box">
+        <div class="info-label">Pocket</div>
+        <div class="info-value" id="pocketName">Right Corner Pocket</div>
       </div>
 
-      <canvas class="ball-view" id="objectView"></canvas>
-
     </div>
 
-  </div>
-
-  <div class="controls">
-
-    <div class="stat">
-      <div class="stat-label">Type</div>
-      <div class="stat-value" id="shotType">—</div>
+    <div class="where-hit">
+      <div class="label">Where to Hit</div>
+      <div class="value" id="whereHit">Center of the cue ball</div>
     </div>
 
-    <div class="stat">
-      <div class="stat-label">Pocket</div>
-      <div class="stat-value" id="shotPocket">—</div>
+    <div class="description">
+      <div class="label">Shot Description</div>
+      <p id="shotDescription">
+        Aim through the center of the cue ball toward the contact point on the target ball. Use medium speed.
+      </p>
     </div>
 
-    <div class="stat">
-      <div class="stat-label">Rail</div>
-      <div class="stat-value" id="shotRail">—</div>
-    </div>
+  </section>
 
-    <div class="stat">
-      <div class="stat-label">Speed</div>
-      <div class="stat-value" id="shotSpeed">—</div>
-    </div>
-
-  </div>
-
-  <div class="pro-instruction" id="instruction">
-    Place the cue ball and object ball.
-  </div>
-
-</section>
-
-<!-- ==========================================================
-     POCKET
-     =========================================================== -->
-
-<section class="card full-card section">
-
-  <div class="section-head">
-
-    <div class="section-title">
-      Pocket
-    </div>
-
-    <button class="section-action" id="pocketAuto">
-      Auto
-    </button>
-
-  </div>
-
-  <div class="pockets" id="pockets"></div>
-
-</section>
-
-<!-- ==========================================================
-     SHOT TYPE
-     =========================================================== -->
-
-<section class="card full-card section">
-
-  <div class="section-head">
-
-    <div class="section-title">
-      Shot Type
-    </div>
-
-    <button class="section-action" id="shotAuto">
-      Auto
-    </button>
-
-  </div>
-
-  <div class="modes">
-
-    <button class="mode" data-mode="cut">
-      Cut
-    </button>
-
-    <button class="mode" data-mode="bank">
-      Bank
-    </button>
-
-    <button class="mode" data-mode="kick">
-      Kick
-    </button>
-
-  </div>
-
-  <div class="status" id="status">
-    Select balls and place them on the table.
-  </div>
-
-</section>
-
-<!-- ==========================================================
-     BALLS IN PLAY
-     =========================================================== -->
-
-<section class="card full-card section">
-
-  <div class="section-head">
-
-    <div class="section-title">
-      Balls In Play
-    </div>
-
-    <div class="section-accent" id="rackAccent">
-      Select
-    </div>
-
-  </div>
-
-  <div class="rack" id="rack"></div>
-
-  <div class="ball-role-title">
-    Placement Role
-  </div>
-
-  <div class="ball-role">
-
-    <button class="role-button active" id="objectRole">
-      Target Ball
-    </button>
-
-    <button class="role-button" id="obstacleRole">
-      Blocking Ball
-    </button>
-
-  </div>
-
-  <div class="blocker-type" id="blockerType">
-
-    <button class="blocker-button active" id="myBallBlocker">
-      My Ball
-    </button>
-
-    <button class="blocker-button" id="opponentBallBlocker">
-      Opponent's Ball
-    </button>
-
-  </div>
-
-  <div class="rack-help">
-
-    <strong>Target Ball:</strong>
-    The ball you are trying to pocket.
-
-    <br>
-
-    <strong>Blocking Ball:</strong>
-    A ball that can interfere with the cue-ball or object-ball path.
-
-    <br>
-
-    You can place multiple blocking balls, including both your balls and your opponent's balls.
-
-    <br>
-
-    Select a ball, choose its role, then tap the table to place or move it.
-
-  </div>
-
-  <div class="table-ball-actions">
-
-    <button class="remove-selected" id="removeBall" disabled>
-      Remove Selected Ball
-    </button>
-
-  </div>
-
-</section>
-
-</aside>
-</main>
 </div>
 
 <script>
-"use strict";
+/* =========================================================
+   SHOT CALLER
+   Core table interaction + shot recommendation engine
+========================================================= */
 
-/* ============================================================
-   PHYSICAL TABLE
-   ============================================================ */
-
-const TABLE_W=100;
-const TABLE_H=50;
-
-const BALL_DIAMETER=2.25;
-const BALL_RADIUS=BALL_DIAMETER/2;
-
-const RAIL={
-  top:BALL_RADIUS,
-  bottom:TABLE_H-BALL_RADIUS,
-  left:BALL_RADIUS,
-  right:TABLE_W-BALL_RADIUS
+const state = {
+  role: "cue",
+  balls: [],
+  selectedId: null,
+  draggingId: null,
+  nextId: 1
 };
 
-const POCKET_SIZE=4.55;
+const felt = document.getElementById("felt");
+const ballsEl = document.getElementById("balls");
+const ballList = document.getElementById("ballList");
 
-const POCKETS=[
-  {id:"TL",name:"Top Left",x:0,y:0,type:"corner",opening:POCKET_SIZE},
-  {id:"TM",name:"Top Side",x:50,y:0,type:"side",opening:POCKET_SIZE},
-  {id:"TR",name:"Top Right",x:100,y:0,type:"corner",opening:POCKET_SIZE},
-  {id:"BL",name:"Bottom Left",x:0,y:50,type:"corner",opening:POCKET_SIZE},
-  {id:"BM",name:"Bottom Side",x:50,y:50,type:"side",opening:POCKET_SIZE},
-  {id:"BR",name:"Bottom Right",x:100,y:50,type:"corner",opening:POCKET_SIZE}
-];
+const roleButtons = [...document.querySelectorAll(".role-btn")];
 
-/* ============================================================
-   BALL SET
-   ============================================================ */
+roleButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.role = btn.dataset.role;
 
-const BALLS=[
-  {n:1,type:"solid",color:"#f4c51d"},
-  {n:2,type:"solid",color:"#2867c7"},
-  {n:3,type:"solid",color:"#d9343e"},
-  {n:4,type:"solid",color:"#6d3c9b"},
-  {n:5,type:"solid",color:"#ed701c"},
-  {n:6,type:"solid",color:"#16884e"},
-  {n:7,type:"solid",color:"#8e1725"},
-  {n:8,type:"solid",color:"#151515"},
-  {n:9,type:"stripe",color:"#f4c51d"},
-  {n:10,type:"stripe",color:"#2867c7"},
-  {n:11,type:"stripe",color:"#d9343e"},
-  {n:12,type:"stripe",color:"#6d3c9b"},
-  {n:13,type:"stripe",color:"#ed701c"},
-  {n:14,type:"stripe",color:"#16884e"},
-  {n:15,type:"stripe",color:"#8e1725"}
-];
+    roleButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  });
+});
 
-const BALL_MAP=Object.fromEntries(BALLS.map(b=>[b.n,b]));
+/* ---------------------------------------------------------
+   Utilities
+--------------------------------------------------------- */
 
-/* ============================================================
-   STATE
-   ============================================================ */
-
-const state={
-
-  cue:{
-    x:22,
-    y:34
-  },
-
-  object:{
-    x:65,
-    y:20,
-    number:3
-  },
-
-  tableBalls:[
-    {
-      number:3,
-      x:65,
-      y:20,
-      role:"object",
-      owner:"target"
-    }
-  ],
-
-  selectedBall:null,
-  selectedRackBall:3,
-
-  placementRole:"object",
-
-  blockerOwner:"my",
-
-  selectedPocket:null,
-
-  mode:"auto",
-
-  solution:null
-};
-
-/* ============================================================
-   DOM
-   ============================================================ */
-
-const canvas=document.getElementById("table");
-const ctx=canvas.getContext("2d");
-
-let DPR=Math.min(window.devicePixelRatio||1,2);
-
-/* ============================================================
-   VECTOR MATH
-   ============================================================ */
-
-function V(x,y){return{x,y}}
-
-function add(a,b){return V(a.x+b.x,a.y+b.y)}
-
-function sub(a,b){return V(a.x-b.x,a.y-b.y)}
-
-function mul(a,n){return V(a.x*n,a.y*n)}
-
-function dot(a,b){return a.x*b.x+a.y*b.y}
-
-function len(a){return Math.hypot(a.x,a.y)}
-
-function norm(a){
-  const l=len(a);
-  if(l<1e-10)return V(0,0);
-  return V(a.x/l,a.y/l);
+function clamp(v,min,max){
+  return Math.max(min,Math.min(max,v));
 }
 
-function dist(a,b){
+function distance(a,b){
   return Math.hypot(a.x-b.x,a.y-b.y);
 }
 
-function clamp(n,a,b){
-  return Math.max(a,Math.min(b,n));
+function angleDeg(a,b){
+  let a1 = Math.atan2(b.y-a.y,b.x-a.x) * 180 / Math.PI;
+  if(a1 < 0) a1 += 360;
+  return a1;
 }
 
-/* ============================================================
-   GEOMETRY
-   ============================================================ */
-
-function centerInside(p){
-  return(
-    p.x>=BALL_RADIUS &&
-    p.x<=TABLE_W-BALL_RADIUS &&
-    p.y>=BALL_RADIUS &&
-    p.y<=TABLE_H-BALL_RADIUS
-  );
+function normalizeAngle(a){
+  while(a > 180) a -= 360;
+  while(a < -180) a += 360;
+  return a;
 }
 
-function pointSegmentDistance(p,a,b){
+function getPointerPercent(e){
+  const rect = felt.getBoundingClientRect();
 
-  const ab=sub(b,a);
-  const d=dot(ab,ab);
+  let x;
+  let y;
 
-  if(d<1e-10)return dist(p,a);
+  if(e.touches && e.touches.length){
+    x = e.touches[0].clientX;
+    y = e.touches[0].clientY;
+  }else{
+    x = e.clientX;
+    y = e.clientY;
+  }
 
-  const t=clamp(
-    dot(sub(p,a),ab)/d,
+  return {
+    x:clamp((x-rect.left)/rect.width*100,3,97),
+    y:clamp((y-rect.top)/rect.height*100,4,96)
+  };
+}
+
+function roleName(role){
+  if(role === "cue") return "Cue Ball";
+  if(role === "target") return "Target Ball";
+  return "Blocking Ball";
+}
+
+function ballColor(role,index){
+  if(role === "cue") return "#f4f4ed";
+
+  if(role === "target"){
+    const colors = [
+      "#f3cf25",
+      "#1768d2",
+      "#dc3a30",
+      "#6b3ca8",
+      "#ef8c21",
+      "#168e5a",
+      "#9a2228",
+      "#22252a"
+    ];
+    return colors[index % colors.length];
+  }
+
+  return index % 2 === 0 ? "#d23a34" : "#1f6fd0";
+}
+
+/* ---------------------------------------------------------
+   Ball creation
+--------------------------------------------------------- */
+
+function addBall(role,x,y){
+
+  if(role === "cue"){
+    state.balls = state.balls.filter(b => b.role !== "cue");
+  }
+
+  const count = state.balls.filter(b => b.role === role).length;
+
+  const ball = {
+    id:state.nextId++,
+    role,
+    x,
+    y,
+    number:count + 1
+  };
+
+  state.balls.push(ball);
+  state.selectedId = ball.id;
+
+  render();
+}
+
+function removeBall(id){
+
+  state.balls = state.balls.filter(b => b.id !== id);
+
+  if(state.selectedId === id){
+    state.selectedId = null;
+  }
+
+  render();
+}
+
+/* ---------------------------------------------------------
+   Render balls
+--------------------------------------------------------- */
+
+function render(){
+
+  ballsEl.innerHTML = "";
+
+  state.balls.forEach(ball => {
+
+    const el = document.createElement("div");
+
+    el.className = "ball " + ball.role;
+
+    if(state.selectedId === ball.id){
+      el.classList.add("selected");
+    }
+
+    el.style.left = ball.x + "%";
+    el.style.top = ball.y + "%";
+    el.style.background = ballColor(
+      ball.role,
+      ball.number
+    );
+
+    if(ball.role !== "cue"){
+      el.textContent = ball.number;
+    }
+
+    el.dataset.id = ball.id;
+
+    el.addEventListener("pointerdown",startDrag);
+
+    if(state.selectedId === ball.id){
+
+      const del = document.createElement("button");
+
+      del.className = "ball-delete";
+      del.type = "button";
+      del.innerHTML = "×";
+      del.setAttribute("aria-label","Delete ball");
+
+      del.addEventListener("pointerdown",e => {
+        e.stopPropagation();
+      });
+
+      del.addEventListener("click",e => {
+        e.stopPropagation();
+        removeBall(ball.id);
+      });
+
+      el.appendChild(del);
+    }
+
+    ballsEl.appendChild(el);
+  });
+
+  renderList();
+  updateRecommendation();
+}
+
+/* ---------------------------------------------------------
+   Ball list
+--------------------------------------------------------- */
+
+function renderList(){
+
+  ballList.innerHTML = "";
+
+  state.balls.forEach(ball => {
+
+    const row = document.createElement("div");
+    row.className = "ball-row";
+
+    const left = document.createElement("div");
+    left.className = "ball-row-left";
+
+    const mini = document.createElement("div");
+    mini.className = "mini-ball";
+    mini.style.background = ballColor(ball.role,ball.number);
+
+    const text = document.createElement("div");
+
+    text.innerHTML =
+      `<strong>${roleName(ball.role)}</strong>
+       <div class="row-role">${ball.role === "blocking" ? "Obstacle" : "Primary ball"}</div>`;
+
+    left.appendChild(mini);
+    left.appendChild(text);
+
+    const remove = document.createElement("button");
+    remove.className = "remove-btn";
+    remove.textContent = "×";
+
+    remove.addEventListener("click",() => {
+      removeBall(ball.id);
+    });
+
+    row.appendChild(left);
+    row.appendChild(remove);
+
+    ballList.appendChild(row);
+  });
+}
+
+/* ---------------------------------------------------------
+   Table placement
+--------------------------------------------------------- */
+
+felt.addEventListener("pointerdown",e => {
+
+  if(e.target.closest(".ball")){
+    return;
+  }
+
+  const pos = getPointerPercent(e);
+
+  addBall(state.role,pos.x,pos.y);
+});
+
+/* ---------------------------------------------------------
+   Dragging
+--------------------------------------------------------- */
+
+function startDrag(e){
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const el = e.currentTarget;
+  const id = Number(el.dataset.id);
+
+  state.selectedId = id;
+  state.draggingId = id;
+
+  el.setPointerCapture?.(e.pointerId);
+
+  render();
+
+  const current = state.balls.find(b => b.id === id);
+
+  function move(ev){
+
+    const pos = getPointerPercent(ev);
+
+    current.x = pos.x;
+    current.y = pos.y;
+
+    render();
+  }
+
+  function end(){
+
+    state.draggingId = null;
+
+    window.removeEventListener("pointermove",move);
+    window.removeEventListener("pointerup",end);
+  }
+
+  window.addEventListener("pointermove",move);
+  window.addEventListener("pointerup",end);
+}
+
+/* ---------------------------------------------------------
+   Auto arrange
+--------------------------------------------------------- */
+
+document.getElementById("autoBtn").addEventListener("click",() => {
+
+  state.balls = [
+    {
+      id:state.nextId++,
+      role:"cue",
+      x:20,
+      y:50,
+      number:0
+    },
+    {
+      id:state.nextId++,
+      role:"target",
+      x:66,
+      y:50,
+      number:1
+    },
+    {
+      id:state.nextId++,
+      role:"blocking",
+      x:45,
+      y:37,
+      number:1
+    }
+  ];
+
+  state.selectedId = state.balls[0].id;
+
+  render();
+});
+
+document.getElementById("clearBtn").addEventListener("click",() => {
+
+  state.balls = [];
+  state.selectedId = null;
+
+  render();
+});
+
+/* =========================================================
+   SHOT ENGINE
+========================================================= */
+
+function getCue(){
+  return state.balls.find(b => b.role === "cue");
+}
+
+function getTarget(){
+  return state.balls.find(b => b.role === "target");
+}
+
+function getBlocking(){
+  return state.balls.filter(b => b.role === "blocking");
+}
+
+const pockets = [
+  {name:"Left Corner Pocket",x:1,y:1,type:"corner"},
+  {name:"Right Corner Pocket",x:99,y:1,type:"corner"},
+  {name:"Left Side Pocket",x:50,y:1,type:"side"},
+  {name:"Left Corner Pocket",x:1,y:99,type:"corner"},
+  {name:"Right Corner Pocket",x:99,y:99,type:"corner"},
+  {name:"Right Side Pocket",x:50,y:99,type:"side"}
+];
+
+/*
+  Convert normalized table coordinates to a more realistic
+  pocket interpretation. The two center rail pockets are
+  called left/right side pockets based on the direction from
+  the object ball.
+*/
+
+function choosePocket(target,cue){
+
+  const candidates = [
+    {
+      name:"Left Corner Pocket",
+      x:3,
+      y:3
+    },
+    {
+      name:"Right Corner Pocket",
+      x:97,
+      y:3
+    },
+    {
+      name:"Left Side Pocket",
+      x:50,
+      y:3
+    },
+    {
+      name:"Left Corner Pocket",
+      x:3,
+      y:97
+    },
+    {
+      name:"Right Corner Pocket",
+      x:97,
+      y:97
+    },
+    {
+      name:"Right Side Pocket",
+      x:50,
+      y:97
+    }
+  ];
+
+  let best = null;
+
+  candidates.forEach(p => {
+
+    const dTarget = distance(target,p);
+    const dCue = distance(cue,target);
+
+    /*
+      Prefer pockets that don't require an extreme cut,
+      while still considering the cue-ball route.
+    */
+    const cutPenalty = Math.abs(
+      normalizeAngle(
+        angleDeg(cue,target) -
+        angleDeg(target,p)
+      )
+    );
+
+    const score =
+      dTarget +
+      cutPenalty * 0.22 +
+      dCue * 0.05;
+
+    if(!best || score < best.score){
+      best = {...p,score};
+    }
+  });
+
+  return best;
+}
+
+function lineIntersectsBall(a,b,c,r=4.5){
+
+  const dx = b.x-a.x;
+  const dy = b.y-a.y;
+
+  const len2 = dx*dx+dy*dy;
+
+  if(len2 === 0) return false;
+
+  const t = clamp(
+    ((c.x-a.x)*dx+(c.y-a.y)*dy)/len2,
     0,
     1
   );
 
-  return dist(p,add(a,mul(ab,t)));
+  const closest = {
+    x:a.x+t*dx,
+    y:a.y+t*dy
+  };
+
+  return distance(closest,c) < r;
 }
 
-/* ============================================================
-   OBSTACLE PATH CHECKING
-   ============================================================ */
+function detectBlockers(cue,target){
 
-function pathClear(a,b,ignoreNumber=null){
+  return getBlocking().filter(b => {
 
-  for(const ball of state.tableBalls){
+    if(b === cue || b === target) return false;
 
-    if(ball.number===ignoreNumber)continue;
-
-    if(
-      pointSegmentDistance(ball,a,b)<
-      BALL_DIAMETER*1.02
-    ){
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function objectPathClear(a,b){
-
-  for(const ball of state.tableBalls){
-
-    if(ball.number===state.object.number)continue;
-
-    if(
-      pointSegmentDistance(ball,a,b)<
-      BALL_DIAMETER*1.02
-    ){
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/* ============================================================
-   POCKET TARGETS
-   ============================================================ */
-
-function pocketTargets(pocket){
-
-  const targets=[];
-
-  if(pocket.type==="side"){
-
-    [-1.1,-.55,0,.55,1.1].forEach(offset=>{
-
-      targets.push(
-        V(
-          clamp(
-            pocket.x+offset,
-            BALL_RADIUS,
-            TABLE_W-BALL_RADIUS
-          ),
-          pocket.y===0
-            ?RAIL.top
-            :RAIL.bottom
-        )
-      );
-
-    });
-
-  }else{
-
-    const sx=pocket.x===0?1:-1;
-    const sy=pocket.y===0?1:-1;
-
-    [
-      [.35,.35],
-      [.60,.60],
-      [.85,.85]
-    ].forEach(([x,y])=>{
-
-      targets.push(
-        V(
-          pocket.x+sx*x*POCKET_SIZE*.48,
-          pocket.y+sy*y*POCKET_SIZE*.48
-        )
-      );
-
-    });
-  }
-
-  return targets;
-}
-
-/* ============================================================
-   GHOST BALL
-   ============================================================ */
-
-function ghostForDirection(object,direction){
-
-  return sub(
-    object,
-    mul(norm(direction),BALL_DIAMETER)
-  );
-}
-
-/* ============================================================
-   DIRECT CUT
-   ============================================================ */
-
-function directCandidate(cue,object,pocket,target){
-
-  const objectVector=sub(target,object);
-
-  if(len(objectVector)<.01)return null;
-
-  const objectDirection=norm(objectVector);
-
-  const ghost=ghostForDirection(
-    object,
-    objectDirection
-  );
-
-  if(!centerInside(ghost))return null;
-
-  if(
-    !pathClear(
+    return lineIntersectsBall(
       cue,
-      ghost,
-      state.object.number
-    )
-  )return null;
-
-  if(!objectPathClear(object,target))return null;
-
-  const cueDirection=norm(sub(ghost,cue));
-
-  const incoming=norm(sub(object,ghost));
-
-  const cutAngle=Math.acos(
-    clamp(
-      dot(cueDirection,incoming),
-      -1,
-      1
-    )
-  );
-
-  const cutDegrees=cutAngle*180/Math.PI;
-
-  const thinPenalty=
-    cutDegrees>50
-      ?(cutDegrees-50)*2.5
-      :0;
-
-  const cueDistance=dist(cue,ghost);
-  const objectDistance=dist(object,target);
-
-  return{
-    kind:"cut",
-    pocket,
-    target,
-    rail:null,
-    ghost,
-    bankPoint:null,
-    cueDirection,
-    objectDirection,
-    cueDistance,
-    objectDistance,
-    cutDegrees,
-    score:
-      cueDistance+
-      objectDistance+
-      thinPenalty
-  };
-}
-
-/* ============================================================
-   RAIL REFLECTION
-   ============================================================ */
-
-function reflectAcrossRail(p,rail){
-
-  if(rail==="top")
-    return V(p.x,2*RAIL.top-p.y);
-
-  if(rail==="bottom")
-    return V(p.x,2*RAIL.bottom-p.y);
-
-  if(rail==="left")
-    return V(2*RAIL.left-p.x,p.y);
-
-  if(rail==="right")
-    return V(2*RAIL.right-p.x,p.y);
-
-  return null;
-}
-
-function railIntersection(a,b,rail){
-
-  const dx=b.x-a.x;
-  const dy=b.y-a.y;
-
-  let t;
-
-  if(rail==="top"||rail==="bottom"){
-
-    const y=rail==="top"?RAIL.top:RAIL.bottom;
-
-    if(Math.abs(dy)<1e-10)return null;
-
-    t=(y-a.y)/dy;
-
-  }else{
-
-    const x=rail==="left"?RAIL.left:RAIL.right;
-
-    if(Math.abs(dx)<1e-10)return null;
-
-    t=(x-a.x)/dx;
-  }
-
-  if(t<=.00001||t>=.99999)return null;
-
-  return V(
-    a.x+dx*t,
-    a.y+dy*t
-  );
-}
-
-function usableRailPoint(p,rail){
-
-  const margin=1.5;
-
-  if(rail==="top"||rail==="bottom"){
-
-    return(
-      p.x>BALL_RADIUS+margin &&
-      p.x<TABLE_W-BALL_RADIUS-margin
-    );
-
-  }
-
-  return(
-    p.y>BALL_RADIUS+margin &&
-    p.y<TABLE_H-BALL_RADIUS-margin
-  );
-}
-
-/* ============================================================
-   ONE-RAIL BANK
-   ============================================================ */
-
-function bankCandidate(cue,object,pocket,target,rail){
-
-  if(rail==="top"&&pocket.y===0)return null;
-  if(rail==="bottom"&&pocket.y===TABLE_H)return null;
-  if(rail==="left"&&pocket.x===0)return null;
-  if(rail==="right"&&pocket.x===TABLE_W)return null;
-
-  const reflected=reflectAcrossRail(target,rail);
-
-  if(!reflected)return null;
-
-  const bankPoint=railIntersection(
-    object,
-    reflected,
-    rail
-  );
-
-  if(
-    !bankPoint||
-    !usableRailPoint(bankPoint,rail)
-  )return null;
-
-  if(!objectPathClear(object,bankPoint))return null;
-  if(!objectPathClear(bankPoint,target))return null;
-
-  const objectDirection=norm(
-    sub(bankPoint,object)
-  );
-
-  const ghost=ghostForDirection(
-    object,
-    objectDirection
-  );
-
-  if(!centerInside(ghost))return null;
-
-  if(
-    !pathClear(
-      cue,
-      ghost,
-      state.object.number
-    )
-  )return null;
-
-  const cueDirection=norm(sub(ghost,cue));
-  const incoming=norm(sub(object,ghost));
-
-  const cutAngle=Math.acos(
-    clamp(
-      dot(cueDirection,incoming),
-      -1,
-      1
-    )
-  );
-
-  const cutDegrees=cutAngle*180/Math.PI;
-
-  if(cutDegrees>58)return null;
-
-  const cueDistance=dist(cue,ghost);
-  const firstLeg=dist(object,bankPoint);
-  const secondLeg=dist(bankPoint,target);
-
-  return{
-    kind:"bank",
-    pocket,
-    target,
-    rail,
-    ghost,
-    bankPoint,
-    cueDirection,
-    objectDirection,
-    cueDistance,
-    objectDistance:firstLeg+secondLeg,
-    bankDistance:firstLeg,
-    postBankDistance:secondLeg,
-    cutDegrees,
-    score:
-      cueDistance+
-      firstLeg+
-      secondLeg+
-      18+
-      Math.max(0,cutDegrees-45)*1.4
-  };
-}
-
-/* ============================================================
-   KICK
-   ============================================================ */
-
-function kickCandidate(cue,object,pocket,rail){
-
-  const objectDirection=norm(
-    sub(pocket,object)
-  );
-
-  if(len(objectDirection)<.01)return null;
-
-  const ghost=ghostForDirection(
-    object,
-    objectDirection
-  );
-
-  if(!centerInside(ghost))return null;
-
-  const reflected=reflectAcrossRail(
-    ghost,
-    rail
-  );
-
-  if(!reflected)return null;
-
-  const kickPoint=railIntersection(
-    cue,
-    reflected,
-    rail
-  );
-
-  if(
-    !kickPoint||
-    !usableRailPoint(kickPoint,rail)
-  )return null;
-
-  if(
-    !pathClear(
-      cue,
-      kickPoint,
-      state.object.number
-    )
-  )return null;
-
-  if(
-    !pathClear(
-      kickPoint,
-      ghost,
-      state.object.number
-    )
-  )return null;
-
-  const cueDistance=dist(cue,kickPoint);
-  const secondDistance=dist(kickPoint,ghost);
-  const objectDistance=dist(object,pocket);
-
-  return{
-    kind:"kick",
-    pocket,
-    target:pocket,
-    rail,
-    ghost,
-    bankPoint:kickPoint,
-    cueDirection:norm(sub(kickPoint,cue)),
-    objectDirection,
-    cueDistance,
-    objectDistance,
-    kickDistance:cueDistance,
-    postKickDistance:secondDistance,
-    cutDegrees:0,
-    score:
-      cueDistance+
-      secondDistance+
-      objectDistance+
-      25
-  };
-}
-
-/* ============================================================
-   SOLVER
-   ============================================================ */
-
-function candidatesForPocket(pocket){
-
-  const cuts=[];
-  const banks=[];
-  const kicks=[];
-
-  const targets=pocketTargets(pocket);
-
-  if(state.mode==="auto"||state.mode==="cut"){
-
-    for(const target of targets){
-
-      const candidate=directCandidate(
-        state.cue,
-        state.object,
-        pocket,
-        target
-      );
-
-      if(candidate)cuts.push(candidate);
-    }
-  }
-
-  if(state.mode==="auto"||state.mode==="bank"){
-
-    for(const target of targets){
-
-      for(const rail of [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]){
-
-        const candidate=bankCandidate(
-          state.cue,
-          state.object,
-          pocket,
-          target,
-          rail
-        );
-
-        if(candidate)banks.push(candidate);
-      }
-    }
-  }
-
-  if(state.mode==="auto"||state.mode==="kick"){
-
-    for(const rail of [
-      "top",
-      "bottom",
-      "left",
-      "right"
-    ]){
-
-      const candidate=kickCandidate(
-        state.cue,
-        state.object,
-        pocket,
-        rail
-      );
-
-      if(candidate)kicks.push(candidate);
-    }
-  }
-
-  /*
-    Auto mode deliberately prioritizes a clean direct shot.
-    Banks and kicks are only selected when a clean direct route
-    is not available. This keeps the recommendation practical
-    instead of choosing a bank merely because of a mathematical
-    distance advantage.
-  */
-
-  if(state.mode==="auto"){
-
-    if(cuts.length)
-      return cuts.sort((a,b)=>a.score-b.score);
-
-    if(banks.length)
-      return banks.sort((a,b)=>a.score-b.score);
-
-    return kicks.sort((a,b)=>a.score-b.score);
-  }
-
-  return[
-    ...cuts,
-    ...banks,
-    ...kicks
-  ].sort((a,b)=>a.score-b.score);
-}
-
-function solve(){
-
-  let best=null;
-
-  const pockets=
-    state.selectedPocket
-      ?[state.selectedPocket]
-      :POCKETS;
-
-  for(const pocket of pockets){
-
-    const candidates=candidatesForPocket(pocket);
-
-    if(!candidates.length)continue;
-
-    const candidate=candidates[0];
-
-    const sidePenalty=
-      pocket.type==="side"
-        ?1.75
-        :0;
-
-    const adjusted={
-      ...candidate,
-      adjustedScore:candidate.score+sidePenalty
-    };
-
-    if(
-      !best||
-      adjusted.adjustedScore<
-      best.adjustedScore
-    ){
-      best=adjusted;
-    }
-  }
-
-  state.solution=best;
-
-  render();
-}
-
-/* ============================================================
-   SHOT LANGUAGE
-   ============================================================ */
-
-function railText(rail){
-
-  return{
-    top:"Top Rail",
-    bottom:"Bottom Rail",
-    left:"Left Rail",
-    right:"Right Rail"
-  }[rail]||"Rail";
-}
-
-function speedForShot(s){
-
-  if(!s)return"—";
-
-  if(s.kind==="kick")
-    return s.kickDistance>42?"Firm":"Medium";
-
-  if(s.kind==="bank")
-    return s.objectDistance>55?"Firm":"Medium";
-
-  if(s.cutDegrees>55)
-    return"Medium";
-
-  if(s.objectDistance<18)
-    return"Soft";
-
-  if(s.objectDistance>55)
-    return"Firm";
-
-  return"Medium";
-}
-
-/*
-  English is intentionally conservative.
-  The planner does not force left/right english simply because
-  a geometric cross product exists. On normal shots the primary
-  recommendation is to use a center-ball hit unless the layout
-  specifically calls for something different.
-*/
-
-function englishForShot(s){
-
-  if(!s)return"";
-
-  if(
-    s.kind==="kick"||
-    s.kind==="bank"
-  ){
-    return"Use a controlled center-ball hit and focus on speed.";
-  }
-
-  if(s.cutDegrees<8)
-    return"Use a center-ball hit.";
-
-  return"Use a center-ball hit unless your table conditions require a small adjustment.";
-}
-
-/*
-  This replaces the old clock-face instruction.
-
-  Clock-face language was too ambiguous because it can change
-  depending on how the player interprets the diagram. The
-  planner now describes the actual contact point in plain
-  billiards language: center, slightly left, or slightly right.
-*/
-
-function contactDescription(s){
-
-  if(!s)
-    return"the contact point";
-
-  const contact=norm(
-    sub(
-      s.ghost,
-      state.object
-    )
-  );
-
-  const horizontal=contact.x;
-
-  const vertical=contact.y;
-
-  const threshold=.28;
-
-  if(
-    Math.abs(horizontal)<threshold&&
-    Math.abs(vertical)<threshold
-  ){
-    return"the center of the object ball";
-  }
-
-  if(
-    Math.abs(horizontal)>=
-    Math.abs(vertical)
-  ){
-
-    if(horizontal<0)
-      return"the left side of the object ball";
-
-    return"the right side of the object ball";
-  }
-
-  if(vertical<0)
-    return"the upper portion of the object ball";
-
-  return"the lower portion of the object ball";
-}
-
-function instructionFor(s){
-
-  if(!s){
-
-    return"No clean route is available from the current layout.";
-  }
-
-  const number=state.object.number;
-  const pocket=s.pocket.name;
-  const speed=speedForShot(s);
-  const contact=contactDescription(s);
-
-  if(s.kind==="kick"){
-
-    return(
-      `Kick the cue ball off the ${railText(s.rail)} first, `+
-      `then contact the ${number} on ${contact}. `+
-      `Use ${speed.toLowerCase()} speed and let the cue ball reach the object ball cleanly.`
-    );
-  }
-
-  if(s.kind==="bank"){
-
-    return(
-      `Bank the ${number} to the ${pocket} off the ${railText(s.rail)}. `+
-      `Contact the ${number} on ${contact} and use ${speed.toLowerCase()} speed.`
-    );
-  }
-
-  if(s.cutDegrees<8){
-
-    return(
-      `Hit the ${number} near its center and send it toward the ${pocket}. `+
-      `Use ${speed.toLowerCase()} speed.`
-    );
-  }
-
-  return(
-    `Cut the ${number} toward the ${pocket} by contacting ${contact}. `+
-    `Use ${speed.toLowerCase()} speed.`
-  );
-}
-
-/* ============================================================
-   SCREEN GEOMETRY
-   ============================================================ */
-
-function geometry(){
-
-  const w=canvas.width;
-  const h=canvas.height;
-
-  const inset=Math.min(w,h)*.085;
-
-  return{
-    x:inset,
-    y:inset,
-    w:w-inset*2,
-    h:h-inset*2
-  };
-}
-
-function toScreen(p){
-
-  const g=geometry();
-
-  return V(
-    g.x+p.x/TABLE_W*g.w,
-    g.y+p.y/TABLE_H*g.h
-  );
-}
-
-function fromScreen(clientX,clientY){
-
-  const rect=canvas.getBoundingClientRect();
-  const g=geometry();
-
-  const px=
-    (clientX-rect.left)*
-    canvas.width/
-    rect.width;
-
-  const py=
-    (clientY-rect.top)*
-    canvas.height/
-    rect.height;
-
-  return V(
-    (px-g.x)/g.w*TABLE_W,
-    (py-g.y)/g.h*TABLE_H
-  );
-}
-
-/* ============================================================
-   TABLE DRAWING
-   ============================================================ */
-
-function roundedRect(c,x,y,w,h,r){
-
-  c.beginPath();
-
-  c.moveTo(x+r,y);
-
-  c.arcTo(x+w,y,x+w,y+h,r);
-  c.arcTo(x+w,y+h,x,y+h,r);
-  c.arcTo(x,y+h,x,y,r);
-  c.arcTo(x,y,x+w,y,r);
-
-  c.closePath();
-}
-
-function drawTable(){
-
-  const w=canvas.width;
-  const h=canvas.height;
-
-  ctx.clearRect(0,0,w,h);
-
-  const g=geometry();
-
-  const wood=ctx.createLinearGradient(0,0,0,h);
-
-  wood.addColorStop(0,"#624326");
-  wood.addColorStop(.5,"#2e1d11");
-  wood.addColorStop(1,"#4b2e18");
-
-  ctx.fillStyle=wood;
-
-  roundedRect(
-    ctx,
-    0,
-    0,
-    w,
-    h,
-    Math.min(w,h)*.035
-  );
-
-  ctx.fill();
-
-  const felt=ctx.createLinearGradient(
-    0,
-    g.y,
-    0,
-    g.y+g.h
-  );
-
-  felt.addColorStop(0,"#197755");
-  felt.addColorStop(.5,"#146447");
-  felt.addColorStop(1,"#10533a");
-
-  ctx.fillStyle=felt;
-
-  ctx.fillRect(
-    g.x,
-    g.y,
-    g.w,
-    g.h
-  );
-
-  ctx.strokeStyle="rgba(7,6,4,.95)";
-
-  ctx.lineWidth=Math.max(
-    2,
-    Math.min(w,h)*.018
-  );
-
-  ctx.strokeRect(
-    g.x,
-    g.y,
-    g.w,
-    g.h
-  );
-
-  drawDiamonds(g);
-  drawPockets(g);
-}
-
-function drawDiamonds(g){
-
-  const size=Math.max(
-    2.5,
-    Math.min(g.w,g.h)*.017
-  );
-
-  function diamond(x,y){
-
-    ctx.save();
-
-    ctx.translate(x,y);
-    ctx.rotate(Math.PI/4);
-
-    ctx.fillStyle="rgba(240,214,168,.72)";
-
-    ctx.fillRect(
-      -size/2,
-      -size/2,
-      size,
-      size
-    );
-
-    ctx.restore();
-  }
-
-  [
-    .125,.25,.375,.5,.625,.75,.875
-  ].forEach(t=>{
-
-    diamond(
-      g.x+g.w*t,
-      g.y-size*.72
-    );
-
-    diamond(
-      g.x+g.w*t,
-      g.y+g.h+size*.72
-    );
-  });
-
-  [
-    .25,.5,.75
-  ].forEach(t=>{
-
-    diamond(
-      g.x-size*.72,
-      g.y+g.h*t
-    );
-
-    diamond(
-      g.x+g.w+size*.72,
-      g.y+g.h*t
+      target,
+      b,
+      6
     );
   });
 }
 
-function drawPockets(g){
+function directionText(target,pocket){
 
-  const radius=
-    POCKET_SIZE/TABLE_W*g.w/2;
+  const dx = pocket.x-target.x;
+  const dy = pocket.y-target.y;
 
-  POCKETS.forEach(pocket=>{
+  const horizontal =
+    Math.abs(dx) > 8
+      ? dx > 0 ? "right" : "left"
+      : "";
 
-    const p=toScreen(pocket);
+  const vertical =
+    Math.abs(dy) > 8
+      ? dy > 0 ? "lower" : "upper"
+      : "";
 
-    const selected=
-      state.selectedPocket&&
-      state.selectedPocket.id===pocket.id;
-
-    const suggested=
-      state.solution&&
-      state.solution.pocket.id===pocket.id;
-
-    if(selected||suggested){
-
-      ctx.beginPath();
-
-      ctx.arc(
-        p.x,
-        p.y,
-        radius*1.28,
-        0,
-        Math.PI*2
-      );
-
-      ctx.strokeStyle=
-        selected
-          ?"rgba(217,255,63,.95)"
-          :"rgba(217,255,63,.55)";
-
-      ctx.lineWidth=2;
-      ctx.stroke();
-    }
-
-    ctx.beginPath();
-
-    ctx.arc(
-      p.x,
-      p.y,
-      radius,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fillStyle="#030303";
-    ctx.fill();
-
-    ctx.strokeStyle="rgba(0,0,0,.98)";
-    ctx.lineWidth=2;
-    ctx.stroke();
-  });
-}
-
-/* ============================================================
-   ROUTES
-   ============================================================ */
-
-function drawLine(a,b,color,width,dashed=false){
-
-  const A=toScreen(a);
-  const B=toScreen(b);
-
-  ctx.beginPath();
-
-  ctx.moveTo(A.x,A.y);
-  ctx.lineTo(B.x,B.y);
-
-  ctx.strokeStyle=color;
-  ctx.lineWidth=width;
-  ctx.lineCap="round";
-
-  ctx.setLineDash(
-    dashed?[7,7]:[]
-  );
-
-  ctx.stroke();
-
-  ctx.setLineDash([]);
-}
-
-function drawRoute(){
-
-  const s=state.solution;
-
-  if(!s)return;
-
-  const lineWidth=Math.max(
-    2,
-    canvas.width*.0026
-  );
-
-  if(s.kind==="kick"){
-
-    drawLine(
-      state.cue,
-      s.bankPoint,
-      "#42d995",
-      lineWidth,
-      true
-    );
-
-    drawLine(
-      s.bankPoint,
-      s.ghost,
-      "#42d995",
-      lineWidth,
-      true
-    );
-
-  }else{
-
-    drawLine(
-      state.cue,
-      s.ghost,
-      "#42d995",
-      lineWidth,
-      true
-    );
+  if(vertical === "upper" && horizontal === "right"){
+    return "right corner pocket";
   }
 
-  if(s.kind==="cut"){
-
-    drawLine(
-      state.object,
-      s.target,
-      "#ffffff",
-      lineWidth,
-      false
-    );
-
-  }else if(s.kind==="bank"){
-
-    drawLine(
-      state.object,
-      s.bankPoint,
-      "#ff4652",
-      lineWidth+1,
-      false
-    );
-
-    drawLine(
-      s.bankPoint,
-      s.target,
-      "#ff4652",
-      lineWidth+1,
-      false
-    );
-
-    drawBankPoint(s.bankPoint);
-
-  }else{
-
-    drawBankPoint(s.bankPoint);
+  if(vertical === "upper" && horizontal === "left"){
+    return "left corner pocket";
   }
 
-  const gp=toScreen(s.ghost);
-  const g=geometry();
-
-  const radius=
-    BALL_RADIUS/TABLE_W*g.w;
-
-  ctx.beginPath();
-
-  ctx.arc(
-    gp.x,
-    gp.y,
-    radius,
-    0,
-    Math.PI*2
-  );
-
-  ctx.strokeStyle="rgba(217,255,63,.45)";
-  ctx.lineWidth=1.5;
-
-  ctx.setLineDash([5,5]);
-  ctx.stroke();
-  ctx.setLineDash([]);
-}
-
-function drawBankPoint(p){
-
-  if(!p)return;
-
-  const q=toScreen(p);
-
-  ctx.beginPath();
-
-  ctx.arc(
-    q.x,
-    q.y,
-    Math.max(4,canvas.width*.006),
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle="#ff4652";
-  ctx.fill();
-}
-
-/* ============================================================
-   POOL BALLS
-   ============================================================ */
-
-function drawPoolBall(position,number,selected=false,role="obstacle"){
-
-  const g=geometry();
-  const p=toScreen(position);
-
-  const radius=
-    BALL_RADIUS/TABLE_W*g.w;
-
-  ctx.save();
-
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x+radius*.10,
-    p.y+radius*.12,
-    radius*1.01,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle="rgba(0,0,0,.24)";
-  ctx.fill();
-
-  ctx.restore();
-
-  const ball=BALL_MAP[number];
-
-  if(!ball)return;
-
-  ctx.save();
-
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x,
-    p.y,
-    radius,
-    0,
-    Math.PI*2
-  );
-
-  ctx.clip();
-
-  const gradient=ctx.createRadialGradient(
-    p.x-radius*.36,
-    p.y-radius*.42,
-    radius*.03,
-    p.x,
-    p.y,
-    radius
-  );
-
-  gradient.addColorStop(0,"#ffffff");
-  gradient.addColorStop(.18,ball.color);
-  gradient.addColorStop(.82,ball.color);
-  gradient.addColorStop(1,"#111111");
-
-  ctx.fillStyle=gradient;
-
-  ctx.fillRect(
-    p.x-radius,
-    p.y-radius,
-    radius*2,
-    radius*2
-  );
-
-  if(ball.type==="stripe"){
-
-    ctx.fillStyle="#f5f5f5";
-
-    ctx.fillRect(
-      p.x-radius,
-      p.y-radius*.31,
-      radius*2,
-      radius*.62
-    );
+  if(vertical === "lower" && horizontal === "right"){
+    return "right corner pocket";
   }
 
-  ctx.restore();
-
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x,
-    p.y,
-    radius,
-    0,
-    Math.PI*2
-  );
-
-  ctx.strokeStyle="rgba(255,255,255,.28)";
-  ctx.lineWidth=Math.max(1,radius*.035);
-  ctx.stroke();
-
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x,
-    p.y,
-    radius*.39,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle="#f8f8f8";
-  ctx.fill();
-
-  ctx.strokeStyle="rgba(0,0,0,.55)";
-  ctx.lineWidth=Math.max(1,radius*.035);
-  ctx.stroke();
-
-  ctx.fillStyle="#111";
-
-  ctx.font=
-    `900 ${Math.max(6,radius*.62)}px Arial`;
-
-  ctx.textAlign="center";
-  ctx.textBaseline="middle";
-
-  ctx.fillText(
-    number,
-    p.x,
-    p.y+.25
-  );
-
-  if(selected||role==="object"){
-
-    ctx.beginPath();
-
-    ctx.arc(
-      p.x,
-      p.y,
-      radius*1.17,
-      0,
-      Math.PI*2
-    );
-
-    ctx.strokeStyle=
-      selected
-        ?"rgba(217,255,63,.95)"
-        :"rgba(217,255,63,.48)";
-
-    ctx.lineWidth=Math.max(
-      1.5,
-      radius*.07
-    );
-
-    ctx.stroke();
+  if(vertical === "lower" && horizontal === "left"){
+    return "left corner pocket";
   }
 
-  /*
-    Blocking balls have a subtle red outline so they are
-    visually distinct from the target ball without changing
-    the actual table geometry.
-  */
-
-  if(role==="blocker"){
-
-    ctx.beginPath();
-
-    ctx.arc(
-      p.x,
-      p.y,
-      radius*1.13,
-      0,
-      Math.PI*2
-    );
-
-    ctx.strokeStyle="rgba(255,70,82,.55)";
-    ctx.lineWidth=Math.max(1,radius*.045);
-    ctx.stroke();
-  }
+  return pocket.name.toLowerCase();
 }
 
-function drawCueBall(){
+function updateRecommendation(){
 
-  const g=geometry();
-  const p=toScreen(state.cue);
+  const cue = getCue();
+  const target = getTarget();
 
-  const radius=
-    BALL_RADIUS/TABLE_W*g.w;
+  const shotTypeEl = document.getElementById("shotType");
+  const pocketEl = document.getElementById("pocketName");
+  const whereEl = document.getElementById("whereHit");
+  const descEl = document.getElementById("shotDescription");
 
-  ctx.beginPath();
+  if(!cue || !target){
 
-  ctx.arc(
-    p.x+radius*.10,
-    p.y+radius*.12,
-    radius*1.01,
-    0,
-    Math.PI*2
-  );
+    shotTypeEl.textContent = "Set Up Your Shot";
+    pocketEl.textContent = "—";
+    whereEl.textContent = "Place a cue ball and target ball";
+    descEl.textContent =
+      "Place the cue ball and target ball on the table to receive a shot recommendation.";
 
-  ctx.fillStyle="rgba(0,0,0,.24)";
-  ctx.fill();
-
-  const gradient=ctx.createRadialGradient(
-    p.x-radius*.38,
-    p.y-radius*.42,
-    radius*.03,
-    p.x,
-    p.y,
-    radius
-  );
-
-  gradient.addColorStop(0,"#ffffff");
-  gradient.addColorStop(.72,"#f1f1f1");
-  gradient.addColorStop(1,"#c4c8ca");
-
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x,
-    p.y,
-    radius,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle=gradient;
-  ctx.fill();
-
-  ctx.strokeStyle="rgba(0,0,0,.28)";
-  ctx.lineWidth=Math.max(1,radius*.035);
-  ctx.stroke();
-
-  if(state.selectedBall==="cue"){
-
-    ctx.beginPath();
-
-    ctx.arc(
-      p.x,
-      p.y,
-      radius*1.17,
-      0,
-      Math.PI*2
-    );
-
-    ctx.strokeStyle="#d9ff3f";
-    ctx.lineWidth=Math.max(2,radius*.07);
-    ctx.stroke();
-  }
-}
-
-function drawBalls(){
-
-  drawCueBall();
-
-  for(const ball of state.tableBalls){
-
-    drawPoolBall(
-      ball,
-      ball.number,
-      state.selectedBall==="object"&&
-      state.selectedRackBall===ball.number,
-      ball.role
-    );
-  }
-}
-
-/* ============================================================
-   AIM BALLS
-   ============================================================ */
-
-function setupBallCanvas(el){
-
-  const rect=el.getBoundingClientRect();
-
-  el.width=Math.max(1,Math.round(rect.width*DPR));
-  el.height=Math.max(1,Math.round(rect.height*DPR));
-
-  return el.getContext("2d");
-}
-
-function largeBall(c,type,number){
-
-  const w=c.canvas.width;
-  const h=c.canvas.height;
-
-  c.clearRect(0,0,w,h);
-
-  const x=w/2;
-  const y=h/2;
-  const r=Math.min(w,h)*.36;
-
-  if(type==="cue"){
-
-    const gradient=c.createRadialGradient(
-      x-r*.36,
-      y-r*.42,
-      r*.02,
-      x,
-      y,
-      r
-    );
-
-    gradient.addColorStop(0,"#ffffff");
-    gradient.addColorStop(.76,"#f0f0f0");
-    gradient.addColorStop(1,"#c2c6c8");
-
-    c.beginPath();
-
-    c.arc(
-      x,
-      y,
-      r,
-      0,
-      Math.PI*2
-    );
-
-    c.fillStyle=gradient;
-    c.fill();
-
-    c.strokeStyle="rgba(0,0,0,.25)";
-    c.lineWidth=Math.max(1,r*.025);
-    c.stroke();
-
-    return{x,y,r};
-  }
-
-  const ball=BALL_MAP[number];
-
-  if(!ball)return{x,y,r};
-
-  c.save();
-
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    r,
-    0,
-    Math.PI*2
-  );
-
-  c.clip();
-
-  c.fillStyle=ball.color;
-
-  c.fillRect(
-    x-r,
-    y-r,
-    r*2,
-    r*2
-  );
-
-  if(ball.type==="stripe"){
-
-    c.fillStyle="#f7f7f7";
-
-    c.fillRect(
-      x-r,
-      y-r*.30,
-      r*2,
-      r*.60
-    );
-  }
-
-  const shade=c.createRadialGradient(
-    x-r*.38,
-    y-r*.40,
-    r*.04,
-    x,
-    y,
-    r
-  );
-
-  shade.addColorStop(0,"rgba(255,255,255,.34)");
-  shade.addColorStop(.32,"rgba(255,255,255,0)");
-  shade.addColorStop(.82,"rgba(0,0,0,0)");
-  shade.addColorStop(1,"rgba(0,0,0,.20)");
-
-  c.fillStyle=shade;
-
-  c.fillRect(
-    x-r,
-    y-r,
-    r*2,
-    r*2
-  );
-
-  c.restore();
-
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    r,
-    0,
-    Math.PI*2
-  );
-
-  c.strokeStyle="rgba(0,0,0,.42)";
-  c.lineWidth=Math.max(1,r*.025);
-  c.stroke();
-
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    r*.39,
-    0,
-    Math.PI*2
-  );
-
-  c.fillStyle="#fafafa";
-  c.fill();
-
-  c.strokeStyle="rgba(0,0,0,.65)";
-  c.lineWidth=Math.max(1.5,r*.035);
-  c.stroke();
-
-  c.fillStyle="#111";
-
-  c.font=
-    `900 ${Math.max(10,r*.50)}px Arial`;
-
-  c.textAlign="center";
-  c.textBaseline="middle";
-
-  c.fillText(
-    number,
-    x,
-    y+.5
-  );
-
-  return{x,y,r};
-}
-
-function drawCueView(c){
-
-  const ball=largeBall(c,"cue");
-
-  const s=state.solution;
-
-  if(!s)return;
-
-  const direction=norm(
-    sub(
-      s.ghost,
-      state.cue
-    )
-  );
-
-  /*
-    Red marker indicates the direction of the cue-ball hit.
-    It is intentionally positioned on the ball surface rather
-    than using an ambiguous clock-face label.
-  */
-
-  const markerDistance=ball.r*.76;
-
-  const markerRadius=Math.max(
-    5,
-    ball.r*.115
-  );
-
-  const x=ball.x+direction.x*markerDistance;
-  const y=ball.y+direction.y*markerDistance;
-
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    markerRadius,
-    0,
-    Math.PI*2
-  );
-
-  c.fillStyle="#ff4652";
-  c.fill();
-
-  c.strokeStyle="rgba(0,0,0,.35)";
-  c.lineWidth=Math.max(1,markerRadius*.18);
-  c.stroke();
-}
-
-function drawObjectView(c){
-
-  const ball=largeBall(
-    c,
-    "object",
-    state.object.number
-  );
-
-  const s=state.solution;
-
-  if(!s)return;
-
-  const contact=norm(
-    sub(
-      s.ghost,
-      state.object
-    )
-  );
-
-  const markerDistance=ball.r*.76;
-
-  const markerRadius=Math.max(
-    5,
-    ball.r*.115
-  );
-
-  const x=ball.x+contact.x*markerDistance;
-  const y=ball.y+contact.y*markerDistance;
-
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    markerRadius,
-    0,
-    Math.PI*2
-  );
-
-  c.fillStyle="#ff4652";
-  c.fill();
-
-  c.strokeStyle="rgba(0,0,0,.35)";
-  c.lineWidth=Math.max(1,markerRadius*.18);
-  c.stroke();
-}
-
-function drawBallViews(){
-
-  const cueContext=setupBallCanvas(
-    document.getElementById("cueView")
-  );
-
-  const objectContext=setupBallCanvas(
-    document.getElementById("objectView")
-  );
-
-  drawCueView(cueContext);
-  drawObjectView(objectContext);
-}
-
-/* ============================================================
-   MASTER DRAW
-   ============================================================ */
-
-function draw(){
-
-  drawTable();
-  drawRoute();
-  drawBalls();
-  drawBallViews();
-}
-
-/* ============================================================
-   UI RENDER
-   ============================================================ */
-
-function render(){
-
-  const s=state.solution;
-
-  document.getElementById("whereBall").textContent=
-    state.object.number;
-
-  document.getElementById("shotType").textContent=
-    s
-      ?capitalize(s.kind)
-      :"—";
-
-  document.getElementById("shotPocket").textContent=
-    s
-      ?s.pocket.name
-      :"—";
-
-  document.getElementById("shotRail").textContent=
-    s&&s.rail
-      ?railText(s.rail)
-      :"—";
-
-  document.getElementById("shotSpeed").textContent=
-    s
-      ?speedForShot(s)
-      :"—";
-
-  document.getElementById("instruction").textContent=
-    instructionFor(s);
-
-  document.getElementById("status").textContent=
-    s
-      ?"Route calculated from the current ball layout."
-      :"No clean route is available from the current layout.";
-
-  renderPockets();
-  renderModes();
-  renderRack();
-  renderRoles();
-  renderBlockerType();
-
-  document.getElementById("removeBall").disabled=
-    !state.selectedRackBall;
-
-  draw();
-}
-
-function capitalize(text){
-
-  if(!text)return text;
-
-  return text.charAt(0).toUpperCase()+text.slice(1);
-}
-
-/* ============================================================
-   POCKET UI
-   ============================================================ */
-
-document.getElementById("pocketAuto").onclick=()=>{
-
-  state.selectedPocket=null;
-
-  solve();
-};
-
-function renderPockets(){
-
-  const container=document.getElementById("pockets");
-
-  container.innerHTML="";
-
-  for(const pocket of POCKETS){
-
-    const button=document.createElement("button");
-
-    button.className="pocket";
-
-    const active=
-      state.selectedPocket&&
-      state.selectedPocket.id===pocket.id;
-
-    if(active)
-      button.classList.add("selected");
-
-    button.textContent=pocket.name;
-
-    button.onclick=()=>{
-
-      state.selectedPocket=pocket;
-
-      solve();
-    };
-
-    container.appendChild(button);
-  }
-
-  document.getElementById("pocketAuto").classList.toggle(
-    "active",
-    !state.selectedPocket
-  );
-}
-
-/* ============================================================
-   MODE UI
-   ============================================================ */
-
-document.getElementById("shotAuto").onclick=()=>{
-
-  state.mode="auto";
-
-  solve();
-};
-
-function renderModes(){
-
-  document.querySelectorAll(".mode").forEach(button=>{
-
-    button.classList.toggle(
-      "active",
-      state.mode===button.dataset.mode
-    );
-
-    button.onclick=()=>{
-
-      state.mode=button.dataset.mode;
-
-      solve();
-    };
-  });
-
-  document.getElementById("shotAuto").classList.toggle(
-    "active",
-    state.mode==="auto"
-  );
-}
-
-/* ============================================================
-   RACK
-   ============================================================ */
-
-function rackOrder(){
-
-  return[
-    [1],
-    [2,3],
-    [4,8,5],
-    [6,7,9,10],
-    [11,12,13,14,15]
-  ];
-}
-
-function renderRack(){
-
-  const rack=document.getElementById("rack");
-
-  rack.innerHTML="";
-
-  const placed=new Set(
-    state.tableBalls.map(b=>b.number)
-  );
-
-  rackOrder().forEach((numbers,index)=>{
-
-    const row=document.createElement("div");
-
-    row.className=`rack-row r${index+1}`;
-
-    numbers.forEach(number=>{
-
-      const ball=BALL_MAP[number];
-
-      const button=document.createElement("button");
-
-      button.className=`rack-ball ${ball.type}`;
-
-      button.style.setProperty(
-        "--ball-color",
-        ball.color
-      );
-
-      if(state.selectedRackBall===number)
-        button.classList.add("selected");
-
-      if(placed.has(number))
-        button.classList.add("on-table");
-
-      if(
-        state.object.number===number&&
-        state.tableBalls.some(
-          b=>
-            b.number===number&&
-            b.role==="object"
-        )
-      ){
-        button.classList.add("object-ball");
-      }
-
-      const span=document.createElement("span");
-
-      span.textContent=number;
-
-      button.appendChild(span);
-
-      button.onclick=event=>{
-
-        event.stopPropagation();
-
-        selectRackBall(number);
-      };
-
-      row.appendChild(button);
-    });
-
-    rack.appendChild(row);
-  });
-
-  document.getElementById("rackAccent").textContent=
-    state.selectedRackBall
-      ?`Ball ${state.selectedRackBall} Selected`
-      :"Select";
-}
-
-/* ============================================================
-   BALL ROLES
-   ============================================================ */
-
-document.getElementById("objectRole").onclick=()=>{
-
-  state.placementRole="object";
-
-  renderRoles();
-};
-
-document.getElementById("obstacleRole").onclick=()=>{
-
-  state.placementRole="obstacle";
-
-  renderRoles();
-};
-
-function renderRoles(){
-
-  document.getElementById("objectRole").classList.toggle(
-    "active",
-    state.placementRole==="object"
-  );
-
-  document.getElementById("obstacleRole").classList.toggle(
-    "active",
-    state.placementRole==="obstacle"
-  );
-
-  document.getElementById("blockerType").style.display=
-    state.placementRole==="obstacle"
-      ?"grid"
-      :"none";
-}
-
-/* ============================================================
-   BLOCKER OWNERSHIP
-   ============================================================ */
-
-document.getElementById("myBallBlocker").onclick=()=>{
-
-  state.blockerOwner="my";
-
-  renderBlockerType();
-};
-
-document.getElementById("opponentBallBlocker").onclick=()=>{
-
-  state.blockerOwner="opponent";
-
-  renderBlockerType();
-};
-
-function renderBlockerType(){
-
-  document.getElementById("myBallBlocker").classList.toggle(
-    "active",
-    state.blockerOwner==="my"
-  );
-
-  document.getElementById("opponentBallBlocker").classList.toggle(
-    "active",
-    state.blockerOwner==="opponent"
-  );
-}
-
-/* ============================================================
-   RACK SELECTION
-   ============================================================ */
-
-function selectRackBall(number){
-
-  state.selectedRackBall=number;
-  state.selectedBall="object";
-
-  const existing=state.tableBalls.find(
-    b=>b.number===number
-  );
-
-  if(existing){
-
-    if(existing.role==="object"){
-
-      state.object={
-        x:existing.x,
-        y:existing.y,
-        number
-      };
-
-      state.placementRole="object";
-
-    }else{
-
-      state.placementRole="obstacle";
-      state.blockerOwner=
-        existing.owner==="opponent"
-          ?"opponent"
-          :"my";
-    }
-  }
-
-  render();
-}
-
-/* ============================================================
-   HIT TEST
-   ============================================================ */
-
-function nearestBall(p){
-
-  const touchRadius=Math.max(
-    BALL_DIAMETER*1.7,
-    4.4
-  );
-
-  if(
-    dist(p,state.cue)<=touchRadius
-  ){
-    return{type:"cue"};
-  }
-
-  let best=null;
-  let bestDistance=Infinity;
-
-  for(const ball of state.tableBalls){
-
-    const d=dist(p,ball);
-
-    if(
-      d<=touchRadius&&
-      d<bestDistance
-    ){
-      best=ball;
-      bestDistance=d;
-    }
-  }
-
-  if(best){
-
-    return{
-      type:"object",
-      number:best.number,
-      role:best.role
-    };
-  }
-
-  return null;
-}
-
-/* ============================================================
-   VALID POSITION
-   ============================================================ */
-
-function validBallPosition(p,movingNumber=null){
-
-  if(!centerInside(p))
-    return false;
-
-  if(
-    dist(p,state.cue)<BALL_DIAMETER
-  )
-    return false;
-
-  for(const ball of state.tableBalls){
-
-    if(ball.number===movingNumber)
-      continue;
-
-    if(
-      dist(p,ball)<BALL_DIAMETER
-    ){
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/* ============================================================
-   TABLE INTERACTION
-   ============================================================ */
-
-canvas.addEventListener(
-  "pointerdown",
-  event=>{
-
-    event.preventDefault();
-
-    const p=fromScreen(
-      event.clientX,
-      event.clientY
-    );
-
-    const hit=nearestBall(p);
-
-    if(hit){
-
-      if(hit.type==="cue"){
-
-        state.selectedBall="cue";
-        state.selectedRackBall=null;
-
-        render();
-
-        return;
-      }
-
-      const ball=state.tableBalls.find(
-        b=>b.number===hit.number
-      );
-
-      if(!ball)return;
-
-      state.selectedBall="object";
-      state.selectedRackBall=ball.number;
-
-      if(ball.role==="object"){
-
-        state.object={
-          x:ball.x,
-          y:ball.y,
-          number:ball.number
-        };
-
-        state.placementRole="object";
-
-      }else{
-
-        state.placementRole="obstacle";
-
-        state.blockerOwner=
-          ball.owner==="opponent"
-            ?"opponent"
-            :"my";
-      }
-
-      render();
-
-      return;
-    }
-
-    if(!state.selectedBall)
-      return;
-
-    const next=V(
-      clamp(
-        p.x,
-        BALL_RADIUS,
-        TABLE_W-BALL_RADIUS
-      ),
-      clamp(
-        p.y,
-        BALL_RADIUS,
-        TABLE_H-BALL_RADIUS
-      )
-    );
-
-    /* Cue ball */
-
-    if(state.selectedBall==="cue"){
-
-      if(!validBallPosition(next))
-        return;
-
-      state.cue=next;
-
-      solve();
-
-      return;
-    }
-
-    /* Object / blocking ball */
-
-    const number=state.selectedRackBall;
-
-    if(!number)return;
-
-    const existing=state.tableBalls.find(
-      b=>b.number===number
-    );
-
-    if(existing){
-
-      if(
-        !validBallPosition(
-          next,
-          number
-        )
-      )return;
-
-      existing.x=next.x;
-      existing.y=next.y;
-
-      if(state.placementRole==="object"){
-
-        for(const b of state.tableBalls){
-
-          if(
-            b.number!==number&&
-            b.role==="object"
-          ){
-            b.role="blocker";
-            if(!b.owner)b.owner="my";
-          }
-        }
-
-        existing.role="object";
-        existing.owner="target";
-
-        state.object={
-          x:next.x,
-          y:next.y,
-          number
-        };
-
-      }else{
-
-        existing.role="blocker";
-        existing.owner=state.blockerOwner;
-      }
-
-    }else{
-
-      if(!validBallPosition(next))
-        return;
-
-      const newBall={
-        number,
-        x:next.x,
-        y:next.y,
-        role:
-          state.placementRole==="object"
-            ?"object"
-            :"blocker",
-        owner:
-          state.placementRole==="object"
-            ?"target"
-            :state.blockerOwner
-      };
-
-      state.tableBalls.push(newBall);
-
-      if(newBall.role==="object"){
-
-        for(const b of state.tableBalls){
-
-          if(
-            b.number!==number&&
-            b.role==="object"
-          ){
-
-            b.role="blocker";
-
-            if(!b.owner)
-              b.owner="my";
-          }
-        }
-
-        state.object={
-          x:next.x,
-          y:next.y,
-          number
-        };
-      }
-    }
-
-    solve();
-  },
-  {
-    passive:false
-  }
-);
-
-/* ============================================================
-   REMOVE BALL
-   ============================================================ */
-
-document.getElementById("removeBall").onclick=()=>{
-
-  if(!state.selectedRackBall)
     return;
+  }
 
-  const number=state.selectedRackBall;
+  const pocket = choosePocket(target,cue);
+  const blockers = detectBlockers(cue,target);
 
-  const removed=state.tableBalls.find(
-    b=>b.number===number
+  const cueToTarget = distance(cue,target);
+  const targetToPocket = distance(target,pocket);
+
+  const cutAngle = Math.abs(
+    normalizeAngle(
+      angleDeg(cue,target) -
+      angleDeg(target,pocket)
+    )
   );
 
-  state.tableBalls=state.tableBalls.filter(
-    b=>b.number!==number
-  );
+  let shotType = "Straight Shot";
 
-  state.selectedRackBall=null;
-  state.selectedBall=null;
-
-  if(
-    removed&&
-    removed.role==="object"
+  if(blockers.length){
+    shotType = "Blocked Shot";
+  }else if(cutAngle > 70){
+    shotType = "Bank Shot";
+  }else if(cutAngle > 38){
+    shotType = "Cut Shot";
+  }else if(
+    targetToPocket > 55 &&
+    cutAngle > 20
   ){
+    shotType = "Long Cut Shot";
+  }
 
-    const replacement=state.tableBalls[0];
+  /*
+    Bank recommendation is deliberately conservative.
+    A bank is only suggested when the direct pocket route
+    is unusually difficult.
+  */
 
-    if(replacement){
+  if(shotType === "Bank Shot"){
 
-      replacement.role="object";
-      replacement.owner="target";
+    const rail =
+      pocket.y < 50
+        ? "upper rail"
+        : "lower rail";
 
-      state.object={
-        x:replacement.x,
-        y:replacement.y,
-        number:replacement.number
-      };
+    whereEl.textContent =
+      "Aim the object ball toward the " + rail + " first.";
+
+    descEl.textContent =
+      "Play the object ball to the " +
+      rail +
+      " and let the rebound carry it toward the " +
+      directionText(target,pocket) +
+      ". Use medium speed.";
+
+  }else if(shotType === "Blocked Shot"){
+
+    const blocker = blockers[0];
+
+    const side =
+      blocker.x < cue.x
+        ? "right side"
+        : "left side";
+
+    whereEl.textContent =
+      "Use the " + side + " of the cue ball.";
+
+    descEl.textContent =
+      "The direct path is obstructed. Use controlled sidespin and a slightly fuller or thinner contact to route the cue ball around the blocking ball. Use medium speed.";
+
+  }else{
+
+    let contact;
+
+    if(cutAngle < 8){
+      contact = "Center of the cue ball";
+    }else if(
+      normalizeAngle(
+        angleDeg(cue,target) -
+        angleDeg(target,pocket)
+      ) > 0
+    ){
+      contact = "Slightly left of center";
+    }else{
+      contact = "Slightly right of center";
+    }
+
+    whereEl.textContent = contact;
+
+    const pocketText = directionText(target,pocket);
+
+    if(shotType === "Straight Shot"){
+
+      descEl.textContent =
+        "Aim through the center of the cue ball toward the contact point on the target ball. Send the target ball straight toward the " +
+        pocketText +
+        ". Use medium speed.";
 
     }else{
 
-      state.object={
-        x:65,
-        y:20,
-        number:3
-      };
+      const cutDirection =
+        normalizeAngle(
+          angleDeg(cue,target) -
+          angleDeg(target,pocket)
+        ) > 0
+          ? "left"
+          : "right";
+
+      descEl.textContent =
+        "Cut the target ball " +
+        cutDirection +
+        " toward the " +
+        pocketText +
+        ", contacting the object ball on the appropriate side of center. Use medium speed.";
     }
   }
 
-  solve();
-};
-
-/* ============================================================
-   RESET
-   ============================================================ */
-
-document.getElementById("reset").onclick=()=>{
-
-  state.cue={
-    x:22,
-    y:34
-  };
-
-  state.object={
-    x:65,
-    y:20,
-    number:3
-  };
-
-  state.tableBalls=[
-    {
-      number:3,
-      x:65,
-      y:20,
-      role:"object",
-      owner:"target"
-    }
-  ];
-
-  state.selectedBall=null;
-  state.selectedRackBall=3;
-  state.placementRole="object";
-  state.blockerOwner="my";
-  state.selectedPocket=null;
-  state.mode="auto";
-  state.solution=null;
-
-  solve();
-};
-
-/* ============================================================
-   RESIZE
-   ============================================================ */
-
-let resizeTimer=null;
-
-window.addEventListener(
-  "resize",
-  ()=>{
-
-    clearTimeout(resizeTimer);
-
-    resizeTimer=setTimeout(
-      ()=>{
-
-        DPR=Math.min(
-          window.devicePixelRatio||1,
-          2
-        );
-
-        resizeCanvas();
-
-      },
-      50
-    );
-  }
-);
-
-function resizeCanvas(){
-
-  const rect=canvas.getBoundingClientRect();
-
-  canvas.width=Math.max(
-    1,
-    Math.round(rect.width*DPR)
-  );
-
-  canvas.height=Math.max(
-    1,
-    Math.round(rect.height*DPR)
-  );
-
-  draw();
+  shotTypeEl.textContent = shotType;
+  pocketEl.textContent =
+    pocket.name.replace("Side","Side");
 }
 
-/* ============================================================
-   START
-   ============================================================ */
+/* ---------------------------------------------------------
+   Initial state
+--------------------------------------------------------- */
 
-requestAnimationFrame(()=>{
+addBall("cue",20,50);
+addBall("target",66,50);
 
-  state.tableBalls=[
-    {
-      number:3,
-      x:65,
-      y:20,
-      role:"object",
-      owner:"target"
-    }
-  ];
+state.selectedId = null;
 
-  state.selectedRackBall=3;
-  state.placementRole="object";
-  state.blockerOwner="my";
-
-  resizeCanvas();
-
-  solve();
-});
+render();
 
 </script>
 
