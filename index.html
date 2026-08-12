@@ -17,7 +17,7 @@
   --lime:#d9ff3f;
   --red:#ff4652;
   --green:#42d995;
-  --white:#ffffff;
+  --white:#f5f7f8;
 }
 
 *{
@@ -34,8 +34,14 @@ html,body{
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
 }
 
-body{padding:7px}
-button{font:inherit}
+body{
+  padding:7px;
+}
+
+button{
+  font:inherit;
+  cursor:pointer;
+}
 
 .app{
   width:min(1200px,100%);
@@ -57,8 +63,8 @@ button{font:inherit}
 
 .brand-name{
   font-size:22px;
-  font-weight:900;
-  letter-spacing:-.05em;
+  font-weight:950;
+  letter-spacing:-.06em;
   line-height:.9;
 }
 
@@ -66,8 +72,9 @@ button{font:inherit}
   margin-top:3px;
   color:var(--muted);
   font-size:8px;
-  font-weight:700;
-  letter-spacing:.06em;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:lowercase;
 }
 
 .reset{
@@ -77,7 +84,7 @@ button{font:inherit}
   border-radius:9px;
   padding:8px 13px;
   font-size:11px;
-  font-weight:800;
+  font-weight:850;
 }
 
 .layout{
@@ -117,7 +124,7 @@ button{font:inherit}
   padding:7px 2px 2px;
   color:var(--muted);
   font-size:9px;
-  font-weight:650;
+  font-weight:700;
 }
 
 .legend{
@@ -126,17 +133,35 @@ button{font:inherit}
   gap:8px 14px;
   padding:6px 2px 0;
   font-size:8px;
-  font-weight:750;
+  font-weight:800;
+  color:#89949b;
 }
 
-.legend-green{color:var(--green)}
-.legend-white{color:var(--white)}
-.legend-red{color:var(--red)}
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.legend-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  flex:0 0 auto;
+}
+
+.legend-green .legend-dot{background:var(--green)}
+.legend-white .legend-dot{background:#fff}
+.legend-red .legend-dot{background:var(--red)}
 
 .side{
   display:flex;
   flex-direction:column;
   gap:8px;
+}
+
+.full-card{
+  width:100%;
 }
 
 .section{
@@ -152,25 +177,33 @@ button{font:inherit}
 
 .section-title{
   font-size:10px;
-  font-weight:850;
-  letter-spacing:0;
+  font-weight:950;
+  letter-spacing:-.01em;
+  text-transform:lowercase;
 }
 
-.auto-button{
-  border:1px solid rgba(217,255,63,.38);
-  background:rgba(217,255,63,.08);
-  color:var(--lime);
+.section-action{
+  border:1px solid rgba(255,255,255,.065);
+  background:#101519;
+  color:#aeb7bd;
   border-radius:7px;
-  min-width:48px;
-  padding:5px 9px;
+  padding:4px 8px;
   font-size:8px;
-  font-weight:850;
+  font-weight:900;
+  text-transform:lowercase;
 }
 
-.auto-button.active{
+.section-action.active{
   background:var(--lime);
-  color:#10150b;
   border-color:var(--lime);
+  color:#10150b;
+}
+
+.section-accent{
+  color:var(--lime);
+  font-size:8px;
+  font-weight:950;
+  letter-spacing:.02em;
 }
 
 .where-grid{
@@ -188,10 +221,19 @@ button{font:inherit}
   min-width:0;
 }
 
+.ball-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+}
+
 .ball-label{
   color:var(--muted);
-  font-size:8px;
-  font-weight:750;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.1em;
+  text-transform:uppercase;
 }
 
 .ball-view{
@@ -218,17 +260,19 @@ button{font:inherit}
 .stat-label{
   color:var(--muted);
   font-size:7px;
-  font-weight:750;
-  letter-spacing:.03em;
+  font-weight:900;
+  letter-spacing:.1em;
+  text-transform:lowercase;
 }
 
 .stat-value{
   margin-top:3px;
   font-size:9px;
-  font-weight:800;
+  font-weight:900;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  text-transform:lowercase;
 }
 
 .pro-instruction{
@@ -237,10 +281,10 @@ button{font:inherit}
   border-left:2px solid var(--lime);
   background:#0b1013;
   border-radius:0 8px 8px 0;
-  color:#e1e6e8;
+  color:#dfe5e7;
   font-size:9px;
-  line-height:1.45;
-  font-weight:650;
+  line-height:1.5;
+  font-weight:700;
 }
 
 .status{
@@ -264,7 +308,7 @@ button{font:inherit}
   background:#101519;
   color:#aeb7bd;
   font-size:8px;
-  font-weight:750;
+  font-weight:850;
 }
 
 .pocket.selected{
@@ -287,33 +331,11 @@ button{font:inherit}
   border-radius:8px;
   padding:8px 3px;
   font-size:8px;
-  font-weight:750;
+  font-weight:900;
+  text-transform:lowercase;
 }
 
 .mode.active{
-  background:var(--lime);
-  color:#10150b;
-  border-color:var(--lime);
-}
-
-.role-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:5px;
-  margin-top:7px;
-}
-
-.role-button{
-  border:1px solid rgba(255,255,255,.065);
-  background:#101519;
-  color:#aeb7bd;
-  border-radius:8px;
-  padding:8px 4px;
-  font-size:8px;
-  font-weight:750;
-}
-
-.role-button.active{
   background:var(--lime);
   color:#10150b;
   border-color:var(--lime);
@@ -347,17 +369,18 @@ button{font:inherit}
   width:31px;
   height:31px;
   border-radius:50%;
-  border:2px solid #080909;
+  border:1px solid rgba(255,255,255,.25);
   position:relative;
   display:grid;
   place-items:center;
   padding:0;
   overflow:hidden;
   box-shadow:
-    inset -3px -4px 5px rgba(0,0,0,.22),
+    inset -3px -4px 5px rgba(0,0,0,.25),
     0 2px 4px rgba(0,0,0,.25);
   font-size:9px;
-  font-weight:900;
+  font-weight:950;
+  color:#111;
 }
 
 .rack-ball.stripe{
@@ -375,16 +398,16 @@ button{font:inherit}
 }
 
 .rack-ball span{
-  width:15px;
-  height:15px;
+  width:14px;
+  height:14px;
   display:grid;
   place-items:center;
   border-radius:50%;
   background:#fff;
   color:#111;
-  border:1.5px solid #080909;
   font-size:7px;
-  font-weight:900;
+  font-weight:950;
+  border:1px solid rgba(0,0,0,.25);
 }
 
 .rack-ball.selected{
@@ -394,26 +417,55 @@ button{font:inherit}
 }
 
 .rack-ball.on-table{
-  opacity:.42;
+  opacity:.45;
+}
+
+.rack-ball.object-ball{
+  opacity:1;
+}
+
+.ball-role{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  margin-top:7px;
+}
+
+.role-button{
+  border:1px solid rgba(255,255,255,.065);
+  background:#101519;
+  color:#aeb7bd;
+  border-radius:8px;
+  padding:7px 4px;
+  font-size:8px;
+  font-weight:900;
+  text-transform:lowercase;
+}
+
+.role-button.active{
+  background:rgba(217,255,63,.10);
+  border-color:var(--lime);
+  color:var(--lime);
 }
 
 .rack-help{
   color:#89949b;
   text-align:center;
   font-size:8px;
-  line-height:1.45;
-  font-weight:650;
+  line-height:1.5;
+  padding:2px 10px 0;
 }
 
 .rack-help strong{
-  color:#cbd2d5;
-  font-weight:800;
+  color:#dfe5e7;
+  font-weight:850;
 }
 
 .table-ball-actions{
   display:flex;
   justify-content:center;
-  margin-top:8px;
+  gap:5px;
+  margin-top:7px;
 }
 
 .remove-selected{
@@ -423,23 +475,46 @@ button{font:inherit}
   border-radius:8px;
   padding:7px 11px;
   font-size:8px;
-  font-weight:800;
+  font-weight:900;
 }
 
 .remove-selected:disabled{
   opacity:.35;
 }
 
+.empty{
+  color:#667178;
+  font-size:8px;
+  padding:5px 0;
+}
+
 @media(max-width:850px){
-  .layout{grid-template-columns:1fr}
+  .layout{
+    grid-template-columns:1fr;
+  }
 }
 
 @media(max-width:520px){
-  body{padding:5px}
-  .header{height:45px}
-  .brand-name{font-size:20px}
-  .where-grid{gap:5px}
-  .controls{grid-template-columns:repeat(2,1fr)}
+  body{
+    padding:5px;
+  }
+
+  .header{
+    height:45px;
+  }
+
+  .brand-name{
+    font-size:20px;
+  }
+
+  .where-grid{
+    gap:5px;
+  }
+
+  .controls{
+    grid-template-columns:repeat(2,1fr);
+  }
+
   .rack-ball{
     width:27px;
     height:27px;
@@ -449,15 +524,17 @@ button{font:inherit}
 </head>
 
 <body>
+
 <div class="app">
 
 <header class="header">
   <div class="brand">
     <div>
       <div class="brand-name">Shot Caller</div>
-      <div class="brand-tag">I'll call the shots.</div>
+      <div class="brand-tag">i'll call the shots.</div>
     </div>
   </div>
+
   <button class="reset" id="reset">Reset</button>
 </header>
 
@@ -474,31 +551,72 @@ button{font:inherit}
   </div>
 
   <div class="legend">
-    <span class="legend-green">Green = cue-ball path</span>
-    <span class="legend-white">White = object-ball path</span>
-    <span class="legend-red">Red = bank or kick route</span>
+
+    <span class="legend-item legend-green">
+      <span class="legend-dot"></span>
+      <span>cue-ball path</span>
+    </span>
+
+    <span class="legend-item legend-white">
+      <span class="legend-dot"></span>
+      <span>object-ball path</span>
+    </span>
+
+    <span class="legend-item legend-red">
+      <span class="legend-dot"></span>
+      <span>rail route</span>
+    </span>
+
   </div>
 
 </section>
 
 <aside class="side">
 
-<section class="card section">
+<section class="card full-card section">
 
   <div class="section-head">
-    <div class="section-title">Where to Hit</div>
+
+    <div class="section-title">
+      where to hit
+    </div>
+
+    <div class="section-accent">
+      ball <span id="whereBall">—</span>
+    </div>
+
   </div>
 
   <div class="where-grid">
 
     <div class="ball-panel">
-      <div class="ball-label">Cue Ball</div>
-      <canvas class="ball-view" id="cueView"></canvas>
+
+      <div class="ball-head">
+        <div class="ball-label">
+          cue ball
+        </div>
+      </div>
+
+      <canvas
+        class="ball-view"
+        id="cueView">
+      </canvas>
+
     </div>
 
     <div class="ball-panel">
-      <div class="ball-label">Object Ball</div>
-      <canvas class="ball-view" id="objectView"></canvas>
+
+      <div class="ball-head">
+        <div class="ball-label">
+          object ball
+        </div>
+      </div>
+
+      <canvas
+        class="ball-view"
+        id="objectView">
+      </canvas>
+
     </div>
 
   </div>
@@ -506,100 +624,186 @@ button{font:inherit}
   <div class="controls">
 
     <div class="stat">
-      <div class="stat-label">Type</div>
-      <div class="stat-value" id="shotType">—</div>
+      <div class="stat-label">type</div>
+      <div
+        class="stat-value"
+        id="shotType">
+        —
+      </div>
     </div>
 
     <div class="stat">
-      <div class="stat-label">Pocket</div>
-      <div class="stat-value" id="shotPocket">—</div>
+      <div class="stat-label">pocket</div>
+      <div
+        class="stat-value"
+        id="shotPocket">
+        —
+      </div>
     </div>
 
     <div class="stat">
-      <div class="stat-label">Rail</div>
-      <div class="stat-value" id="shotRail">—</div>
+      <div class="stat-label">rail</div>
+      <div
+        class="stat-value"
+        id="shotRail">
+        —
+      </div>
     </div>
 
     <div class="stat">
-      <div class="stat-label">Speed</div>
-      <div class="stat-value" id="shotSpeed">—</div>
+      <div class="stat-label">speed</div>
+      <div
+        class="stat-value"
+        id="shotSpeed">
+        —
+      </div>
     </div>
 
   </div>
 
-  <div class="pro-instruction" id="instruction">
+  <div
+    class="pro-instruction"
+    id="instruction">
     Place the cue ball and object ball.
   </div>
 
 </section>
 
-<section class="card section">
+<section class="card full-card section">
 
   <div class="section-head">
-    <div class="section-title">Pocket</div>
-    <button class="auto-button active" id="pocketAuto">Auto</button>
+
+    <div class="section-title">
+      pocket
+    </div>
+
+    <button
+      class="section-action"
+      id="pocketAuto">
+      auto
+    </button>
+
   </div>
 
-  <div class="pockets" id="pockets"></div>
-
-  <div class="section-head" style="margin-top:11px">
-    <div class="section-title">Shot Type</div>
-    <button class="auto-button active" id="shotAuto">Auto</button>
+  <div
+    class="pockets"
+    id="pockets">
   </div>
 
-  <div class="modes" id="modes">
-    <button class="mode" data-mode="cut">Cut</button>
-    <button class="mode" data-mode="bank">Bank</button>
-    <button class="mode" data-mode="kick">Kick</button>
+  <div
+    class="section-head"
+    style="margin-top:11px">
+
+    <div class="section-title">
+      shot type
+    </div>
+
+    <button
+      class="section-action"
+      id="shotAuto">
+      auto
+    </button>
+
   </div>
 
-  <div class="status" id="status">
+  <div class="modes">
+
+    <button
+      class="mode"
+      data-mode="cut">
+      cut
+    </button>
+
+    <button
+      class="mode"
+      data-mode="bank">
+      bank
+    </button>
+
+    <button
+      class="mode"
+      data-mode="kick">
+      kick
+    </button>
+
+  </div>
+
+  <div
+    class="status"
+    id="status">
     Select balls and place them on the table.
   </div>
 
 </section>
 
-<section class="card section">
+<section class="card full-card section">
 
   <div class="section-head">
-    <div class="section-title">Ball Placement</div>
+
+    <div class="section-title">
+      balls in play
+    </div>
+
+    <div
+      class="section-accent"
+      id="rackAccent">
+      select
+    </div>
+
   </div>
 
-  <div class="role-buttons">
-    <button class="role-button active" id="objectRole">Object Ball</button>
-    <button class="role-button" id="obstructionRole">Obstruction Ball</button>
+  <div
+    class="rack"
+    id="rack">
   </div>
 
-  <div class="status">
-    Choose <strong>Object Ball</strong> for the ball you're shooting.
-    Choose <strong>Obstruction Ball</strong> for balls that stay in the way.
+  <div class="ball-role">
+
+    <button
+      class="role-button active"
+      id="objectRole">
+      object ball
+    </button>
+
+    <button
+      class="role-button"
+      id="obstacleRole">
+      obstacle ball
+    </button>
+
   </div>
-
-</section>
-
-<section class="card section">
-
-  <div class="section-head">
-    <div class="section-title">Balls in Play</div>
-  </div>
-
-  <div class="rack" id="rack"></div>
 
   <div class="rack-help">
-    <strong>Tap a ball</strong> to select it.
-    <strong>Tap the table</strong> to place or move it.
-    Select <strong>Obstruction Ball</strong> first when adding another ball.
+
+    <strong>Object ball:</strong>
+    the ball you're shooting.
+
+    <br>
+
+    <strong>Obstacle ball:</strong>
+    another ball that blocks the route.
+
+    <br>
+
+    Tap a ball in the rack, then tap the table to place it.
+
   </div>
 
   <div class="table-ball-actions">
-    <button class="remove-selected" id="removeBall" disabled>
+
+    <button
+      class="remove-selected"
+      id="removeBall"
+      disabled>
       Remove Selected Ball
     </button>
+
   </div>
 
 </section>
 
 </aside>
+
 </main>
 </div>
 
@@ -623,19 +827,61 @@ const RAIL={
   right:TABLE_W-BALL_RADIUS
 };
 
-const POCKET_OPENING=4.35;
+const POCKET_SIZE=4.55;
 
 const POCKETS=[
-  {id:"TL",name:"Top Left",x:0,y:0,type:"corner"},
-  {id:"TM",name:"Top Side",x:50,y:0,type:"side"},
-  {id:"TR",name:"Top Right",x:100,y:0,type:"corner"},
-  {id:"BL",name:"Bottom Left",x:0,y:50,type:"corner"},
-  {id:"BM",name:"Bottom Side",x:50,y:50,type:"side"},
-  {id:"BR",name:"Bottom Right",x:100,y:50,type:"corner"}
+  {
+    id:"TL",
+    name:"top left",
+    x:0,
+    y:0,
+    type:"corner",
+    opening:POCKET_SIZE
+  },
+  {
+    id:"TM",
+    name:"top side",
+    x:50,
+    y:0,
+    type:"side",
+    opening:POCKET_SIZE
+  },
+  {
+    id:"TR",
+    name:"top right",
+    x:100,
+    y:0,
+    type:"corner",
+    opening:POCKET_SIZE
+  },
+  {
+    id:"BL",
+    name:"bottom left",
+    x:0,
+    y:50,
+    type:"corner",
+    opening:POCKET_SIZE
+  },
+  {
+    id:"BM",
+    name:"bottom side",
+    x:50,
+    y:50,
+    type:"side",
+    opening:POCKET_SIZE
+  },
+  {
+    id:"BR",
+    name:"bottom right",
+    x:100,
+    y:50,
+    type:"corner",
+    opening:POCKET_SIZE
+  }
 ];
 
 /* ============================================================
-   BALLS
+   BALL SET
    ============================================================ */
 
 const BALLS=[
@@ -665,7 +911,11 @@ const BALL_MAP=Object.fromEntries(
    ============================================================ */
 
 const state={
-  cue:{x:22,y:34},
+
+  cue:{
+    x:22,
+    y:34
+  },
 
   object:{
     x:65,
@@ -673,17 +923,23 @@ const state={
     number:3
   },
 
-  tableBalls:[],
+  tableBalls:[
+    {
+      number:3,
+      x:65,
+      y:20,
+      role:"object"
+    }
+  ],
 
   selectedBall:null,
-  selectedRackBall:null,
+  selectedRackBall:3,
 
   placementRole:"object",
 
-  pocketMode:"auto",
   selectedPocket:null,
 
-  shotMode:"auto",
+  mode:"auto",
 
   solution:null
 };
@@ -695,17 +951,30 @@ const state={
 const canvas=document.getElementById("table");
 const ctx=canvas.getContext("2d");
 
-let DPR=Math.min(window.devicePixelRatio||1,2);
+let DPR=Math.min(
+  window.devicePixelRatio||1,
+  2
+);
 
 /* ============================================================
    VECTOR MATH
    ============================================================ */
 
-function V(x,y){return{x,y}}
+function V(x,y){
+  return{x,y};
+}
 
-function add(a,b){return V(a.x+b.x,a.y+b.y)}
-function sub(a,b){return V(a.x-b.x,a.y-b.y)}
-function mul(a,n){return V(a.x*n,a.y*n)}
+function add(a,b){
+  return V(a.x+b.x,a.y+b.y);
+}
+
+function sub(a,b){
+  return V(a.x-b.x,a.y-b.y);
+}
+
+function mul(a,n){
+  return V(a.x*n,a.y*n);
+}
 
 function dot(a,b){
   return a.x*b.x+a.y*b.y;
@@ -716,28 +985,53 @@ function len(a){
 }
 
 function norm(a){
+
   const l=len(a);
-  return l<1e-10?V(0,0):V(a.x/l,a.y/l);
+
+  if(l<1e-10)
+    return V(0,0);
+
+  return V(
+    a.x/l,
+    a.y/l
+  );
 }
 
 function dist(a,b){
-  return Math.hypot(a.x-b.x,a.y-b.y);
+  return Math.hypot(
+    a.x-b.x,
+    a.y-b.y
+  );
 }
 
 function clamp(n,a,b){
-  return Math.max(a,Math.min(b,n));
+  return Math.max(
+    a,
+    Math.min(b,n)
+  );
 }
 
 /* ============================================================
-   BALL / PATH COLLISION
+   GEOMETRY
    ============================================================ */
+
+function centerInside(p){
+
+  return(
+    p.x>=BALL_RADIUS &&
+    p.x<=TABLE_W-BALL_RADIUS &&
+    p.y>=BALL_RADIUS &&
+    p.y<=TABLE_H-BALL_RADIUS
+  );
+}
 
 function pointSegmentDistance(p,a,b){
 
   const ab=sub(b,a);
   const d=dot(ab,ab);
 
-  if(d<1e-10)return dist(p,a);
+  if(d<1e-10)
+    return dist(p,a);
 
   const t=clamp(
     dot(sub(p,a),ab)/d,
@@ -751,18 +1045,27 @@ function pointSegmentDistance(p,a,b){
   );
 }
 
-function pathClear(a,b,ignore=[]){
-
-  const ignoreSet=new Set(ignore);
+/*
+  Obstacles are balls other than the ball currently being shot.
+*/
+function pathClear(
+  a,
+  b,
+  ignoreNumber=null
+){
 
   for(const ball of state.tableBalls){
 
-    if(ignoreSet.has(ball.number))
+    if(ball.number===ignoreNumber)
       continue;
 
     if(
-      pointSegmentDistance(a,b,ball) <
-      BALL_DIAMETER
+      pointSegmentDistance(
+        ball,
+        a,
+        b
+      )<
+      BALL_DIAMETER*1.02
     ){
       return false;
     }
@@ -771,59 +1074,100 @@ function pathClear(a,b,ignore=[]){
   return true;
 }
 
-function centerInside(p){
-  return(
-    p.x>=BALL_RADIUS &&
-    p.x<=TABLE_W-BALL_RADIUS &&
-    p.y>=BALL_RADIUS &&
-    p.y<=TABLE_H-BALL_RADIUS
-  );
+/*
+  Same validation, explicitly used for the object-ball route.
+*/
+function objectPathClear(a,b){
+
+  for(const ball of state.tableBalls){
+
+    if(ball.number===state.object.number)
+      continue;
+
+    if(
+      pointSegmentDistance(
+        ball,
+        a,
+        b
+      )<
+      BALL_DIAMETER*1.02
+    ){
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /* ============================================================
-   POCKET GEOMETRY
+   POCKET TARGETS
    ============================================================ */
 
 function pocketTargets(pocket){
 
-  const r=POCKET_OPENING/2;
+  const targets=[];
+
+  /*
+    These are actual object-ball target-center positions.
+    They remain inside the table and provide several legal
+    entry angles instead of treating every pocket as a single
+    magic point.
+  */
 
   if(pocket.type==="side"){
 
-    return[
-      V(pocket.x-r*.45,pocket.y),
-      V(pocket.x-r*.22,pocket.y),
-      V(pocket.x,pocket.y),
-      V(pocket.x+r*.22,pocket.y),
-      V(pocket.x+r*.45,pocket.y)
-    ];
+    [-1.1,-.55,0,.55,1.1].forEach(offset=>{
 
+      targets.push(
+        V(
+          clamp(
+            pocket.x+offset,
+            BALL_RADIUS,
+            TABLE_W-BALL_RADIUS
+          ),
+          pocket.y===0
+            ?RAIL.top
+            :RAIL.bottom
+        )
+      );
+
+    });
+
+  }else{
+
+    const sx=pocket.x===0?1:-1;
+    const sy=pocket.y===0?1:-1;
+
+    [
+      [.35,.35],
+      [.60,.60],
+      [.85,.85]
+    ].forEach(([x,y])=>{
+
+      targets.push(
+        V(
+          pocket.x+
+          sx*x*POCKET_SIZE*.48,
+
+          pocket.y+
+          sy*y*POCKET_SIZE*.48
+        )
+      );
+
+    });
   }
 
-  const sx=pocket.x===0?1:-1;
-  const sy=pocket.y===0?1:-1;
-
-  return[
-    V(
-      pocket.x+sx*r*.38,
-      pocket.y+sy*r*.38
-    ),
-    V(
-      pocket.x+sx*r*.25,
-      pocket.y+sy*r*.25
-    ),
-    V(
-      pocket.x+sx*r*.50,
-      pocket.y+sy*r*.50
-    )
-  ];
+  return targets;
 }
 
 /* ============================================================
    GHOST BALL
    ============================================================ */
 
-function ghostForDirection(object,direction){
+function ghostForDirection(
+  object,
+  direction
+){
 
   return sub(
     object,
@@ -845,81 +1189,113 @@ function directCandidate(
   target
 ){
 
-  const objectVector=sub(target,object);
+  const objectVector=
+    sub(target,object);
 
   if(len(objectVector)<.01)
     return null;
 
-  const objectDirection=norm(objectVector);
+  const objectDirection=
+    norm(objectVector);
 
-  const ghost=ghostForDirection(
-    object,
-    objectDirection
-  );
+  const ghost=
+    ghostForDirection(
+      object,
+      objectDirection
+    );
 
   if(!centerInside(ghost))
     return null;
 
-  if(!pathClear(
-    cue,
-    ghost,
-    [state.object.number]
-  ))
-    return null;
-
-  if(!pathClear(
-    object,
-    target,
-    [state.object.number]
-  ))
-    return null;
-
-  const cueDirection=norm(
-    sub(ghost,cue)
-  );
-
-  const incoming=norm(
-    sub(object,ghost)
-  );
-
-  const angle=Math.acos(
-    clamp(
-      dot(cueDirection,incoming),
-      -1,
-      1
+  /*
+    Cue route must reach the ghost ball without hitting
+    another ball.
+  */
+  if(
+    !pathClear(
+      cue,
+      ghost,
+      state.object.number
     )
-  );
-
-  const cutDegrees=angle*180/Math.PI;
-
-  if(cutDegrees>78)
+  )
     return null;
-
-  const cueDistance=dist(cue,ghost);
-  const objectDistance=dist(object,target);
 
   /*
-    Direct shots are deliberately preferred over banks and kicks.
-    A normal pool shot should not become a bank simply because
-    the bank route happens to be a few inches shorter.
+    Object route must reach the pocket target without
+    hitting an obstacle.
+  */
+  if(
+    !objectPathClear(
+      object,
+      target
+    )
+  )
+    return null;
+
+  const cueDirection=
+    norm(
+      sub(ghost,cue)
+    );
+
+  const incoming=
+    norm(
+      sub(object,ghost)
+    );
+
+  const cutAngle=
+    Math.acos(
+      clamp(
+        dot(
+          cueDirection,
+          incoming
+        ),
+        -1,
+        1
+      )
+    );
+
+  const cutDegrees=
+    cutAngle*180/Math.PI;
+
+  /*
+    Thin cuts are possible, but they should not beat a much
+    more natural shot simply because of raw distance.
   */
   const thinPenalty=
-    cutDegrees>55
-      ?(cutDegrees-55)*2.2
+    cutDegrees>50
+      ?(cutDegrees-50)*2.5
       :0;
 
+  const cueDistance=
+    dist(cue,ghost);
+
+  const objectDistance=
+    dist(object,target);
+
   return{
+
     kind:"cut",
+
     pocket,
+
     target,
+
     rail:null,
+
     ghost,
+
     bankPoint:null,
+
     cueDirection,
+
     objectDirection,
+
     cueDistance,
+
     objectDistance,
+
     cutDegrees,
+
     score:
       cueDistance+
       objectDistance+
@@ -931,40 +1307,57 @@ function directCandidate(
    RAIL REFLECTION
    ============================================================ */
 
-function reflectAcrossRail(p,rail){
+function reflectAcrossRail(
+  p,
+  rail
+){
 
-  if(rail==="top")
+  if(rail==="top"){
     return V(
       p.x,
       2*RAIL.top-p.y
     );
+  }
 
-  if(rail==="bottom")
+  if(rail==="bottom"){
     return V(
       p.x,
       2*RAIL.bottom-p.y
     );
+  }
 
-  if(rail==="left")
+  if(rail==="left"){
     return V(
       2*RAIL.left-p.x,
       p.y
     );
+  }
 
-  return V(
-    2*RAIL.right-p.x,
-    p.y
-  );
+  if(rail==="right"){
+    return V(
+      2*RAIL.right-p.x,
+      p.y
+    );
+  }
+
+  return null;
 }
 
-function railIntersection(a,b,rail){
+function railIntersection(
+  a,
+  b,
+  rail
+){
 
   const dx=b.x-a.x;
   const dy=b.y-a.y;
 
   let t;
 
-  if(rail==="top"||rail==="bottom"){
+  if(
+    rail==="top"||
+    rail==="bottom"
+  ){
 
     const y=
       rail==="top"
@@ -989,7 +1382,10 @@ function railIntersection(a,b,rail){
     t=(x-a.x)/dx;
   }
 
-  if(t<=.00001||t>=.99999)
+  if(
+    t<=.00001||
+    t>=.99999
+  )
     return null;
 
   return V(
@@ -998,28 +1394,37 @@ function railIntersection(a,b,rail){
   );
 }
 
-function usableRailPoint(p,rail){
+function usableRailPoint(
+  p,
+  rail
+){
 
-  const margin=1.25;
+  const margin=1.5;
 
   if(
     rail==="top"||
     rail==="bottom"
   ){
+
     return(
-      p.x>BALL_RADIUS+margin &&
-      p.x<TABLE_W-BALL_RADIUS-margin
+      p.x>
+        BALL_RADIUS+margin &&
+      p.x<
+        TABLE_W-BALL_RADIUS-margin
     );
+
   }
 
   return(
-    p.y>BALL_RADIUS+margin &&
-    p.y<TABLE_H-BALL_RADIUS-margin
+    p.y>
+      BALL_RADIUS+margin &&
+    p.y<
+      TABLE_H-BALL_RADIUS-margin
   );
 }
 
 /* ============================================================
-   ONE-RAIL BANK
+   ONE RAIL BANK
    ============================================================ */
 
 function bankCandidate(
@@ -1030,100 +1435,212 @@ function bankCandidate(
   rail
 ){
 
-  if(rail==="top"&&pocket.y===0)return null;
-  if(rail==="bottom"&&pocket.y===TABLE_H)return null;
-  if(rail==="left"&&pocket.x===0)return null;
-  if(rail==="right"&&pocket.x===TABLE_W)return null;
+  /*
+    Do not bank directly into a pocket's own rail.
+    A bank needs a rail different from the pocket rail.
+  */
 
-  const reflected=reflectAcrossRail(
-    target,
-    rail
-  );
-
-  const bank=railIntersection(
-    object,
-    reflected,
-    rail
-  );
-
-  if(!bank||!usableRailPoint(bank,rail))
+  if(
+    rail==="top"&&
+    pocket.y===0
+  )
     return null;
 
-  if(!pathClear(
-    object,
-    bank,
-    [state.object.number]
-  ))
+  if(
+    rail==="bottom"&&
+    pocket.y===TABLE_H
+  )
     return null;
 
-  if(!pathClear(
-    bank,
-    target,
-    [state.object.number]
-  ))
+  if(
+    rail==="left"&&
+    pocket.x===0
+  )
     return null;
 
-  const objectDirection=norm(
-    sub(bank,object)
-  );
+  if(
+    rail==="right"&&
+    pocket.x===TABLE_W
+  )
+    return null;
 
-  const ghost=ghostForDirection(
-    object,
-    objectDirection
-  );
+  /*
+    Mirror the TARGET across the chosen rail.
+    The straight line from the object ball to that mirrored
+    target gives the physical bank contact point.
+  */
+  const reflected=
+    reflectAcrossRail(
+      target,
+      rail
+    );
+
+  if(!reflected)
+    return null;
+
+  const bankPoint=
+    railIntersection(
+      object,
+      reflected,
+      rail
+    );
+
+  if(
+    !bankPoint||
+    !usableRailPoint(
+      bankPoint,
+      rail
+    )
+  )
+    return null;
+
+  /*
+    Object ball -> rail must be clear.
+  */
+  if(
+    !objectPathClear(
+      object,
+      bankPoint
+    )
+  )
+    return null;
+
+  /*
+    Rail -> pocket must be clear.
+  */
+  if(
+    !objectPathClear(
+      bankPoint,
+      target
+    )
+  )
+    return null;
+
+  /*
+    The cue ball must contact the object at the correct
+    ghost-ball position for the bank's first leg.
+  */
+  const objectDirection=
+    norm(
+      sub(
+        bankPoint,
+        object
+      )
+    );
+
+  const ghost=
+    ghostForDirection(
+      object,
+      objectDirection
+    );
 
   if(!centerInside(ghost))
     return null;
 
-  if(!pathClear(
-    cue,
-    ghost,
-    [state.object.number]
-  ))
+  if(
+    !pathClear(
+      cue,
+      ghost,
+      state.object.number
+    )
+  )
     return null;
 
-  const cueDirection=norm(
-    sub(ghost,cue)
-  );
+  const cueDirection=
+    norm(
+      sub(
+        ghost,
+        cue
+      )
+    );
 
-  const incoming=norm(
-    sub(object,ghost)
-  );
+  const incoming=
+    norm(
+      sub(
+        object,
+        ghost
+      )
+    );
 
-  const cutDegrees=
+  const cutAngle=
     Math.acos(
       clamp(
-        dot(cueDirection,incoming),
+        dot(
+          cueDirection,
+          incoming
+        ),
         -1,
         1
       )
-    )*180/Math.PI;
+    );
 
-  if(cutDegrees>72)
+  const cutDegrees=
+    cutAngle*180/Math.PI;
+
+  /*
+    This is important:
+    A bank is an alternate shot, not something that should
+    magically replace an obvious cut.
+
+    Extremely thin cue-ball contacts are therefore rejected.
+  */
+  if(cutDegrees>58)
     return null;
 
-  const firstLeg=dist(object,bank);
-  const secondLeg=dist(bank,target);
-  const cueDistance=dist(cue,ghost);
+  const cueDistance=
+    dist(cue,ghost);
+
+  const firstLeg=
+    dist(object,bankPoint);
+
+  const secondLeg=
+    dist(bankPoint,target);
+
+  /*
+    Banks get a deliberate penalty so an easy cut wins in auto.
+    But the penalty is small enough that an actually useful bank
+    still beats an absurd alternative.
+  */
+  const score=
+    cueDistance+
+    firstLeg+
+    secondLeg+
+    18+
+    Math.max(
+      0,
+      cutDegrees-45
+    )*1.4;
 
   return{
+
     kind:"bank",
+
     pocket,
+
     target,
+
     rail,
+
     ghost,
-    bankPoint:bank,
+
+    bankPoint,
+
     cueDirection,
+
     objectDirection,
+
     cueDistance,
-    objectDistance:firstLeg+secondLeg,
+
+    objectDistance:
+      firstLeg+secondLeg,
+
+    bankDistance:firstLeg,
+
+    postBankDistance:secondLeg,
+
     cutDegrees,
-    score:
-      cueDistance+
-      firstLeg+
-      secondLeg+
-      Math.max(0,cutDegrees-50)*1.8+
-      12
+
+    score
   };
 }
 
@@ -1138,70 +1655,134 @@ function kickCandidate(
   rail
 ){
 
-  const targetPocket=
-    pocketTargets(pocket)[2];
+  /*
+    For a kick, the cue ball first reaches the rail,
+    then travels to the ghost-ball contact point.
 
-  const objectDirection=norm(
-    sub(targetPocket,object)
-  );
+    The object-ball travel line is independently checked.
+  */
 
-  const ghost=ghostForDirection(
-    object,
-    objectDirection
-  );
+  const objectDirection=
+    norm(
+      sub(
+        pocket,
+        object
+      )
+    );
 
-  const reflected=reflectAcrossRail(
-    ghost,
-    rail
-  );
+  if(len(objectDirection)<.01)
+    return null;
 
-  const kickPoint=railIntersection(
-    cue,
-    reflected,
-    rail
-  );
+  const ghost=
+    ghostForDirection(
+      object,
+      objectDirection
+    );
+
+  if(!centerInside(ghost))
+    return null;
+
+  const reflected=
+    reflectAcrossRail(
+      ghost,
+      rail
+    );
+
+  if(!reflected)
+    return null;
+
+  const kickPoint=
+    railIntersection(
+      cue,
+      reflected,
+      rail
+    );
 
   if(
     !kickPoint||
-    !usableRailPoint(kickPoint,rail)
+    !usableRailPoint(
+      kickPoint,
+      rail
+    )
   )
     return null;
 
-  if(!pathClear(
-    cue,
-    kickPoint,
-    [state.object.number]
-  ))
+  if(
+    !pathClear(
+      cue,
+      kickPoint,
+      state.object.number
+    )
+  )
     return null;
 
-  if(!pathClear(
-    kickPoint,
-    ghost,
-    [state.object.number]
-  ))
+  if(
+    !pathClear(
+      kickPoint,
+      ghost,
+      state.object.number
+    )
+  )
     return null;
+
+  const cueDistance=
+    dist(
+      cue,
+      kickPoint
+    );
+
+  const secondDistance=
+    dist(
+      kickPoint,
+      ghost
+    );
+
+  const objectDistance=
+    dist(
+      object,
+      pocket
+    );
 
   return{
+
     kind:"kick",
+
     pocket,
-    target:targetPocket,
+
+    target:pocket,
+
     rail,
+
     ghost,
+
     bankPoint:kickPoint,
-    cueDirection:norm(
-      sub(kickPoint,cue)
-    ),
+
+    cueDirection:
+      norm(
+        sub(
+          kickPoint,
+          cue
+        )
+      ),
+
     objectDirection,
-    cueDistance:dist(cue,kickPoint),
-    objectDistance:dist(object,targetPocket),
-    kickDistance:dist(cue,kickPoint),
-    postKickDistance:dist(kickPoint,ghost),
+
+    cueDistance,
+
+    objectDistance,
+
+    kickDistance:cueDistance,
+
+    postKickDistance:
+      secondDistance,
+
     cutDegrees:0,
+
     score:
-      dist(cue,kickPoint)+
-      dist(kickPoint,ghost)+
-      dist(object,targetPocket)+
-      20
+      cueDistance+
+      secondDistance+
+      objectDistance+
+      25
   };
 }
 
@@ -1209,277 +1790,356 @@ function kickCandidate(
    SOLVER
    ============================================================ */
 
-function getDirectCandidates(pockets){
+function candidatesForPocket(
+  pocket
+){
 
-  const results=[];
+  const cuts=[];
+  const banks=[];
+  const kicks=[];
 
-  for(const pocket of pockets){
+  const targets=
+    pocketTargets(pocket);
 
-    for(const target of pocketTargets(pocket)){
+  if(
+    state.mode==="auto"||
+    state.mode==="cut"
+  ){
 
-      const candidate=directCandidate(
-        state.cue,
-        state.object,
-        pocket,
-        target
-      );
+    for(
+      const target of targets
+    ){
+
+      const candidate=
+        directCandidate(
+          state.cue,
+          state.object,
+          pocket,
+          target
+        );
 
       if(candidate)
-        results.push(candidate);
+        cuts.push(candidate);
     }
   }
 
-  results.sort((a,b)=>a.score-b.score);
+  if(
+    state.mode==="auto"||
+    state.mode==="bank"
+  ){
 
-  return results;
-}
+    for(
+      const target of targets
+    ){
 
-function getBankCandidates(pockets){
+      for(
+        const rail of [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ]
+      ){
 
-  const results=[];
+        const candidate=
+          bankCandidate(
+            state.cue,
+            state.object,
+            pocket,
+            target,
+            rail
+          );
 
-  for(const pocket of pockets){
+        if(candidate)
+          banks.push(candidate);
+      }
+    }
+  }
 
-    for(const target of pocketTargets(pocket)){
+  if(
+    state.mode==="auto"||
+    state.mode==="kick"
+  ){
 
-      for(const rail of[
+    for(
+      const rail of [
         "top",
         "bottom",
         "left",
         "right"
-      ]){
+      ]
+    ){
 
-        const candidate=bankCandidate(
+      const candidate=
+        kickCandidate(
           state.cue,
           state.object,
           pocket,
-          target,
           rail
         );
 
-        if(candidate)
-          results.push(candidate);
-      }
-    }
-  }
-
-  results.sort((a,b)=>a.score-b.score);
-
-  return results;
-}
-
-function getKickCandidates(pockets){
-
-  const results=[];
-
-  for(const pocket of pockets){
-
-    for(const rail of[
-      "top",
-      "bottom",
-      "left",
-      "right"
-    ]){
-
-      const candidate=kickCandidate(
-        state.cue,
-        state.object,
-        pocket,
-        rail
-      );
-
       if(candidate)
-        results.push(candidate);
+        kicks.push(candidate);
     }
   }
 
-  results.sort((a,b)=>a.score-b.score);
+  if(state.mode==="auto"){
 
-  return results;
+    /*
+      Direct cut always gets first consideration.
+
+      This prevents the old problem where the solver would
+      show a bank simply because its raw distance score happened
+      to be lower.
+    */
+    if(cuts.length){
+
+      return cuts.sort(
+        (a,b)=>a.score-b.score
+      );
+    }
+
+    if(banks.length){
+
+      return banks.sort(
+        (a,b)=>a.score-b.score
+      );
+    }
+
+    return kicks.sort(
+      (a,b)=>a.score-b.score
+    );
+  }
+
+  return[
+    ...cuts,
+    ...banks,
+    ...kicks
+  ].sort(
+    (a,b)=>a.score-b.score
+  );
 }
 
 function solve(){
 
+  let best=null;
+
   const pockets=
-    state.pocketMode==="auto"
-      ?POCKETS
-      :[state.selectedPocket];
+    state.selectedPocket
+      ?[state.selectedPocket]
+      :POCKETS;
 
-  let result=null;
+  for(
+    const pocket of pockets
+  ){
 
-  if(state.shotMode==="auto"){
+    const candidates=
+      candidatesForPocket(
+        pocket
+      );
+
+    if(!candidates.length)
+      continue;
+
+    const candidate=
+      candidates[0];
 
     /*
-      AUTO prioritizes a clean direct shot first.
-      Banks are a fallback.
-      Kicks are the final fallback.
-
-      This prevents an obvious corner cut from being
-      incorrectly called as a bank to a side pocket.
+      Side pockets are a little less forgiving,
+      but only slightly.
     */
+    const sidePenalty=
+      pocket.type==="side"
+        ?1.75
+        :0;
 
-    const direct=getDirectCandidates(pockets);
+    const adjusted={
+      ...candidate,
 
-    if(direct.length){
+      adjustedScore:
+        candidate.score+
+        sidePenalty
+    };
 
-      result=direct[0];
+    if(
+      !best||
+      adjusted.adjustedScore<
+      best.adjustedScore
+    ){
 
-    }else{
-
-      const banks=getBankCandidates(pockets);
-
-      if(banks.length){
-
-        result=banks[0];
-
-      }else{
-
-        const kicks=getKickCandidates(pockets);
-
-        if(kicks.length)
-          result=kicks[0];
-      }
+      best=adjusted;
     }
-
-  }else if(state.shotMode==="cut"){
-
-    result=getDirectCandidates(pockets)[0]||null;
-
-  }else if(state.shotMode==="bank"){
-
-    result=getBankCandidates(pockets)[0]||null;
-
-  }else if(state.shotMode==="kick"){
-
-    result=getKickCandidates(pockets)[0]||null;
   }
 
-  state.solution=result;
+  state.solution=best;
 
   render();
 }
 
 /* ============================================================
-   LANGUAGE
+   SHOT LANGUAGE
    ============================================================ */
 
-function pocketShort(p){
+function railText(rail){
 
   return{
-    "Top Left":"top-left corner",
-    "Top Side":"top side pocket",
-    "Top Right":"top-right corner",
-    "Bottom Left":"bottom-left corner",
-    "Bottom Side":"bottom side pocket",
-    "Bottom Right":"bottom-right corner"
-  }[p.name];
-}
-
-function railText(r){
-
-  return{
-    top:"Top Rail",
-    bottom:"Bottom Rail",
-    left:"Left Rail",
-    right:"Right Rail"
-  }[r]||"—";
+    top:"top rail",
+    bottom:"bottom rail",
+    left:"left rail",
+    right:"right rail"
+  }[rail]||"rail";
 }
 
 function speedForShot(s){
 
+  if(!s)
+    return"—";
+
   if(s.kind==="kick")
-    return s.kickDistance>40?"Firm":"Medium";
+    return s.kickDistance>42
+      ?"firm"
+      :"medium";
 
   if(s.kind==="bank")
-    return s.objectDistance>55?"Firm":"Medium";
+    return s.objectDistance>55
+      ?"firm"
+      :"medium";
 
   if(s.cutDegrees>55)
-    return "Medium";
+    return"medium";
 
-  if(s.objectDistance<20)
-    return "Soft";
+  if(s.objectDistance<18)
+    return"soft";
 
   if(s.objectDistance>55)
-    return "Firm";
+    return"firm";
 
-  return "Medium";
+  return"medium";
 }
 
-function englishDirection(s){
+function englishForShot(s){
 
-  if(!s)return "";
+  if(!s)
+    return"";
 
-  if(s.kind==="kick")
-    return "Give the cue ball a touch of running English.";
+  if(s.kind==="kick"){
 
-  if(s.kind==="bank")
-    return "Stay near center ball unless the table calls for running English.";
-
-  if(s.cutDegrees>55)
-    return "Use a touch of outside English.";
-
-  if(s.cutDegrees>35)
-    return "Use a slight touch of outside English.";
-
-  return "Stay close to center ball.";
-}
-
-function contactDescription(s){
-
-  if(!s)return "";
-
-  const d=s.objectDirection;
-
-  if(Math.abs(d.x)>=Math.abs(d.y)){
-
-    if(d.x>0)
-      return "Aim for the left side of the object ball.";
-
-    return "Aim for the right side of the object ball.";
+    return"Stay close to center ball and control the speed.";
   }
 
-  if(d.y>0)
-    return "Aim for the top side of the object ball.";
+  if(s.kind==="bank"){
 
-  return "Aim for the bottom side of the object ball.";
+    return"Stay close to center ball and control the speed.";
+  }
+
+  if(s.cutDegrees<8){
+
+    return"Stay close to center ball.";
+  }
+
+  /*
+    Conservative outside-english language.
+    No forced english on straightforward shots.
+  */
+  const cross=
+    s.cueDirection.x*
+    s.objectDirection.y-
+    s.cueDirection.y*
+    s.objectDirection.x;
+
+  if(Math.abs(cross)<.08)
+    return"Stay close to center ball.";
+
+  return cross>0
+    ?"Use a touch of left english."
+    :"Use a touch of right english.";
+}
+
+function contactClockFace(s){
+
+  if(!s)
+    return"";
+
+  const contact=
+    norm(
+      sub(
+        s.ghost,
+        state.object
+      )
+    );
+
+  /*
+    Convert mathematical angle into conventional clock position.
+  */
+  let angle=
+    Math.atan2(
+      contact.y,
+      contact.x
+    );
+
+  angle=
+    angle-
+    Math.PI/2;
+
+  let hours=
+    Math.round(
+      ((angle+Math.PI*2)%
+        (Math.PI*2))/
+      (Math.PI/6)
+    );
+
+  if(hours===0)
+    hours=12;
+
+  return`${hours} o'clock`;
 }
 
 function instructionFor(s){
 
-  if(!s)
-    return "No clean route is available from the current layout.";
+  if(!s){
 
-  const number=state.object.number;
-  const pocket=pocketShort(s.pocket);
-  const speed=speedForShot(s);
+    return"No clean route is available from the current layout.";
+  }
+
+  const number=
+    state.object.number;
+
+  const pocket=
+    s.pocket.name;
+
+  const speed=
+    speedForShot(s);
+
+  const english=
+    englishForShot(s);
+
+  const contact=
+    contactClockFace(s);
 
   if(s.kind==="kick"){
 
     return(
-      `Kick the cue ball off the ${railText(s.rail)} and into the ${number}. `+
-      `${englishDirection(s)} ${speed} speed.`
+      `Send the cue ball to the ${railText(s.rail)} first. `+
+      `${english} `+
+      `Contact the ${number} at about ${contact} `+
+      `with ${speed} speed.`
     );
   }
 
   if(s.kind==="bank"){
 
     return(
-      `Bank the ${number} off the ${railText(s.rail)} toward the ${pocket}. `+
-      `${englishDirection(s)} ${speed} speed.`
-    );
-  }
-
-  if(s.cutDegrees<10){
-
-    return(
-      `Play the ${number} nearly straight to the ${pocket}. `+
-      `${englishDirection(s)} ${speed} speed.`
+      `Play the ${number} to the ${pocket} off the ${railText(s.rail)}. `+
+      `${english} `+
+      `Contact the ${number} at about ${contact} `+
+      `with ${speed} speed.`
     );
   }
 
   return(
-    `Cut the ${number} to the ${pocket}. `+
-    `${contactDescription(s)} ${englishDirection(s)} ${speed} speed.`
+    `Aim to contact the ${number} at about ${contact}. `+
+    `${english} `+
+    `Use ${speed} speed to the ${pocket}.`
   );
 }
 
@@ -1492,18 +2152,17 @@ function geometry(){
   const w=canvas.width;
   const h=canvas.height;
 
-  /*
-    The felt sits inside a substantial wooden rail.
-    This keeps the diamonds centered on the wood rather than
-    pushed against the outer edge of the canvas.
-  */
-
-  const inset=Math.min(w,h)*.105;
+  const inset=
+    Math.min(w,h)*.085;
 
   return{
+
     x:inset,
+
     y:inset,
+
     w:w-inset*2,
+
     h:h-inset*2
   };
 }
@@ -1513,14 +2172,23 @@ function toScreen(p){
   const g=geometry();
 
   return V(
-    g.x+p.x/TABLE_W*g.w,
-    g.y+p.y/TABLE_H*g.h
+
+    g.x+
+    p.x/TABLE_W*g.w,
+
+    g.y+
+    p.y/TABLE_H*g.h
   );
 }
 
-function fromScreen(clientX,clientY){
+function fromScreen(
+  clientX,
+  clientY
+){
 
-  const rect=canvas.getBoundingClientRect();
+  const rect=
+    canvas.getBoundingClientRect();
+
   const g=geometry();
 
   const px=
@@ -1534,8 +2202,14 @@ function fromScreen(clientX,clientY){
     rect.height;
 
   return V(
-    (px-g.x)/g.w*TABLE_W,
-    (py-g.y)/g.h*TABLE_H
+
+    (px-g.x)/
+      g.w*
+      TABLE_W,
+
+    (py-g.y)/
+      g.h*
+      TABLE_H
   );
 }
 
@@ -1543,15 +2217,53 @@ function fromScreen(clientX,clientY){
    TABLE DRAWING
    ============================================================ */
 
-function roundedRect(c,x,y,w,h,r){
+function roundedRect(
+  c,
+  x,
+  y,
+  w,
+  h,
+  r
+){
 
   c.beginPath();
 
-  c.moveTo(x+r,y);
-  c.arcTo(x+w,y,x+w,y+h,r);
-  c.arcTo(x+w,y+h,x,y+h,r);
-  c.arcTo(x,y+h,x,y,r);
-  c.arcTo(x,y,x+w,y,r);
+  c.moveTo(
+    x+r,
+    y
+  );
+
+  c.arcTo(
+    x+w,
+    y,
+    x+w,
+    y+h,
+    r
+  );
+
+  c.arcTo(
+    x+w,
+    y+h,
+    x,
+    y+h,
+    r
+  );
+
+  c.arcTo(
+    x,
+    y+h,
+    x,
+    y,
+    r
+  );
+
+  c.arcTo(
+    x,
+    y,
+    x+w,
+    y,
+    r
+  );
 
   c.closePath();
 }
@@ -1560,18 +2272,38 @@ function drawTable(){
 
   const w=canvas.width;
   const h=canvas.height;
-  const g=geometry();
 
-  ctx.clearRect(0,0,w,h);
-
-  /* Wood */
-  const wood=ctx.createLinearGradient(
-    0,0,0,h
+  ctx.clearRect(
+    0,
+    0,
+    w,
+    h
   );
 
-  wood.addColorStop(0,"#704c2b");
-  wood.addColorStop(.5,"#3b2415");
-  wood.addColorStop(1,"#62401f");
+  const g=geometry();
+
+  const wood=
+    ctx.createLinearGradient(
+      0,
+      0,
+      0,
+      h
+    );
+
+  wood.addColorStop(
+    0,
+    "#624326"
+  );
+
+  wood.addColorStop(
+    .5,
+    "#2e1d11"
+  );
+
+  wood.addColorStop(
+    1,
+    "#4b2e18"
+  );
 
   ctx.fillStyle=wood;
 
@@ -1586,31 +2318,28 @@ function drawTable(){
 
   ctx.fill();
 
-  /* Inner cushion */
-  ctx.fillStyle="#17100b";
+  const felt=
+    ctx.createLinearGradient(
+      0,
+      g.y,
+      0,
+      g.y+g.h
+    );
 
-  roundedRect(
-    ctx,
-    g.x-Math.min(w,h)*.035,
-    g.y-Math.min(w,h)*.035,
-    g.w+Math.min(w,h)*.07,
-    g.h+Math.min(w,h)*.07,
-    Math.min(w,h)*.025
+  felt.addColorStop(
+    0,
+    "#197755"
   );
 
-  ctx.fill();
-
-  /* Felt */
-  const felt=ctx.createLinearGradient(
-    0,
-    g.y,
-    0,
-    g.y+g.h
+  felt.addColorStop(
+    .5,
+    "#146447"
   );
 
-  felt.addColorStop(0,"#197755");
-  felt.addColorStop(.5,"#146447");
-  felt.addColorStop(1,"#10533a");
+  felt.addColorStop(
+    1,
+    "#10533a"
+  );
 
   ctx.fillStyle=felt;
 
@@ -1621,9 +2350,14 @@ function drawTable(){
     g.h
   );
 
-  /* Cushion edge */
-  ctx.strokeStyle="rgba(5,8,6,.85)";
-  ctx.lineWidth=Math.max(2,Math.min(w,h)*.014);
+  ctx.strokeStyle=
+    "rgba(7,6,4,.95)";
+
+  ctx.lineWidth=
+    Math.max(
+      2,
+      Math.min(w,h)*.018
+    );
 
   ctx.strokeRect(
     g.x,
@@ -1632,40 +2366,36 @@ function drawTable(){
     g.h
   );
 
-  drawPockets(g);
   drawDiamonds(g);
+  drawPockets(g);
 }
-
-/* ============================================================
-   DIAMONDS
-   ============================================================ */
 
 function drawDiamonds(g){
 
-  /*
-    Diamonds are centered in the wooden rail.
-    They are not placed at the outer edge of the canvas.
-  */
+  const size=
+    Math.max(
+      2.5,
+      Math.min(g.w,g.h)*.017
+    );
 
-  const size=Math.max(
-    3,
-    Math.min(g.w,g.h)*.018
-  );
-
-  const topY=g.y*.52;
-  const bottomY=canvas.height-g.y*.52;
-
-  const leftX=g.x*.52;
-  const rightX=canvas.width-g.x*.52;
-
-  function diamond(x,y){
+  function diamond(
+    x,
+    y
+  ){
 
     ctx.save();
 
-    ctx.translate(x,y);
-    ctx.rotate(Math.PI/4);
+    ctx.translate(
+      x,
+      y
+    );
 
-    ctx.fillStyle="rgba(238,215,175,.76)";
+    ctx.rotate(
+      Math.PI/4
+    );
+
+    ctx.fillStyle=
+      "rgba(240,214,168,.72)";
 
     ctx.fillRect(
       -size/2,
@@ -1677,89 +2407,135 @@ function drawDiamonds(g){
     ctx.restore();
   }
 
-  [.125,.25,.375,.5,.625,.75,.875]
-    .forEach(t=>{
-      diamond(g.x+g.w*t,topY);
-      diamond(g.x+g.w*t,bottomY);
-    });
+  [
+    .125,
+    .25,
+    .375,
+    .5,
+    .625,
+    .75,
+    .875
+  ].forEach(t=>{
 
-  [.25,.5,.75]
-    .forEach(t=>{
-      diamond(leftX,g.y+g.h*t);
-      diamond(rightX,g.y+g.h*t);
-    });
+    diamond(
+      g.x+
+      g.w*t,
+
+      g.y-
+      size*.72
+    );
+
+    diamond(
+      g.x+
+      g.w*t,
+
+      g.y+
+      g.h+
+      size*.72
+    );
+
+  });
+
+  [
+    .25,
+    .5,
+    .75
+  ].forEach(t=>{
+
+    diamond(
+      g.x-
+      size*.72,
+
+      g.y+
+      g.h*t
+    );
+
+    diamond(
+      g.x+
+      g.w+
+      size*.72,
+
+      g.y+
+      g.h*t
+    );
+
+  });
 }
-
-/* ============================================================
-   POCKETS
-   ============================================================ */
 
 function drawPockets(g){
 
-  /*
-    Every pocket uses the exact same diameter.
-
-    Side pockets are centered on the rail edge so only the
-    inner half appears on the felt.
-
-    Corner pockets are centered exactly at the corner so the
-    visible opening forms the natural quarter-circle /
-    Pac-Man-style corner cutout.
-  */
-
   const radius=
-    POCKET_OPENING/TABLE_W*g.w/2;
+    POCKET_SIZE/
+    TABLE_W*
+    g.w/2;
 
-  POCKETS.forEach(pocket=>{
+  POCKETS.forEach(
+    pocket=>{
 
-    const p=toScreen(pocket);
+      const p=
+        toScreen(pocket);
 
-    const selected=
-      state.selectedPocket &&
-      state.selectedPocket.id===pocket.id;
+      const selected=
+        state.selectedPocket&&
+        state.selectedPocket.id===
+        pocket.id;
 
-    const suggested=
-      state.solution &&
-      state.solution.pocket.id===pocket.id;
+      const suggested=
+        state.solution&&
+        state.solution.pocket.id===
+        pocket.id;
 
-    ctx.beginPath();
+      if(
+        selected||
+        suggested
+      ){
 
-    ctx.arc(
-      p.x,
-      p.y,
-      radius,
-      0,
-      Math.PI*2
-    );
+        ctx.beginPath();
 
-    ctx.fillStyle="#030404";
-    ctx.fill();
+        ctx.arc(
+          p.x,
+          p.y,
+          radius*1.28,
+          0,
+          Math.PI*2
+        );
 
-    if(selected||suggested){
+        ctx.strokeStyle=
+          selected
+            ?"rgba(217,255,63,.95)"
+            :"rgba(217,255,63,.55)";
+
+        ctx.lineWidth=2;
+
+        ctx.stroke();
+      }
 
       ctx.beginPath();
 
       ctx.arc(
         p.x,
         p.y,
-        radius+radius*.35,
+        radius,
         0,
         Math.PI*2
       );
 
+      ctx.fillStyle="#030303";
+
+      ctx.fill();
+
       ctx.strokeStyle=
-        selected
-          ?"rgba(217,255,63,.95)"
-          :"rgba(217,255,63,.55)";
+        "rgba(0,0,0,.98)";
 
       ctx.lineWidth=2;
+
       ctx.stroke();
     }
-  });
+  );
 }
 
 /* ============================================================
-   ROUTE DRAWING
+   ROUTES
    ============================================================ */
 
 function drawLine(
@@ -1775,15 +2551,26 @@ function drawLine(
 
   ctx.beginPath();
 
-  ctx.moveTo(A.x,A.y);
-  ctx.lineTo(B.x,B.y);
+  ctx.moveTo(
+    A.x,
+    A.y
+  );
+
+  ctx.lineTo(
+    B.x,
+    B.y
+  );
 
   ctx.strokeStyle=color;
+
   ctx.lineWidth=width;
+
   ctx.lineCap="round";
 
   ctx.setLineDash(
-    dashed?[7,7]:[]
+    dashed
+      ?[7,7]
+      :[]
   );
 
   ctx.stroke();
@@ -1793,24 +2580,30 @@ function drawLine(
 
 function drawRoute(){
 
-  const s=state.solution;
+  const s=
+    state.solution;
 
-  if(!s)return;
+  if(!s)
+    return;
 
-  const routeWidth=
+  const lineWidth=
     Math.max(
       2,
-      canvas.width*.0025
+      canvas.width*.0026
     );
 
-  /* Cue-ball path */
+  /*
+    GREEN:
+    cue-ball travel only.
+  */
+
   if(s.kind==="kick"){
 
     drawLine(
       state.cue,
       s.bankPoint,
       "#42d995",
-      routeWidth,
+      lineWidth,
       true
     );
 
@@ -1818,7 +2611,7 @@ function drawRoute(){
       s.bankPoint,
       s.ghost,
       "#42d995",
-      routeWidth,
+      lineWidth,
       true
     );
 
@@ -1828,50 +2621,82 @@ function drawRoute(){
       state.cue,
       s.ghost,
       "#42d995",
-      routeWidth,
+      lineWidth,
       true
     );
   }
 
-  /* Object-ball route */
+  /*
+    WHITE:
+    direct object-ball route.
+
+    RED:
+    actual rail-contact portions of a bank.
+  */
+
   if(s.kind==="cut"){
 
     drawLine(
       state.object,
       s.target,
       "#ffffff",
-      routeWidth
+      lineWidth,
+      false
     );
 
   }else if(s.kind==="bank"){
+
+    /*
+      Only the object-ball-to-rail and rail-to-target
+      portions are red.
+    */
 
     drawLine(
       state.object,
       s.bankPoint,
       "#ff4652",
-      routeWidth
+      lineWidth+1,
+      false
     );
 
     drawLine(
       s.bankPoint,
       s.target,
       "#ff4652",
-      routeWidth
+      lineWidth+1,
+      false
     );
 
-    drawBankPoint(s.bankPoint);
+    drawBankPoint(
+      s.bankPoint
+    );
 
   }else{
 
-    drawBankPoint(s.bankPoint);
+    /*
+      Kick has no object-ball rail route.
+      The red point marks where the cue ball hits the rail.
+    */
+
+    drawBankPoint(
+      s.bankPoint
+    );
   }
 
-  /* Ghost ball */
-  const gp=toScreen(s.ghost);
-  const g=geometry();
+  /*
+    Ghost-ball outline.
+  */
+
+  const gp=
+    toScreen(s.ghost);
+
+  const g=
+    geometry();
 
   const radius=
-    BALL_RADIUS/TABLE_W*g.w;
+    BALL_RADIUS/
+    TABLE_W*
+    g.w;
 
   ctx.beginPath();
 
@@ -1883,70 +2708,347 @@ function drawRoute(){
     Math.PI*2
   );
 
-  ctx.strokeStyle="rgba(217,255,63,.48)";
+  ctx.strokeStyle=
+    "rgba(217,255,63,.45)";
+
   ctx.lineWidth=1.5;
-  ctx.setLineDash([5,5]);
+
+  ctx.setLineDash(
+    [5,5]
+  );
+
   ctx.stroke();
+
   ctx.setLineDash([]);
 }
 
 function drawBankPoint(p){
 
-  if(!p)return;
+  if(!p)
+    return;
 
-  const q=toScreen(p);
+  const q=
+    toScreen(p);
 
   ctx.beginPath();
 
   ctx.arc(
     q.x,
     q.y,
-    Math.max(4,canvas.width*.006),
+    Math.max(
+      4,
+      canvas.width*.006
+    ),
     0,
     Math.PI*2
   );
 
-  ctx.fillStyle="#ff4652";
-  ctx.fill();
+  ctx.fillStyle=
+    "#ff4652";
 
-  ctx.strokeStyle="#080909";
-  ctx.lineWidth=2;
-  ctx.stroke();
+  ctx.fill();
 }
 
 /* ============================================================
-   BALL DRAWING
+   POOL BALLS
    ============================================================ */
 
 function drawPoolBall(
   position,
   number,
-  selected=false
+  selected=false,
+  role="obstacle"
 ){
 
-  const g=geometry();
-  const p=toScreen(position);
+  const g=
+    geometry();
+
+  const p=
+    toScreen(position);
 
   const radius=
-    BALL_RADIUS/TABLE_W*g.w;
+    BALL_RADIUS/
+    TABLE_W*
+    g.w;
 
-  const ball=BALL_MAP[number];
+  /*
+    Shadow stays inside a realistic scale.
+  */
 
-  /* Shadow */
+  ctx.save();
+
   ctx.beginPath();
 
   ctx.arc(
-    p.x+radius*.10,
-    p.y+radius*.13,
+    p.x+
+      radius*.10,
+
+    p.y+
+      radius*.12,
+
     radius*1.01,
+
     0,
     Math.PI*2
   );
 
-  ctx.fillStyle="rgba(0,0,0,.28)";
+  ctx.fillStyle=
+    "rgba(0,0,0,.24)";
+
   ctx.fill();
 
-  /* Ball */
+  ctx.restore();
+
+  const ball=
+    BALL_MAP[number];
+
+  if(!ball)
+    return;
+
+  ctx.save();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    radius,
+    0,
+    Math.PI*2
+  );
+
+  ctx.clip();
+
+  const gradient=
+    ctx.createRadialGradient(
+      p.x-
+        radius*.36,
+
+      p.y-
+        radius*.42,
+
+      radius*.03,
+
+      p.x,
+      p.y,
+      radius
+    );
+
+  gradient.addColorStop(
+    0,
+    "#ffffff"
+  );
+
+  gradient.addColorStop(
+    .18,
+    ball.color
+  );
+
+  gradient.addColorStop(
+    .82,
+    ball.color
+  );
+
+  gradient.addColorStop(
+    1,
+    "#111111"
+  );
+
+  ctx.fillStyle=
+    gradient;
+
+  ctx.fillRect(
+    p.x-radius,
+    p.y-radius,
+    radius*2,
+    radius*2
+  );
+
+  if(ball.type==="stripe"){
+
+    ctx.fillStyle=
+      "#f5f5f5";
+
+    ctx.fillRect(
+      p.x-radius,
+      p.y-radius*.31,
+      radius*2,
+      radius*.62
+    );
+  }
+
+  ctx.restore();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    radius,
+    0,
+    Math.PI*2
+  );
+
+  ctx.strokeStyle=
+    "rgba(255,255,255,.28)";
+
+  ctx.lineWidth=
+    Math.max(
+      1,
+      radius*.035
+    );
+
+  ctx.stroke();
+
+  /*
+    Number circle.
+  */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    radius*.39,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle=
+    "#f8f8f8";
+
+  ctx.fill();
+
+  ctx.strokeStyle=
+    "rgba(0,0,0,.55)";
+
+  ctx.lineWidth=
+    Math.max(
+      1,
+      radius*.035
+    );
+
+  ctx.stroke();
+
+  ctx.fillStyle=
+    "#111";
+
+  ctx.font=
+    `900 ${Math.max(
+      6,
+      radius*.62
+    )}px Arial`;
+
+  ctx.textAlign=
+    "center";
+
+  ctx.textBaseline=
+    "middle";
+
+  ctx.fillText(
+    number,
+    p.x,
+    p.y+.25
+  );
+
+  /*
+    Only the actual object ball gets the persistent subtle
+    lime ring. Selected balls get the stronger ring.
+  */
+
+  if(
+    selected||
+    role==="object"
+  ){
+
+    ctx.beginPath();
+
+    ctx.arc(
+      p.x,
+      p.y,
+      radius*1.17,
+      0,
+      Math.PI*2
+    );
+
+    ctx.strokeStyle=
+      selected
+        ?"rgba(217,255,63,.95)"
+        :"rgba(217,255,63,.48)";
+
+    ctx.lineWidth=
+      Math.max(
+        1.5,
+        radius*.07
+      );
+
+    ctx.stroke();
+  }
+}
+
+function drawCueBall(){
+
+  const g=
+    geometry();
+
+  const p=
+    toScreen(state.cue);
+
+  const radius=
+    BALL_RADIUS/
+    TABLE_W*
+    g.w;
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x+
+      radius*.10,
+
+    p.y+
+      radius*.12,
+
+    radius*1.01,
+
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle=
+    "rgba(0,0,0,.24)";
+
+  ctx.fill();
+
+  const gradient=
+    ctx.createRadialGradient(
+      p.x-
+        radius*.38,
+
+      p.y-
+        radius*.42,
+
+      radius*.03,
+
+      p.x,
+      p.y,
+      radius
+    );
+
+  gradient.addColorStop(
+    0,
+    "#ffffff"
+  );
+
+  gradient.addColorStop(
+    .72,
+    "#f1f1f1"
+  );
+
+  gradient.addColorStop(
+    1,
+    "#c4c8ca"
+  );
+
   ctx.beginPath();
 
   ctx.arc(
@@ -1958,165 +3060,44 @@ function drawPoolBall(
   );
 
   ctx.fillStyle=
-    ball?.color||"#fff";
+    gradient;
 
   ctx.fill();
 
-  if(ball?.type==="stripe"){
+  ctx.strokeStyle=
+    "rgba(0,0,0,.28)";
 
-    ctx.save();
+  ctx.lineWidth=
+    Math.max(
+      1,
+      radius*.035
+    );
+
+  ctx.stroke();
+
+  if(
+    state.selectedBall==="cue"
+  ){
 
     ctx.beginPath();
 
     ctx.arc(
       p.x,
       p.y,
-      radius,
+      radius*1.17,
       0,
       Math.PI*2
     );
 
-    ctx.clip();
+    ctx.strokeStyle=
+      "#d9ff3f";
 
-    ctx.fillStyle="#f4f4f4";
+    ctx.lineWidth=
+      Math.max(
+        2,
+        radius*.07
+      );
 
-    ctx.fillRect(
-      p.x-radius,
-      p.y-radius*.30,
-      radius*2,
-      radius*.60
-    );
-
-    ctx.restore();
-  }
-
-  /* Strong black outer edge */
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x,
-    p.y,
-    radius,
-    0,
-    Math.PI*2
-  );
-
-  ctx.strokeStyle="#050606";
-  ctx.lineWidth=Math.max(1.5,radius*.055);
-  ctx.stroke();
-
-  /* Number circle */
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x,
-    p.y,
-    radius*.40,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle="#f8f8f8";
-  ctx.fill();
-
-  ctx.strokeStyle="#050606";
-  ctx.lineWidth=Math.max(1,radius*.045);
-  ctx.stroke();
-
-  ctx.fillStyle="#111";
-  ctx.font=`900 ${Math.max(6,radius*.65)}px Arial`;
-  ctx.textAlign="center";
-  ctx.textBaseline="middle";
-
-  ctx.fillText(
-    number,
-    p.x,
-    p.y+.3
-  );
-
-  if(selected){
-
-    ctx.beginPath();
-
-    ctx.arc(
-      p.x,
-      p.y,
-      radius*1.20,
-      0,
-      Math.PI*2
-    );
-
-    ctx.strokeStyle="#d9ff3f";
-    ctx.lineWidth=Math.max(2,radius*.08);
-    ctx.stroke();
-  }
-}
-
-function drawCueBall(){
-
-  const g=geometry();
-  const p=toScreen(state.cue);
-
-  const radius=
-    BALL_RADIUS/TABLE_W*g.w;
-
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x+radius*.10,
-    p.y+radius*.13,
-    radius*1.01,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle="rgba(0,0,0,.28)";
-  ctx.fill();
-
-  const gradient=ctx.createRadialGradient(
-    p.x-radius*.32,
-    p.y-radius*.38,
-    radius*.02,
-    p.x,
-    p.y,
-    radius
-  );
-
-  gradient.addColorStop(0,"#ffffff");
-  gradient.addColorStop(.75,"#f0f0f0");
-  gradient.addColorStop(1,"#c8c8c8");
-
-  ctx.beginPath();
-
-  ctx.arc(
-    p.x,
-    p.y,
-    radius,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle=gradient;
-  ctx.fill();
-
-  ctx.strokeStyle="#050606";
-  ctx.lineWidth=Math.max(1.5,radius*.055);
-  ctx.stroke();
-
-  if(state.selectedBall==="cue"){
-
-    ctx.beginPath();
-
-    ctx.arc(
-      p.x,
-      p.y,
-      radius*1.20,
-      0,
-      Math.PI*2
-    );
-
-    ctx.strokeStyle="#d9ff3f";
-    ctx.lineWidth=Math.max(2,radius*.08);
     ctx.stroke();
   }
 }
@@ -2125,344 +3106,543 @@ function drawBalls(){
 
   drawCueBall();
 
-  for(const ball of state.tableBalls){
-
-    const selected=
-      state.selectedBall==="object" &&
-      state.selectedRackBall===ball.number;
+  for(
+    const ball of state.tableBalls
+  ){
 
     drawPoolBall(
       ball,
       ball.number,
-      selected
+
+      state.selectedBall===
+        "object"&&
+      state.selectedRackBall===
+        ball.number,
+
+      ball.role
     );
   }
 }
 
-function draw(){
-
-  drawTable();
-  drawRoute();
-  drawBalls();
-  drawBallViews();
-}
-
 /* ============================================================
-   LARGE BALL VIEWS
+   LARGE AIM BALLS
    ============================================================ */
 
 function setupBallCanvas(el){
 
-  const rect=el.getBoundingClientRect();
+  const rect=
+    el.getBoundingClientRect();
 
-  el.width=Math.max(
-    1,
-    Math.round(rect.width*DPR)
-  );
+  el.width=
+    Math.max(
+      1,
+      Math.round(
+        rect.width*DPR
+      )
+    );
 
-  el.height=Math.max(
-    1,
-    Math.round(rect.height*DPR)
-  );
+  el.height=
+    Math.max(
+      1,
+      Math.round(
+        rect.height*DPR
+      )
+    );
 
   return el.getContext("2d");
 }
 
-function drawLargeBall(c,type,number){
+function largeBall(
+  c,
+  type,
+  number
+){
 
-  const w=c.canvas.width;
-  const h=c.canvas.height;
+  const w=
+    c.canvas.width;
 
-  c.clearRect(0,0,w,h);
+  const h=
+    c.canvas.height;
+
+  c.clearRect(
+    0,
+    0,
+    w,
+    h
+  );
 
   const x=w/2;
   const y=h/2;
-
-  /*
-    Same physical radius for cue and object ball.
-    No dramatic oversized shadow.
-  */
-
-  const r=Math.min(w,h)*.355;
-
-  /* subtle shadow */
-  c.beginPath();
-
-  c.arc(
-    x+r*.045,
-    y+r*.065,
-    r*1.01,
-    0,
-    Math.PI*2
-  );
-
-  c.fillStyle="rgba(0,0,0,.25)";
-  c.fill();
-
-  const ball=
-    type==="cue"
-      ?null
-      :BALL_MAP[number];
-
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    r,
-    0,
-    Math.PI*2
-  );
+  const r=
+    Math.min(w,h)*.36;
 
   if(type==="cue"){
 
-    c.fillStyle="#f3f3f3";
-    c.fill();
-
-  }else{
-
-    c.fillStyle=ball?.color||"#aaa";
-    c.fill();
-
-    if(ball?.type==="stripe"){
-
-      c.save();
-
-      c.beginPath();
-
-      c.arc(
+    const gradient=
+      c.createRadialGradient(
+        x-r*.36,
+        y-r*.42,
+        r*.02,
         x,
         y,
-        r,
-        0,
-        Math.PI*2
+        r
       );
 
-      c.clip();
+    gradient.addColorStop(
+      0,
+      "#ffffff"
+    );
 
-      c.fillStyle="#f5f5f5";
+    gradient.addColorStop(
+      .76,
+      "#f0f0f0"
+    );
 
-      c.fillRect(
-        x-r,
-        y-r*.30,
-        r*2,
-        r*.60
-      );
-
-      c.restore();
-    }
-  }
-
-  /* Actual ball outline */
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    r,
-    0,
-    Math.PI*2
-  );
-
-  c.strokeStyle="#050606";
-  c.lineWidth=Math.max(2,r*.055);
-  c.stroke();
-
-  if(type!=="cue"){
-
-    /*
-      The number circle has a clear black edge so stripes
-      and solids both read like real pool balls.
-    */
+    gradient.addColorStop(
+      1,
+      "#c2c6c8"
+    );
 
     c.beginPath();
 
     c.arc(
       x,
       y,
-      r*.39,
+      r,
       0,
       Math.PI*2
     );
 
-    c.fillStyle="#f8f8f8";
+    c.fillStyle=
+      gradient;
+
     c.fill();
 
-    c.strokeStyle="#050606";
-    c.lineWidth=Math.max(2,r*.045);
+    c.strokeStyle=
+      "rgba(0,0,0,.25)";
+
+    c.lineWidth=
+      Math.max(
+        1,
+        r*.025
+      );
+
     c.stroke();
 
-    c.fillStyle="#111";
-
-    c.font=
-      `900 ${Math.max(11,r*.48)}px Arial`;
-
-    c.textAlign="center";
-    c.textBaseline="middle";
-
-    c.fillText(
-      number,
+    return{
       x,
-      y+.5
-    );
+      y,
+      r
+    };
   }
 
-  return{x,y,r};
-}
+  const ball=
+    BALL_MAP[number];
 
-/* ============================================================
-   AIM DOT
-   ============================================================ */
+  if(!ball)
+    return{
+      x,
+      y,
+      r
+    };
 
-function drawAimDot(
-  c,
-  ball,
-  direction
-){
-
-  const d=norm(direction);
-
-  /*
-    A pool-stick tip is much larger than the previous tiny dot.
-    This is still small enough to read as a contact point.
-  */
-
-  const distance=ball.r*.70;
-  const radius=Math.max(
-    4,
-    ball.r*.105
-  );
-
-  const x=
-    ball.x+d.x*distance;
-
-  const y=
-    ball.y+d.y*distance;
+  c.save();
 
   c.beginPath();
 
   c.arc(
     x,
     y,
-    radius,
+    r,
     0,
     Math.PI*2
   );
 
-  c.fillStyle="#ff4652";
+  c.clip();
+
+  c.fillStyle=
+    ball.color;
+
+  c.fillRect(
+    x-r,
+    y-r,
+    r*2,
+    r*2
+  );
+
+  if(ball.type==="stripe"){
+
+    c.fillStyle=
+      "#f7f7f7";
+
+    c.fillRect(
+      x-r,
+      y-r*.30,
+      r*2,
+      r*.60
+    );
+  }
+
+  const shade=
+    c.createRadialGradient(
+      x-r*.38,
+      y-r*.40,
+      r*.04,
+      x,
+      y,
+      r
+    );
+
+  shade.addColorStop(
+    0,
+    "rgba(255,255,255,.34)"
+  );
+
+  shade.addColorStop(
+    .32,
+    "rgba(255,255,255,0)"
+  );
+
+  shade.addColorStop(
+    .82,
+    "rgba(0,0,0,0)"
+  );
+
+  shade.addColorStop(
+    1,
+    "rgba(0,0,0,.20)"
+  );
+
+  c.fillStyle=
+    shade;
+
+  c.fillRect(
+    x-r,
+    y-r,
+    r*2,
+    r*2
+  );
+
+  c.restore();
+
+  c.beginPath();
+
+  c.arc(
+    x,
+    y,
+    r,
+    0,
+    Math.PI*2
+  );
+
+  c.strokeStyle=
+    "rgba(0,0,0,.42)";
+
+  c.lineWidth=
+    Math.max(
+      1,
+      r*.025
+    );
+
+  c.stroke();
+
+  /*
+    White number circle remains properly visible on stripes.
+  */
+
+  c.beginPath();
+
+  c.arc(
+    x,
+    y,
+    r*.39,
+    0,
+    Math.PI*2
+  );
+
+  c.fillStyle=
+    "#fafafa";
+
   c.fill();
 
-  c.strokeStyle="#050606";
-  c.lineWidth=Math.max(1.5,radius*.24);
+  c.strokeStyle=
+    "rgba(0,0,0,.65)";
+
+  c.lineWidth=
+    Math.max(
+      1.5,
+      r*.035
+    );
+
   c.stroke();
+
+  c.fillStyle=
+    "#111";
+
+  c.font=
+    `900 ${Math.max(
+      10,
+      r*.50
+    )}px Arial`;
+
+  c.textAlign=
+    "center";
+
+  c.textBaseline=
+    "middle";
+
+  c.fillText(
+    number,
+    x,
+    y+.5
+  );
+
+  return{
+    x,
+    y,
+    r
+  };
 }
 
 function drawCueView(c){
 
-  const ball=drawLargeBall(c,"cue");
+  const ball=
+    largeBall(
+      c,
+      "cue"
+    );
 
-  const s=state.solution;
+  const s=
+    state.solution;
 
-  if(!s)return;
+  if(!s)
+    return;
 
-  drawAimDot(
-    c,
-    ball,
+  const direction=
     norm(
       sub(
         s.ghost,
         state.cue
       )
-    )
+    );
+
+  const markerDistance=
+    ball.r*.76;
+
+  const markerRadius=
+    Math.max(
+      5,
+      ball.r*.115
+    );
+
+  const x=
+    ball.x+
+    direction.x*
+    markerDistance;
+
+  const y=
+    ball.y+
+    direction.y*
+    markerDistance;
+
+  c.beginPath();
+
+  c.arc(
+    x,
+    y,
+    markerRadius,
+    0,
+    Math.PI*2
   );
+
+  c.fillStyle=
+    "#ff4652";
+
+  c.fill();
+
+  c.strokeStyle=
+    "rgba(0,0,0,.35)";
+
+  c.lineWidth=
+    Math.max(
+      1,
+      markerRadius*.18
+    );
+
+  c.stroke();
 }
 
 function drawObjectView(c){
 
-  const ball=drawLargeBall(
-    c,
-    "object",
-    state.object.number
+  const ball=
+    largeBall(
+      c,
+      "object",
+      state.object.number
+    );
+
+  const s=
+    state.solution;
+
+  if(!s)
+    return;
+
+  const contact=
+    norm(
+      sub(
+        s.ghost,
+        state.object
+      )
+    );
+
+  const markerDistance=
+    ball.r*.76;
+
+  const markerRadius=
+    Math.max(
+      5,
+      ball.r*.115
+    );
+
+  const x=
+    ball.x+
+    contact.x*
+    markerDistance;
+
+  const y=
+    ball.y+
+    contact.y*
+    markerDistance;
+
+  c.beginPath();
+
+  c.arc(
+    x,
+    y,
+    markerRadius,
+    0,
+    Math.PI*2
   );
 
-  const s=state.solution;
+  c.fillStyle=
+    "#ff4652";
 
-  if(!s)return;
+  c.fill();
 
-  drawAimDot(
-    c,
-    ball,
-    mul(
-      norm(s.objectDirection),
-      -1
-    )
-  );
+  c.strokeStyle=
+    "rgba(0,0,0,.35)";
+
+  c.lineWidth=
+    Math.max(
+      1,
+      markerRadius*.18
+    );
+
+  c.stroke();
 }
 
 function drawBallViews(){
 
   const cueContext=
     setupBallCanvas(
-      document.getElementById("cueView")
+      document.getElementById(
+        "cueView"
+      )
     );
 
   const objectContext=
     setupBallCanvas(
-      document.getElementById("objectView")
+      document.getElementById(
+        "objectView"
+      )
     );
 
-  drawCueView(cueContext);
-  drawObjectView(objectContext);
+  drawCueView(
+    cueContext
+  );
+
+  drawObjectView(
+    objectContext
+  );
 }
 
 /* ============================================================
-   UI
+   MASTER DRAW
+   ============================================================ */
+
+function draw(){
+
+  drawTable();
+
+  drawRoute();
+
+  drawBalls();
+
+  drawBallViews();
+}
+
+/* ============================================================
+   UI RENDER
    ============================================================ */
 
 function render(){
 
-  const s=state.solution;
+  const s=
+    state.solution;
 
-  document.getElementById("shotType")
-    .textContent=
-      s
-        ?s.kind.charAt(0).toUpperCase()+s.kind.slice(1)
-        :"—";
+  document.getElementById(
+    "whereBall"
+  ).textContent=
+    state.object.number;
 
-  document.getElementById("shotPocket")
-    .textContent=
-      s
-        ?s.pocket.name
-        :"—";
+  document.getElementById(
+    "shotType"
+  ).textContent=
+    s
+      ?s.kind
+      :"—";
 
-  document.getElementById("shotRail")
-    .textContent=
-      s&&s.rail
-        ?railText(s.rail)
-        :"—";
+  document.getElementById(
+    "shotPocket"
+  ).textContent=
+    s
+      ?s.pocket.name
+      :"—";
 
-  document.getElementById("shotSpeed")
-    .textContent=
-      s
-        ?speedForShot(s)
-        :"—";
+  document.getElementById(
+    "shotRail"
+  ).textContent=
+    s&&s.rail
+      ?railText(s.rail)
+      :"—";
 
-  document.getElementById("instruction")
-    .textContent=
-      instructionFor(s);
+  document.getElementById(
+    "shotSpeed"
+  ).textContent=
+    s
+      ?speedForShot(s)
+      :"—";
 
-  document.getElementById("status")
-    .textContent=
-      s
-        ?"Route calculated from the current ball layout."
-        :"No clean route is available from the current layout.";
+  document.getElementById(
+    "instruction"
+  ).textContent=
+    instructionFor(s);
+
+  document.getElementById(
+    "status"
+  ).textContent=
+    s
+      ?"Route calculated from the current ball layout."
+      :"No clean route is available from the current layout.";
 
   renderPockets();
   renderModes();
-  renderRoles();
   renderRack();
+  renderRoles();
 
-  document.getElementById("removeBall").disabled=
+  document.getElementById(
+    "removeBall"
+  ).disabled=
     !state.selectedRackBall;
 
   draw();
@@ -2472,63 +3652,83 @@ function render(){
    POCKET UI
    ============================================================ */
 
+document.getElementById(
+  "pocketAuto"
+).onclick=()=>{
+
+  state.selectedPocket=
+    null;
+
+  solve();
+};
+
 function renderPockets(){
 
   const container=
-    document.getElementById("pockets");
+    document.getElementById(
+      "pockets"
+    );
 
   container.innerHTML="";
 
-  for(const pocket of POCKETS){
+  for(
+    const pocket of POCKETS
+  ){
 
     const button=
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
 
-    button.className="pocket";
+    button.className=
+      "pocket";
 
     const active=
-      state.pocketMode==="manual" &&
-      state.selectedPocket &&
-      state.selectedPocket.id===pocket.id;
+      state.selectedPocket&&
+      state.selectedPocket.id===
+      pocket.id;
 
     if(active)
-      button.classList.add("selected");
+      button.classList.add(
+        "selected"
+      );
 
-    button.textContent=pocket.name;
+    button.textContent=
+      pocket.name;
 
     button.onclick=()=>{
 
-      state.pocketMode="manual";
-      state.selectedPocket=pocket;
+      state.selectedPocket=
+        pocket;
 
       solve();
     };
 
-    container.appendChild(button);
+    container.appendChild(
+      button
+    );
   }
 
-  const auto=
-    document.getElementById("pocketAuto");
-
-  auto.classList.toggle(
+  document.getElementById(
+    "pocketAuto"
+  ).classList.toggle(
     "active",
-    state.pocketMode==="auto"
+    !state.selectedPocket
   );
 }
 
-document
-  .getElementById("pocketAuto")
-  .onclick=()=>{
-
-    state.pocketMode="auto";
-    state.selectedPocket=null;
-
-    solve();
-  };
-
 /* ============================================================
-   SHOT TYPE UI
+   MODE UI
    ============================================================ */
+
+document.getElementById(
+  "shotAuto"
+).onclick=()=>{
+
+  state.mode="auto";
+
+  solve();
+};
 
 function renderModes(){
 
@@ -2538,74 +3738,26 @@ function renderModes(){
 
       button.classList.toggle(
         "active",
-        state.shotMode===button.dataset.mode
+        state.mode===
+        button.dataset.mode
       );
 
       button.onclick=()=>{
 
-        state.shotMode=button.dataset.mode;
+        state.mode=
+          button.dataset.mode;
 
         solve();
       };
     });
 
-  document
-    .getElementById("shotAuto")
-    .classList.toggle(
-      "active",
-      state.shotMode==="auto"
-    );
+  document.getElementById(
+    "shotAuto"
+  ).classList.toggle(
+    "active",
+    state.mode==="auto"
+  );
 }
-
-document
-  .getElementById("shotAuto")
-  .onclick=()=>{
-
-    state.shotMode="auto";
-
-    solve();
-  };
-
-/* ============================================================
-   BALL ROLE
-   ============================================================ */
-
-function renderRoles(){
-
-  document
-    .getElementById("objectRole")
-    .classList.toggle(
-      "active",
-      state.placementRole==="object"
-    );
-
-  document
-    .getElementById("obstructionRole")
-    .classList.toggle(
-      "active",
-      state.placementRole==="obstruction"
-    );
-}
-
-document
-  .getElementById("objectRole")
-  .onclick=()=>{
-
-    state.placementRole="object";
-    state.selectedBall="object";
-
-    render();
-  };
-
-document
-  .getElementById("obstructionRole")
-  .onclick=()=>{
-
-    state.placementRole="obstruction";
-    state.selectedBall="object";
-
-    render();
-  };
 
 /* ============================================================
    RACK
@@ -2625,66 +3777,180 @@ function rackOrder(){
 function renderRack(){
 
   const rack=
-    document.getElementById("rack");
+    document.getElementById(
+      "rack"
+    );
 
   rack.innerHTML="";
 
   const placed=
     new Set(
-      state.tableBalls.map(b=>b.number)
+      state.tableBalls.map(
+        b=>b.number
+      )
     );
 
-  rackOrder().forEach((numbers,index)=>{
+  const rows=
+    rackOrder();
 
-    const row=
-      document.createElement("div");
+  rows.forEach(
+    (numbers,index)=>{
 
-    row.className=
-      `rack-row r${index+1}`;
+      const row=
+        document.createElement(
+          "div"
+        );
 
-    numbers.forEach(number=>{
+      row.className=
+        `rack-row r${index+1}`;
 
-      const ball=BALL_MAP[number];
+      numbers.forEach(
+        number=>{
 
-      const button=
-        document.createElement("button");
+          const ball=
+            BALL_MAP[number];
 
-      button.className=
-        `rack-ball ${ball.type}`;
+          const button=
+            document.createElement(
+              "button"
+            );
 
-      button.style.setProperty(
-        "--ball-color",
-        ball.color
+          button.className=
+            `rack-ball ${ball.type}`;
+
+          button.style.setProperty(
+            "--ball-color",
+            ball.color
+          );
+
+          if(
+            state.selectedRackBall===
+            number
+          ){
+
+            button.classList.add(
+              "selected"
+            );
+          }
+
+          if(
+            placed.has(number)
+          ){
+
+            button.classList.add(
+              "on-table"
+            );
+          }
+
+          if(
+            state.object.number===
+            number&&
+            state.tableBalls.some(
+              b=>
+                b.number===
+                number&&
+                b.role===
+                "object"
+            )
+          ){
+
+            button.classList.add(
+              "object-ball"
+            );
+          }
+
+          const span=
+            document.createElement(
+              "span"
+            );
+
+          span.textContent=
+            number;
+
+          button.appendChild(
+            span
+          );
+
+          button.onclick=
+            event=>{
+
+              event.stopPropagation();
+
+              selectRackBall(
+                number
+              );
+            };
+
+          row.appendChild(
+            button
+          );
+        }
       );
 
-      if(
-        state.selectedRackBall===number
-      ){
-        button.classList.add("selected");
-      }
+      rack.appendChild(
+        row
+      );
+    }
+  );
 
-      if(placed.has(number))
-        button.classList.add("on-table");
+  const selected=
+    state.selectedRackBall;
 
-      const span=
-        document.createElement("span");
+  document.getElementById(
+    "rackAccent"
+  ).textContent=
+    selected
+      ?`ball ${selected} selected`
+      :"select";
+}
 
-      span.textContent=number;
+/* ============================================================
+   BALL ROLES
+   ============================================================ */
 
-      button.appendChild(span);
+document.getElementById(
+  "objectRole"
+).onclick=()=>{
 
-      button.onclick=(event)=>{
+  state.placementRole=
+    "object";
 
-        event.stopPropagation();
+  /*
+    If a rack ball is already selected, this explicitly means
+    the next placement/selection should make that ball the
+    object ball.
+  */
 
-        selectRackBall(number);
-      };
+  renderRoles();
+};
 
-      row.appendChild(button);
-    });
+document.getElementById(
+  "obstacleRole"
+).onclick=()=>{
 
-    rack.appendChild(row);
-  });
+  state.placementRole=
+    "obstacle";
+
+  renderRoles();
+};
+
+function renderRoles(){
+
+  document.getElementById(
+    "objectRole"
+  ).classList.toggle(
+    "active",
+    state.placementRole===
+    "object"
+  );
+
+  document.getElementById(
+    "obstacleRole"
+  ).classList.toggle(
+    "active",
+    state.placementRole===
+    "obstacle"
+  );
 }
 
 /* ============================================================
@@ -2693,88 +3959,158 @@ function renderRack(){
 
 function selectRackBall(number){
 
-  state.selectedRackBall=number;
+  state.selectedRackBall=
+    number;
 
-  /*
-    Object Ball:
-    selecting a ball that is already placed selects it as the
-    shooting ball.
-
-    Obstruction Ball:
-    selecting a rack ball lets the user place or move that ball
-    without changing the actual object ball.
-  */
+  state.selectedBall=
+    "object";
 
   const existing=
     state.tableBalls.find(
       b=>b.number===number
     );
 
-  if(state.placementRole==="object"){
+  if(existing){
 
-    state.selectedBall="object";
+    /*
+      Selecting an existing obstacle does NOT silently make it
+      the object ball.
+    */
 
-    if(existing){
+    if(
+      existing.role==="object"
+    ){
 
       state.object={
         x:existing.x,
         y:existing.y,
         number
       };
+
+      state.placementRole=
+        "object";
+
+    }else{
+
+      state.placementRole=
+        "obstacle";
     }
 
-  }else{
-
-    state.selectedBall="obstruction";
   }
 
   render();
 }
 
 /* ============================================================
-   TABLE HIT TEST
+   HIT TEST
    ============================================================ */
 
 function nearestBall(p){
 
-  const cueTouchRadius=
+  const touchRadius=
     Math.max(
       BALL_DIAMETER*1.7,
-      4
+      4.4
     );
 
   if(
-    dist(p,state.cue)<=cueTouchRadius
+    dist(
+      p,
+      state.cue
+    )<=touchRadius
   ){
-    return{type:"cue"};
+
+    return{
+      type:"cue"
+    };
   }
 
-  let closest=null;
-  let closestDistance=Infinity;
+  let best=null;
+  let bestDistance=
+    Infinity;
 
-  for(const ball of state.tableBalls){
+  for(
+    const ball of state.tableBalls
+  ){
 
-    const d=dist(p,ball);
+    const d=
+      dist(
+        p,
+        ball
+      );
 
     if(
-      d<cueTouchRadius &&
-      d<closestDistance
+      d<=touchRadius&&
+      d<bestDistance
     ){
 
-      closest=ball;
-      closestDistance=d;
+      best=
+        ball;
+
+      bestDistance=
+        d;
     }
   }
 
-  if(closest){
+  if(best){
 
     return{
       type:"object",
-      number:closest.number
+      number:best.number,
+      role:best.role
     };
   }
 
   return null;
+}
+
+/* ============================================================
+   VALID POSITION
+   ============================================================ */
+
+function validBallPosition(
+  p,
+  movingNumber=null
+){
+
+  if(!centerInside(p))
+    return false;
+
+  /*
+    Cue-ball collision.
+  */
+  if(
+    dist(
+      p,
+      state.cue
+    )<
+    BALL_DIAMETER
+  )
+    return false;
+
+  for(
+    const ball of state.tableBalls
+  ){
+
+    if(
+      ball.number===
+      movingNumber
+    )
+      continue;
+
+    if(
+      dist(
+        p,
+        ball
+      )<
+      BALL_DIAMETER
+    ){
+
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /* ============================================================
@@ -2787,308 +4123,381 @@ canvas.addEventListener(
 
     event.preventDefault();
 
-    const p=fromScreen(
-      event.clientX,
-      event.clientY
-    );
+    const p=
+      fromScreen(
+        event.clientX,
+        event.clientY
+      );
 
-    const hit=nearestBall(p);
+    const hit=
+      nearestBall(p);
 
-    /* Existing ball selected */
+    /*
+      Existing ball was touched.
+    */
+
     if(hit){
 
-      if(hit.type==="cue"){
+      if(
+        hit.type==="cue"
+      ){
 
-        state.selectedBall="cue";
-        state.selectedRackBall=null;
+        state.selectedBall=
+          "cue";
+
+        state.selectedRackBall=
+          null;
+
+        render();
+
+        return;
+      }
+
+      const ball=
+        state.tableBalls.find(
+          b=>
+            b.number===
+            hit.number
+        );
+
+      if(!ball)
+        return;
+
+      state.selectedBall=
+        "object";
+
+      state.selectedRackBall=
+        ball.number;
+
+      /*
+        Selecting the object selects it.
+        Selecting an obstacle does not convert it.
+      */
+
+      if(
+        ball.role==="object"
+      ){
+
+        state.object={
+          x:ball.x,
+          y:ball.y,
+          number:ball.number
+        };
+
+        state.placementRole=
+          "object";
 
       }else{
 
-        state.selectedRackBall=hit.number;
-
-        /*
-          An existing obstruction stays an obstruction.
-          It does not magically become the object ball.
-        */
-
-        const existing=
-          state.tableBalls.find(
-            b=>b.number===hit.number
-          );
-
-        if(
-          existing &&
-          existing.number===state.object.number
-        ){
-
-          state.selectedBall="object";
-
-          state.object={
-            x:existing.x,
-            y:existing.y,
-            number:existing.number
-          };
-
-          state.placementRole="object";
-
-        }else{
-
-          state.selectedBall="obstruction";
-          state.placementRole="obstruction";
-        }
+        state.placementRole=
+          "obstacle";
       }
 
       render();
+
       return;
     }
+
+    /*
+      Empty table location.
+      A selected ball can now be placed/moved.
+    */
 
     if(!state.selectedBall)
       return;
 
-    const next=V(
-      clamp(
-        p.x,
-        BALL_RADIUS,
-        TABLE_W-BALL_RADIUS
-      ),
-      clamp(
-        p.y,
-        BALL_RADIUS,
-        TABLE_H-BALL_RADIUS
+    const next=
+      V(
+        clamp(
+          p.x,
+          BALL_RADIUS,
+          TABLE_W-BALL_RADIUS
+        ),
+
+        clamp(
+          p.y,
+          BALL_RADIUS,
+          TABLE_H-BALL_RADIUS
+        )
+      );
+
+    /*
+      Cue ball.
+    */
+
+    if(
+      state.selectedBall===
+      "cue"
+    ){
+
+      if(
+        !validBallPosition(
+          next
+        )
       )
-    );
-
-    /* Cue ball */
-    if(state.selectedBall==="cue"){
-
-      if(
-        dist(next,state.object)<
-        BALL_DIAMETER
-      ){
         return;
-      }
 
-      if(
-        state.tableBalls.some(
-          b=>dist(next,b)<BALL_DIAMETER
-        )
-      ){
-        return;
-      }
-
-      state.cue=next;
+      state.cue=
+        next;
 
       solve();
+
       return;
     }
 
-    /* Object ball */
-    if(state.selectedBall==="object"){
+    /*
+      Object/obstacle ball.
+    */
 
-      if(
-        dist(next,state.cue)<
-        BALL_DIAMETER
-      ){
-        return;
-      }
+    const number=
+      state.selectedRackBall;
 
-      if(
-        state.tableBalls.some(
-          b=>
-            b.number!==state.object.number &&
-            dist(next,b)<BALL_DIAMETER
-        )
-      ){
-        return;
-      }
-
-      const existing=
-        state.tableBalls.find(
-          b=>b.number===state.object.number
-        );
-
-      if(existing){
-
-        existing.x=next.x;
-        existing.y=next.y;
-
-      }else{
-
-        state.tableBalls.push({
-          number:state.object.number,
-          x:next.x,
-          y:next.y
-        });
-      }
-
-      state.object={
-        x:next.x,
-        y:next.y,
-        number:state.object.number
-      };
-
-      solve();
+    if(!number)
       return;
-    }
 
-    /* Obstruction ball */
-    if(state.selectedBall==="obstruction"){
+    const existing=
+      state.tableBalls.find(
+        b=>
+          b.number===
+          number
+      );
 
-      const number=state.selectedRackBall;
+    /*
+      Moving an existing ball.
+    */
 
-      if(!number)
-        return;
-
-      if(number===state.object.number)
-        return;
-
-      if(
-        dist(next,state.cue)<
-        BALL_DIAMETER
-      ){
-        return;
-      }
+    if(existing){
 
       if(
-        dist(next,state.object)<
-        BALL_DIAMETER
-      ){
-        return;
-      }
-
-      if(
-        state.tableBalls.some(
-          b=>
-            b.number!==number &&
-            dist(next,b)<BALL_DIAMETER
+        !validBallPosition(
+          next,
+          number
         )
-      ){
+      )
         return;
-      }
 
-      const existing=
-        state.tableBalls.find(
-          b=>b.number===number
-        );
+      existing.x=
+        next.x;
 
-      if(existing){
-
-        existing.x=next.x;
-        existing.y=next.y;
-
-      }else{
-
-        state.tableBalls.push({
-          number,
-          x:next.x,
-          y:next.y
-        });
-      }
+      existing.y=
+        next.y;
 
       /*
-        Important:
-        obstruction placement never changes state.object.
+        Only explicit object-ball mode converts a ball
+        into the object ball.
       */
 
-      solve();
+      if(
+        state.placementRole===
+        "object"
+      ){
+
+        for(
+          const b of state.tableBalls
+        ){
+
+          if(
+            b.number!==number&&
+            b.role==="object"
+          ){
+
+            b.role=
+              "obstacle";
+          }
+        }
+
+        existing.role=
+          "object";
+
+        state.object={
+          x:next.x,
+          y:next.y,
+          number
+        };
+      }
+
+    }else{
+
+      /*
+        New ball.
+      */
+
+      if(
+        !validBallPosition(
+          next
+        )
+      )
+        return;
+
+      const newBall={
+        number,
+        x:next.x,
+        y:next.y,
+        role:
+          state.placementRole
+      };
+
+      state.tableBalls.push(
+        newBall
+      );
+
+      if(
+        newBall.role===
+        "object"
+      ){
+
+        /*
+          Only one object ball.
+        */
+
+        for(
+          const b of state.tableBalls
+        ){
+
+          if(
+            b.number!==number&&
+            b.role==="object"
+          ){
+
+            b.role=
+              "obstacle";
+          }
+        }
+
+        state.object={
+          x:next.x,
+          y:next.y,
+          number
+        };
+      }
     }
+
+    solve();
   },
-  {passive:false}
+  {
+    passive:false
+  }
 );
 
 /* ============================================================
    REMOVE BALL
    ============================================================ */
 
-document
-  .getElementById("removeBall")
-  .onclick=()=>{
+document.getElementById(
+  "removeBall"
+).onclick=()=>{
 
-    if(!state.selectedRackBall)
-      return;
+  if(!state.selectedRackBall)
+    return;
 
-    const number=
-      state.selectedRackBall;
+  const number=
+    state.selectedRackBall;
 
-    /*
-      Never remove the cue ball through this button.
-    */
+  const removed=
+    state.tableBalls.find(
+      b=>
+        b.number===
+        number
+    );
 
-    state.tableBalls=
-      state.tableBalls.filter(
-        b=>b.number!==number
-      );
+  state.tableBalls=
+    state.tableBalls.filter(
+      b=>
+        b.number!==
+        number
+    );
 
-    state.selectedRackBall=null;
+  state.selectedRackBall=
+    null;
 
-    /*
-      If the removed ball was the object ball, clear the
-      object position until another object is selected.
-    */
+  state.selectedBall=
+    null;
 
-    if(state.object.number===number){
+  if(
+    removed&&
+    removed.role==="object"
+  ){
 
-      const replacement=
-        state.tableBalls[0];
+    const replacement=
+      state.tableBalls[0];
 
-      if(replacement){
+    if(replacement){
 
-        state.object={
-          x:replacement.x,
-          y:replacement.y,
-          number:replacement.number
-        };
+      replacement.role=
+        "object";
 
-        state.selectedRackBall=
-          replacement.number;
+      state.object={
+        x:replacement.x,
+        y:replacement.y,
+        number:replacement.number
+      };
 
-      }
+    }else{
+
+      /*
+        Preserve the original foundation state when the last
+        ball is removed.
+      */
+
+      state.object={
+        x:65,
+        y:20,
+        number:3
+      };
     }
+  }
 
-    solve();
-  };
+  solve();
+};
 
 /* ============================================================
    RESET
    ============================================================ */
 
-document
-  .getElementById("reset")
-  .onclick=()=>{
+document.getElementById(
+  "reset"
+).onclick=()=>{
 
-    state.cue={
-      x:22,
-      y:34
-    };
+  state.cue={
+    x:22,
+    y:34
+  };
 
-    state.object={
+  state.object={
+    x:65,
+    y:20,
+    number:3
+  };
+
+  state.tableBalls=[
+    {
+      number:3,
       x:65,
       y:20,
-      number:3
-    };
+      role:"object"
+    }
+  ];
 
-    state.tableBalls=[
-      {
-        number:3,
-        x:65,
-        y:20
-      }
-    ];
+  state.selectedBall=
+    null;
 
-    state.selectedBall=null;
-    state.selectedRackBall=3;
+  state.selectedRackBall=
+    3;
 
-    state.placementRole="object";
+  state.placementRole=
+    "object";
 
-    state.pocketMode="auto";
-    state.selectedPocket=null;
+  state.selectedPocket=
+    null;
 
-    state.shotMode="auto";
+  state.mode=
+    "auto";
 
-    state.solution=null;
+  state.solution=
+    null;
 
-    solve();
-  };
+  solve();
+};
 
 /* ============================================================
    RESIZE
@@ -3100,22 +4509,25 @@ window.addEventListener(
   "resize",
   ()=>{
 
-    clearTimeout(resizeTimer);
-
-    resizeTimer=setTimeout(
-      ()=>{
-
-        DPR=
-          Math.min(
-            window.devicePixelRatio||1,
-            2
-          );
-
-        resizeCanvas();
-
-      },
-      50
+    clearTimeout(
+      resizeTimer
     );
+
+    resizeTimer=
+      setTimeout(
+        ()=>{
+
+          DPR=
+            Math.min(
+              window.devicePixelRatio||1,
+              2
+            );
+
+          resizeCanvas();
+
+        },
+        50
+      );
   }
 );
 
@@ -3127,13 +4539,17 @@ function resizeCanvas(){
   canvas.width=
     Math.max(
       1,
-      Math.round(rect.width*DPR)
+      Math.round(
+        rect.width*DPR
+      )
     );
 
   canvas.height=
     Math.max(
       1,
-      Math.round(rect.height*DPR)
+      Math.round(
+        rect.height*DPR
+      )
     );
 
   draw();
@@ -3143,22 +4559,30 @@ function resizeCanvas(){
    START
    ============================================================ */
 
-requestAnimationFrame(()=>{
+requestAnimationFrame(
+  ()=>{
 
-  state.tableBalls=[
-    {
-      number:3,
-      x:65,
-      y:20
-    }
-  ];
+    state.tableBalls=[
+      {
+        number:3,
+        x:65,
+        y:20,
+        role:"object"
+      }
+    ];
 
-  state.selectedRackBall=3;
+    state.selectedRackBall=
+      3;
 
-  resizeCanvas();
-  solve();
+    state.placementRole=
+      "object";
 
-});
+    resizeCanvas();
+
+    solve();
+  }
+);
+
 </script>
 
 </body>
