@@ -16,6 +16,7 @@
   --lime:#d9ff3f;
   --red:#ff4652;
   --green:#42d995;
+  --bank:#ff9f43;
   --white:#f5f7f8;
 }
 *{
@@ -125,13 +126,6 @@ button{
   color:var(--red);
   transform:translate(-50%,-50%) scale(.94);
 }
-.table-help{
-  padding:9px 2px 2px;
-  color:#b2bcc1;
-  font-size:11px;
-  font-weight:700;
-  line-height:1.35;
-}
 .legend{
   display:flex;
   flex-wrap:wrap;
@@ -154,7 +148,7 @@ button{
 }
 .legend-green .legend-dot{background:var(--green)}
 .legend-white .legend-dot{background:#fff}
-.legend-red .legend-dot{background:var(--red)}
+.legend-red .legend-dot{background:var(--bank)}
 .side{
   display:flex;
   flex-direction:column;
@@ -231,6 +225,9 @@ button{
   gap:8px;
   margin-top:9px;
 }
+.where-grid.combo{
+  grid-template-columns:repeat(3,1fr);
+}
 .ball-panel{
   background:#0a0e10;
   border:1px solid rgba(255,255,255,.055);
@@ -253,6 +250,12 @@ button{
 .ball-view{
   width:100%;
   aspect-ratio:1;
+  display:block;
+}
+.combo-only{
+  display:none;
+}
+.where-grid.combo .combo-only{
   display:block;
 }
 .controls{
@@ -320,7 +323,7 @@ button{
 }
 .modes{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:6px;
   margin-top:9px;
 }
@@ -460,6 +463,16 @@ button{
   background:rgba(217,255,63,.07);
   color:#d9ff3f;
 }
+.rack-help{
+  color:#89949b;
+  font-size:10px;
+  line-height:1.5;
+  padding:7px 8px 0;
+}
+.rack-help strong{
+  color:#dfe5e7;
+  font-weight:850;
+}
 .empty{
   color:#667178;
   font-size:9px;
@@ -476,6 +489,9 @@ button{
   .brand-name{font-size:20px}
   .section{padding:12px}
   .where-grid{gap:5px}
+  .where-grid.combo{
+    gap:4px;
+  }
   .controls{
     grid-template-columns:repeat(2,1fr);
   }
@@ -487,8 +503,8 @@ button{
     min-width:58px;
     min-height:32px;
   }
-  .modes{
-    grid-template-columns:repeat(2,1fr);
+  .ball-label{
+    font-size:8px;
   }
 }
 </style>
@@ -515,22 +531,18 @@ button{
     >×</button>
   </div>
 
-  <div class="table-help">
-    Select a ball, then tap where you want to place it.
-  </div>
-
   <div class="legend">
-    <span class="legend-item legend-green">
+    <span class="legend-item legend-white">
       <span class="legend-dot"></span>
       <span>Cue-ball path</span>
     </span>
-    <span class="legend-item legend-white">
+    <span class="legend-item legend-green">
       <span class="legend-dot"></span>
       <span>Object-ball path</span>
     </span>
     <span class="legend-item legend-red">
       <span class="legend-dot"></span>
-      <span>Bank path</span>
+      <span>Bank / rail path</span>
     </span>
   </div>
 </section>
@@ -547,24 +559,29 @@ button{
     </div>
   </div>
 
-  <div class="where-grid">
+  <div class="where-grid" id="whereGrid">
+
     <div class="ball-panel">
       <div class="ball-head">
-        <div class="ball-label" id="cueViewLabel">
-          Cue Ball
-        </div>
+        <div class="ball-label" id="cueViewLabel">Cue Ball</div>
       </div>
       <canvas class="ball-view" id="cueView"></canvas>
     </div>
 
     <div class="ball-panel">
       <div class="ball-head">
-        <div class="ball-label" id="objectViewLabel">
-          Object Ball
-        </div>
+        <div class="ball-label" id="objectViewLabel">Object Ball</div>
       </div>
       <canvas class="ball-view" id="objectView"></canvas>
     </div>
+
+    <div class="ball-panel combo-only">
+      <div class="ball-head">
+        <div class="ball-label" id="targetViewLabel">COMBO TARGET</div>
+      </div>
+      <canvas class="ball-view" id="targetView"></canvas>
+    </div>
+
   </div>
 
   <div class="controls">
@@ -572,17 +589,14 @@ button{
       <div class="stat-label">Type</div>
       <div class="stat-value" id="shotType">—</div>
     </div>
-
     <div class="stat">
       <div class="stat-label">Pocket</div>
       <div class="stat-value" id="shotPocket">—</div>
     </div>
-
     <div class="stat">
       <div class="stat-label">Rail</div>
       <div class="stat-value" id="shotRail">—</div>
     </div>
-
     <div class="stat">
       <div class="stat-label">Speed</div>
       <div class="stat-value" id="shotSpeed">—</div>
@@ -599,11 +613,10 @@ button{
     <div class="section-title">
       Pocket
     </div>
-    <button class="section-action" id="pocketAuto">
-      Auto
+    <button class="section-action active" id="pocketAuto">
+      Suggested
     </button>
   </div>
-
   <div class="pockets" id="pockets"></div>
 </section>
 
@@ -612,8 +625,8 @@ button{
     <div class="section-title">
       Shot Type
     </div>
-    <button class="section-action" id="shotAuto">
-      Auto
+    <button class="section-action active" id="shotAuto">
+      Suggested
     </button>
   </div>
 
@@ -626,9 +639,6 @@ button{
     </button>
     <button class="mode" data-mode="kick">
       Kick
-    </button>
-    <button class="mode" data-mode="combination">
-      Combo
     </button>
   </div>
 </section>
@@ -653,7 +663,6 @@ button{
     <button class="role-button active" id="objectRole">
       Target Ball
     </button>
-
     <button class="role-button" id="obstacleRole">
       Blocking Ball
     </button>
@@ -663,10 +672,21 @@ button{
     <button class="blocker-button active" id="myBallBlocker">
       My Ball
     </button>
-
     <button class="blocker-button" id="opponentBallBlocker">
       Opponent's Ball
     </button>
+  </div>
+
+  <div class="rack-help">
+    <strong>Target Ball:</strong>
+    The ball you are trying to pocket.
+    <br>
+    <strong>Blocking Ball:</strong>
+    A ball that can interfere with the cue-ball or target-ball path.
+    <br>
+    You can place multiple blocking balls, including both your balls and your opponent's balls.
+    <br>
+    Select a ball, choose its role, then tap the table to place it.
   </div>
 </section>
 
@@ -680,7 +700,6 @@ button{
 /* ============================================================
    PHYSICAL TABLE
    ============================================================ */
-
 const TABLE_W=100;
 const TABLE_H=50;
 const BALL_DIAMETER=2.25;
@@ -696,60 +715,17 @@ const RAIL={
 const POCKET_SIZE=4.55;
 
 const POCKETS=[
-  {
-    id:"TL",
-    name:"Left Corner Pocket",
-    x:0,
-    y:0,
-    type:"corner",
-    opening:POCKET_SIZE
-  },
-  {
-    id:"TM",
-    name:"Top Side Pocket",
-    x:50,
-    y:0,
-    type:"side",
-    opening:POCKET_SIZE
-  },
-  {
-    id:"TR",
-    name:"Right Corner Pocket",
-    x:100,
-    y:0,
-    type:"corner",
-    opening:POCKET_SIZE
-  },
-  {
-    id:"BL",
-    name:"Left Corner Pocket",
-    x:0,
-    y:50,
-    type:"corner",
-    opening:POCKET_SIZE
-  },
-  {
-    id:"BM",
-    name:"Bottom Side Pocket",
-    x:50,
-    y:50,
-    type:"side",
-    opening:POCKET_SIZE
-  },
-  {
-    id:"BR",
-    name:"Right Corner Pocket",
-    x:100,
-    y:50,
-    type:"corner",
-    opening:POCKET_SIZE
-  }
+  {id:"TL",name:"Left Corner Pocket",x:0,y:0,type:"corner",opening:POCKET_SIZE},
+  {id:"TM",name:"Top Side Pocket",x:50,y:0,type:"side",opening:POCKET_SIZE},
+  {id:"TR",name:"Right Corner Pocket",x:100,y:0,type:"corner",opening:POCKET_SIZE},
+  {id:"BL",name:"Left Corner Pocket",x:0,y:50,type:"corner",opening:POCKET_SIZE},
+  {id:"BM",name:"Bottom Side Pocket",x:50,y:50,type:"side",opening:POCKET_SIZE},
+  {id:"BR",name:"Right Corner Pocket",x:100,y:50,type:"corner",opening:POCKET_SIZE}
 ];
 
 /* ============================================================
    BALL SET
    ============================================================ */
-
 const BALLS=[
   {n:1,type:"solid",color:"#f4c51d"},
   {n:2,type:"solid",color:"#2867c7"},
@@ -775,7 +751,6 @@ const BALL_MAP=Object.fromEntries(
 /* ============================================================
    STATE
    ============================================================ */
-
 const state={
   cue:{
     x:22,
@@ -811,7 +786,6 @@ const state={
 /* ============================================================
    DOM
    ============================================================ */
-
 const canvas=document.getElementById("table");
 const ctx=canvas.getContext("2d");
 const deleteOverlay=document.getElementById("deleteOverlay");
@@ -824,30 +798,20 @@ let DPR=Math.min(
 /* ============================================================
    VECTOR MATH
    ============================================================ */
-
 function V(x,y){
   return{x,y};
 }
 
 function add(a,b){
-  return V(
-    a.x+b.x,
-    a.y+b.y
-  );
+  return V(a.x+b.x,a.y+b.y);
 }
 
 function sub(a,b){
-  return V(
-    a.x-b.x,
-    a.y-b.y
-  );
+  return V(a.x-b.x,a.y-b.y);
 }
 
 function mul(a,n){
-  return V(
-    a.x*n,
-    a.y*n
-  );
+  return V(a.x*n,a.y*n);
 }
 
 function dot(a,b){
@@ -855,15 +819,11 @@ function dot(a,b){
 }
 
 function len(a){
-  return Math.hypot(
-    a.x,
-    a.y
-  );
+  return Math.hypot(a.x,a.y);
 }
 
 function norm(a){
   const l=len(a);
-
   if(l<1e-10)
     return V(0,0);
 
@@ -890,7 +850,6 @@ function clamp(n,a,b){
 /* ============================================================
    GEOMETRY
    ============================================================ */
-
 function centerInside(p){
   return(
     p.x>=BALL_RADIUS &&
@@ -922,7 +881,6 @@ function pointSegmentDistance(p,a,b){
 /* ============================================================
    PATH CHECKING
    ============================================================ */
-
 function pathClear(
   a,
   b,
@@ -932,7 +890,6 @@ function pathClear(
     ignoreNumbers=[ignoreNumbers];
 
   for(const ball of state.tableBalls){
-
     if(ignoreNumbers.includes(ball.number))
       continue;
 
@@ -966,13 +923,10 @@ function objectPathClear(
 /* ============================================================
    POCKET TARGETS
    ============================================================ */
-
 function pocketTargets(pocket){
-
   const targets=[];
 
   if(pocket.type==="side"){
-
     [-1.1,-.55,0,.55,1.1].forEach(offset=>{
       targets.push(
         V(
@@ -987,9 +941,7 @@ function pocketTargets(pocket){
         )
       );
     });
-
   }else{
-
     const sx=pocket.x===0?1:-1;
     const sy=pocket.y===0?1:-1;
 
@@ -1013,7 +965,6 @@ function pocketTargets(pocket){
 /* ============================================================
    GHOST BALL
    ============================================================ */
-
 function ghostForDirection(
   object,
   direction
@@ -1030,14 +981,12 @@ function ghostForDirection(
 /* ============================================================
    DIRECT CUT
    ============================================================ */
-
 function directCandidate(
   cue,
   object,
   pocket,
   target
 ){
-
   const objectVector=sub(
     target,
     object
@@ -1141,69 +1090,75 @@ function directCandidate(
 }
 
 /* ============================================================
-   COMBINATION SHOT
+   COMBO SHOT
+   Cue Ball -> First Object Ball -> Second Object Ball -> Pocket
    ============================================================ */
-
 function combinationCandidate(
   cue,
-  combinationBall,
-  targetBall,
+  firstBall,
+  secondBall,
   pocket,
   pocketTarget
 ){
-
   if(
-    !combinationBall||
-    !targetBall||
-    combinationBall.number===targetBall.number
+    !firstBall||
+    !secondBall||
+    firstBall.number===secondBall.number
   ){
     return null;
   }
 
-  const targetDirection=norm(
+  /*
+    The second ball must be sent from its intended contact
+    point toward the pocket. The first ball must arrive at
+    that contact point.
+  */
+  const secondToPocket=norm(
     sub(
       pocketTarget,
-      targetBall
+      secondBall
     )
   );
 
-  if(len(targetDirection)<.01)
+  if(len(secondToPocket)<.01)
     return null;
 
   /*
-    This is the point on the target ball where the
-    combination ball needs to make contact.
+    This is the actual contact location on the second ball.
+    The first ball travels toward this point.
   */
-  const targetContactPoint=sub(
-    targetBall,
+  const secondBallContactPoint=sub(
+    secondBall,
     mul(
-      targetDirection,
+      secondToPocket,
       BALL_DIAMETER
     )
   );
 
-  if(!centerInside(targetContactPoint))
+  if(!centerInside(secondBallContactPoint))
     return null;
 
-  const comboDirection=norm(
+  /*
+    The first ball must approach the second ball through
+    its center/contact line.
+  */
+  const firstToSecond=norm(
     sub(
-      targetBall,
-      combinationBall
+      secondBallContactPoint,
+      firstBall
     )
   );
 
-  if(
-    dot(
-      comboDirection,
-      targetDirection
-    )<.15
-  ){
+  if(len(firstToSecond)<.01)
     return null;
-  }
 
+  /*
+    Cue ball must hit the first ball along the direction
+    that sends the first ball toward the second ball.
+  */
   const cueGhost=ghostForDirection(
-    combinationBall,
-    comboDirection
+    firstBall,
+    firstToSecond
   );
 
   if(!centerInside(cueGhost))
@@ -1214,8 +1169,8 @@ function combinationCandidate(
       cue,
       cueGhost,
       [
-        combinationBall.number,
-        targetBall.number
+        firstBall.number,
+        secondBall.number
       ]
     )
   ){
@@ -1224,11 +1179,11 @@ function combinationCandidate(
 
   if(
     !pathClear(
-      combinationBall,
-      targetBall,
+      firstBall,
+      secondBallContactPoint,
       [
-        combinationBall.number,
-        targetBall.number
+        firstBall.number,
+        secondBall.number
       ]
     )
   ){
@@ -1237,11 +1192,11 @@ function combinationCandidate(
 
   if(
     !pathClear(
-      targetBall,
+      secondBall,
       pocketTarget,
       [
-        combinationBall.number,
-        targetBall.number
+        firstBall.number,
+        secondBall.number
       ]
     )
   ){
@@ -1255,25 +1210,25 @@ function combinationCandidate(
     )
   );
 
-  const comboIncoming=norm(
+  const firstIncoming=norm(
     sub(
-      combinationBall,
+      firstBall,
       cueGhost
     )
   );
 
-  const comboOutgoing=norm(
+  const firstOutgoing=norm(
     sub(
-      targetBall,
-      combinationBall
+      secondBallContactPoint,
+      firstBall
     )
   );
 
   const transferAngle=Math.acos(
     clamp(
       dot(
-        comboIncoming,
-        comboOutgoing
+        firstIncoming,
+        firstOutgoing
       ),
       -1,
       1
@@ -1288,20 +1243,20 @@ function combinationCandidate(
     cueGhost
   );
 
-  const comboDistance=dist(
-    combinationBall,
-    targetBall
+  const firstDistance=dist(
+    firstBall,
+    secondBallContactPoint
   );
 
-  const targetDistance=dist(
-    targetBall,
+  const secondDistance=dist(
+    secondBall,
     pocketTarget
   );
 
   const score=
     cueDistance+
-    comboDistance+
-    targetDistance+
+    firstDistance+
+    secondDistance+
     30+
     Math.max(
       0,
@@ -1311,36 +1266,58 @@ function combinationCandidate(
   return{
     kind:"combination",
     pocket,
-    target:pocketTarget,
-
-    targetBall,
-    combinationBall,
-
-    contactBall:combinationBall,
-
-    rail:null,
-
-    ghost:cueGhost,
 
     /*
-      Point on the target ball where the
-      combination ball contacts it.
+      "target" remains the final pocket target so the
+      existing pocket/route system continues to work.
     */
-    combinationGhost:targetContactPoint,
+    target:pocketTarget,
 
+    /*
+      First object ball struck by the cue ball.
+    */
+    combinationBall:firstBall,
+
+    /*
+      Second object ball receiving the combo.
+    */
+    targetBall:secondBall,
+
+    /*
+      First contact is on the first object ball.
+    */
+    firstContactPoint:cueGhost,
+
+    /*
+      Second contact is on the second object ball.
+    */
+    secondContactPoint:secondBallContactPoint,
+
+    /*
+      Existing aliases are retained so other working
+      parts of the application continue to function.
+    */
+    contactBall:firstBall,
+    ghost:cueGhost,
+    combinationGhost:secondBallContactPoint,
+
+    rail:null,
     bankPoint:null,
-
     cueDirection,
-    objectDirection:targetDirection,
+
+    /*
+      Object direction now correctly represents the first
+      ball's route into the second ball.
+    */
+    objectDirection:firstOutgoing,
 
     cueDistance,
-
     objectDistance:
-      comboDistance+
-      targetDistance,
+      firstDistance+
+      secondDistance,
 
-    combinationDistance:comboDistance,
-    targetDistance,
+    combinationDistance:firstDistance,
+    targetDistance:secondDistance,
 
     transferAngle,
     cutDegrees:0,
@@ -1352,9 +1329,7 @@ function combinationCandidate(
 /* ============================================================
    RAIL REFLECTION
    ============================================================ */
-
 function reflectAcrossRail(p,rail){
-
   if(rail==="top")
     return V(
       p.x,
@@ -1383,17 +1358,14 @@ function reflectAcrossRail(p,rail){
 }
 
 function railIntersection(a,b,rail){
-
   const dx=b.x-a.x;
   const dy=b.y-a.y;
-
   let t;
 
   if(
     rail==="top"||
     rail==="bottom"
   ){
-
     const y=
       rail==="top"
         ?RAIL.top
@@ -1403,9 +1375,7 @@ function railIntersection(a,b,rail){
       return null;
 
     t=(y-a.y)/dy;
-
   }else{
-
     const x=
       rail==="left"
         ?RAIL.left
@@ -1431,21 +1401,18 @@ function railIntersection(a,b,rail){
 }
 
 function usableRailPoint(p,rail){
-
   const margin=1.5;
 
   if(
     rail==="top"||
     rail==="bottom"
   ){
-
     return(
       p.x>
         BALL_RADIUS+margin&&
       p.x<
         TABLE_W-BALL_RADIUS-margin
     );
-
   }
 
   return(
@@ -1459,7 +1426,6 @@ function usableRailPoint(p,rail){
 /* ============================================================
    ONE-RAIL BANK
    ============================================================ */
-
 function bankCandidate(
   cue,
   object,
@@ -1467,7 +1433,6 @@ function bankCandidate(
   target,
   rail
 ){
-
   if(
     rail==="top"&&
     pocket.y===0
@@ -1629,14 +1594,12 @@ function bankCandidate(
 /* ============================================================
    KICK
    ============================================================ */
-
 function kickCandidate(
   cue,
   object,
   pocket,
   rail
 ){
-
   const objectDirection=norm(
     sub(
       pocket,
@@ -1737,9 +1700,7 @@ function kickCandidate(
 /* ============================================================
    SOLVER
    ============================================================ */
-
 function candidatesForPocket(pocket){
-
   const cuts=[];
   const banks=[];
   const kicks=[];
@@ -1752,11 +1713,9 @@ function candidatesForPocket(pocket){
     state.mode==="auto"||
     state.mode==="cut"
   ){
-
     for(
       const target of targets
     ){
-
       const candidate=
         directCandidate(
           state.cue,
@@ -1772,9 +1731,14 @@ function candidatesForPocket(pocket){
 
   if(
     state.mode==="auto"||
-    state.mode==="combination"
+    state.mode==="cut"
   ){
-
+    /*
+      A combo requires a second object ball.
+      The selected Target Ball is the final ball going
+      toward the pocket. A qualifying blocker becomes the
+      first ball struck by the cue ball.
+    */
     const comboBalls=
       state.tableBalls.filter(
         ball=>
@@ -1786,11 +1750,9 @@ function candidatesForPocket(pocket){
     for(
       const combinationBall of comboBalls
     ){
-
       for(
         const target of targets
       ){
-
         const candidate=
           combinationCandidate(
             state.cue,
@@ -1810,11 +1772,9 @@ function candidatesForPocket(pocket){
     state.mode==="auto"||
     state.mode==="bank"
   ){
-
     for(
       const target of targets
     ){
-
       for(
         const rail of [
           "top",
@@ -1823,7 +1783,6 @@ function candidatesForPocket(pocket){
           "right"
         ]
       ){
-
         const candidate=
           bankCandidate(
             state.cue,
@@ -1843,7 +1802,6 @@ function candidatesForPocket(pocket){
     state.mode==="auto"||
     state.mode==="kick"
   ){
-
     for(
       const rail of [
         "top",
@@ -1852,7 +1810,6 @@ function candidatesForPocket(pocket){
         "right"
       ]
     ){
-
       const candidate=
         kickCandidate(
           state.cue,
@@ -1867,7 +1824,10 @@ function candidatesForPocket(pocket){
   }
 
   if(state.mode==="auto"){
-
+    /*
+      Preserve the existing preference for direct shots,
+      then combos, then banks, then kicks.
+    */
     if(cuts.length)
       return cuts.sort(
         (a,b)=>a.score-b.score
@@ -1899,7 +1859,6 @@ function candidatesForPocket(pocket){
 }
 
 function solve(){
-
   let best=null;
 
   const pockets=
@@ -1910,7 +1869,6 @@ function solve(){
   for(
     const pocket of pockets
   ){
-
     const candidates=
       candidatesForPocket(
         pocket
@@ -1956,7 +1914,6 @@ function solve(){
 /* ============================================================
    SHOT LANGUAGE
    ============================================================ */
-
 function railText(rail){
   return{
     top:"Top Rail",
@@ -1967,159 +1924,142 @@ function railText(rail){
 }
 
 function speedForShot(s){
-
   if(!s)
     return"—";
 
-  if(s.kind==="kick")
+  if(s.kind==="kick"){
     return s.kickDistance>42
-      ?"Firm"
-      :"Medium";
+      ?"Hard"
+      :s.kickDistance>25
+        ?"Medium"
+        :"Gentle";
+  }
 
-  if(s.kind==="bank")
+  if(s.kind==="bank"){
     return s.objectDistance>55
-      ?"Firm"
-      :"Medium";
+      ?"Hard"
+      :s.objectDistance>32
+        ?"Medium"
+        :"Gentle";
+  }
 
   if(s.kind==="combination"){
-
     const total=
       s.cueDistance+
       s.objectDistance;
 
     return total>75
-      ?"Firm"
-      :"Medium";
+      ?"Hard"
+      :total>45
+        ?"Medium"
+        :"Gentle";
   }
 
   if(s.cutDegrees>55)
     return"Medium";
 
   if(s.objectDistance<18)
-    return"Soft";
+    return"Light";
 
   if(s.objectDistance>55)
-    return"Firm";
+    return"Hard";
 
   return"Medium";
 }
 
 /*
-  Converts a direction into simple visual language instead
-  of giving the player degree measurements.
+  Converts the physical contact vector into intuitive pool
+  language. No degree values are shown to the player.
 */
-function visualDirection(direction){
+function directionDescription(direction){
+  if(!direction)
+    return"the center";
 
-  const d=norm(direction);
+  const x=direction.x;
+  const y=direction.y;
 
-  const horizontal=d.x;
-  const vertical=d.y;
-
-  const threshold=.24;
+  const threshold=.25;
 
   if(
-    Math.abs(horizontal)<threshold&&
-    Math.abs(vertical)<threshold
+    Math.abs(x)<threshold&&
+    Math.abs(y)<threshold
   ){
     return"the center";
   }
 
   if(
-    Math.abs(horizontal)>=threshold&&
-    Math.abs(vertical)>=threshold
+    Math.abs(x)>=threshold&&
+    Math.abs(y)>=threshold
   ){
-
-    if(horizontal<0&&vertical<0)
+    if(x<0&&y<0)
       return"the upper-left";
 
-    if(horizontal>0&&vertical<0)
+    if(x>0&&y<0)
       return"the upper-right";
 
-    if(horizontal<0&&vertical>0)
+    if(x<0&&y>0)
       return"the lower-left";
 
     return"the lower-right";
   }
 
-  if(Math.abs(horizontal)>=threshold){
+  if(Math.abs(x)>Math.abs(y))
+    return x<0
+      ?"the left side"
+      :"the right side";
 
-    if(horizontal<0)
-      return"the left side";
-
-    return"the right side";
-  }
-
-  if(vertical<0)
-    return"the top";
-
-  return"the bottom";
-}
-
-function contactDescriptionForBall(
-  ball,
-  contactPoint
-){
-
-  if(
-    !ball||
-    !contactPoint
-  ){
-    return"the center";
-  }
-
-  const direction=norm(
-    sub(
-      contactPoint,
-      ball
-    )
-  );
-
-  return visualDirection(
-    direction
-  );
+  return y<0
+    ?"the top"
+    :"the bottom";
 }
 
 function contactDescription(s){
-
   if(!s)
     return"the contact point";
 
-  if(s.kind==="combination"){
-
-    return contactDescriptionForBall(
-      s.combinationBall,
-      s.ghost
-    );
-  }
-
   const contactObject=
-    state.object;
+    s.kind==="combination"
+      ?s.combinationBall
+      :state.object;
 
-  return contactDescriptionForBall(
-    contactObject,
-    s.ghost
+  const ghost=
+    s.kind==="combination"
+      ?s.firstContactPoint
+      :s.ghost;
+
+  const contact=norm(
+    sub(
+      ghost,
+      contactObject
+    )
+  );
+
+  return directionDescription(
+    contact
   );
 }
 
-function targetBallContactDescription(s){
-
+function secondContactDescription(s){
   if(
     !s||
-    s.kind!=="combination"||
-    !s.targetBall||
-    !s.combinationGhost
+    s.kind!=="combination"
   ){
-    return null;
+    return"the contact point";
   }
 
-  return contactDescriptionForBall(
-    s.targetBall,
-    s.combinationGhost
+  const contact=norm(
+    sub(
+      s.secondContactPoint,
+      s.targetBall
+    )
+  );
+
+  return directionDescription(
+    contact
   );
 }
 
 function instructionFor(s){
-
   if(!s){
     return"No clean route is available from the current layout.";
   }
@@ -2134,27 +2074,23 @@ function instructionFor(s){
     speedForShot(s);
 
   if(s.kind==="combination"){
-
-    const comboNumber=
+    const firstNumber=
       s.combinationBall.number;
 
-    const firstContact=
-      contactDescriptionForBall(
-        s.combinationBall,
-        s.ghost
-      );
+    const secondNumber=
+      s.targetBall.number;
 
-    const targetContact=
-      targetBallContactDescription(s);
+    const firstContact=
+      contactDescription(s);
+
+    const secondContact=
+      secondContactDescription(s);
 
     return(
-      `Combo the ${comboNumber} into the ${targetNumber} `+
-      `for the ${pocket.toLowerCase()}. `+
-      `On the ${comboNumber}, contact ${firstContact} `+
-      `of the ball. Then the ${comboNumber} needs to contact `+
-      `the ${targetNumber} on ${targetContact} `+
-      `to send the ${targetNumber} toward the pocket. `+
-      `Use ${speed.toLowerCase()} speed.`
+      `${firstNumber} first: hit its ${firstContact}. `+
+      `Then contact the ${secondNumber} on its ${secondContact} `+
+      `to send it to the ${pocket.toLowerCase()}. `+
+      `${speed} speed.`
     );
   }
 
@@ -2162,46 +2098,37 @@ function instructionFor(s){
     contactDescription(s);
 
   if(s.kind==="kick"){
-
     return(
-      `Kick the cue ball off the ${railText(s.rail)} first, `+
-      `then contact the ${targetNumber} on ${contact}. `+
-      `Use ${speed.toLowerCase()} speed.`
+      `Kick off the ${railText(s.rail)} first, then contact `+
+      `the ${targetNumber} on its ${contact}. ${speed} speed.`
     );
   }
 
   if(s.kind==="bank"){
-
     return(
-      `Bank the ${targetNumber} to the ${pocket.toLowerCase()} `+
-      `off the ${railText(s.rail)}. `+
-      `Contact the ${targetNumber} on ${contact} and `+
-      `use ${speed.toLowerCase()} speed.`
+      `Bank the ${targetNumber} off the ${railText(s.rail)} `+
+      `to the ${pocket.toLowerCase()}. Contact its ${contact}. `+
+      `${speed} speed.`
     );
   }
 
   if(s.cutDegrees<8){
-
     return(
-      `Hit the ${targetNumber} near its center and send it `+
-      `toward the ${pocket.toLowerCase()}. `+
-      `Use ${speed.toLowerCase()} speed.`
+      `Hit the ${targetNumber} near center toward the `+
+      `${pocket.toLowerCase()}. ${speed} speed.`
     );
   }
 
   return(
     `Cut the ${targetNumber} toward the `+
-    `${pocket.toLowerCase()} by contacting ${contact}. `+
-    `Use ${speed.toLowerCase()} speed.`
+    `${pocket.toLowerCase()} on its ${contact}. ${speed} speed.`
   );
 }
 
 /* ============================================================
    SCREEN GEOMETRY
    ============================================================ */
-
 function geometry(){
-
   const w=canvas.width;
   const h=canvas.height;
 
@@ -2217,7 +2144,6 @@ function geometry(){
 }
 
 function toScreen(p){
-
   const g=geometry();
 
   return V(
@@ -2232,7 +2158,6 @@ function fromScreen(
   clientX,
   clientY
 ){
-
   const rect=
     canvas.getBoundingClientRect();
 
@@ -2257,7 +2182,6 @@ function fromScreen(
 /* ============================================================
    TABLE DRAWING
    ============================================================ */
-
 function roundedRect(
   c,
   x,
@@ -2266,7 +2190,6 @@ function roundedRect(
   h,
   r
 ){
-
   c.beginPath();
 
   c.moveTo(
@@ -2310,7 +2233,6 @@ function roundedRect(
 }
 
 function drawTable(){
-
   const w=canvas.width;
   const h=canvas.height;
 
@@ -2411,14 +2333,12 @@ function drawTable(){
 }
 
 function drawDiamonds(g){
-
   const size=Math.max(
     2.5,
     Math.min(g.w,g.h)*.017
   );
 
   function diamond(x,y){
-
     ctx.save();
 
     ctx.translate(
@@ -2447,7 +2367,6 @@ function drawDiamonds(g){
     .125,.25,.375,.5,
     .625,.75,.875
   ].forEach(t=>{
-
     diamond(
       g.x+g.w*t,
       g.y-size*.72
@@ -2462,7 +2381,6 @@ function drawDiamonds(g){
   [
     .25,.5,.75
   ].forEach(t=>{
-
     diamond(
       g.x-size*.72,
       g.y+g.h*t
@@ -2478,19 +2396,12 @@ function drawDiamonds(g){
 /* ============================================================
    REALISTIC POCKETS
    ============================================================ */
-
 function drawPockets(g){
-
-  const cornerRadius=
-    POCKET_SIZE/TABLE_W*
-    g.w/2;
-
-  const sideRadius=
+  const outerRadius=
     POCKET_SIZE/TABLE_W*
     g.w/2;
 
   POCKETS.forEach(pocket=>{
-
     const p=toScreen(pocket);
 
     const selected=
@@ -2503,93 +2414,84 @@ function drawPockets(g){
       state.solution.pocket.id===
       pocket.id;
 
+    /*
+      The pocket is rendered as a dark circular opening
+      centered directly on the table boundary. This keeps
+      the opening visually recessed instead of making a
+      green/felt shape appear to extend into it.
+    */
     ctx.save();
 
-    ctx.fillStyle="#030303";
+    ctx.beginPath();
+    ctx.arc(
+      p.x,
+      p.y,
+      outerRadius*1.12,
+      0,
+      Math.PI*2
+    );
 
-    ctx.strokeStyle=
-      "rgba(0,0,0,.98)";
+    ctx.fillStyle="#21160d";
+    ctx.fill();
 
-    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.arc(
+      p.x,
+      p.y,
+      outerRadius,
+      0,
+      Math.PI*2
+    );
 
-    if(pocket.type==="side"){
+    ctx.fillStyle="#020202";
+    ctx.fill();
 
-      const r=sideRadius;
-
-      ctx.beginPath();
-
-      if(pocket.y===0){
-
-        ctx.arc(
-          p.x,
-          p.y,
-          r,
-          0,
-          Math.PI
-        );
-
-      }else{
-
-        ctx.arc(
-          p.x,
-          p.y,
-          r,
-          Math.PI,
-          Math.PI*2
-        );
-      }
-
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-    }else{
-
-      const r=cornerRadius;
-
-      const start=
-        pocket.x===0
-          ?(
-            pocket.y===0
-              ?0
-              :Math.PI*1.5
-           )
-          :(
-            pocket.y===0
-              ?Math.PI*.5
-              :Math.PI
-           );
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        p.x,
-        p.y
-      );
-
-      ctx.arc(
+    const pocketShade=
+      ctx.createRadialGradient(
+        p.x-outerRadius*.28,
+        p.y-outerRadius*.30,
+        outerRadius*.08,
         p.x,
         p.y,
-        r,
-        start,
-        start+Math.PI/2
+        outerRadius
       );
 
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-    }
+    pocketShade.addColorStop(
+      0,
+      "#090909"
+    );
+
+    pocketShade.addColorStop(
+      .72,
+      "#010101"
+    );
+
+    pocketShade.addColorStop(
+      1,
+      "#000000"
+    );
+
+    ctx.beginPath();
+    ctx.arc(
+      p.x,
+      p.y,
+      outerRadius*.86,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fillStyle=pocketShade;
+    ctx.fill();
 
     ctx.restore();
 
     if(selected||suggested){
-
       ctx.beginPath();
 
       ctx.arc(
         p.x,
         p.y,
-        cornerRadius*1.25,
+        outerRadius*1.35,
         0,
         Math.PI*2
       );
@@ -2608,7 +2510,6 @@ function drawPockets(g){
 /* ============================================================
    ROUTES
    ============================================================ */
-
 function drawLine(
   a,
   b,
@@ -2616,7 +2517,6 @@ function drawLine(
   width,
   dashed=false
 ){
-
   const A=toScreen(a);
   const B=toScreen(b);
 
@@ -2648,7 +2548,6 @@ function drawLine(
 }
 
 function drawRoute(){
-
   const s=state.solution;
 
   if(!s)
@@ -2659,45 +2558,81 @@ function drawRoute(){
     canvas.width*.0026
   );
 
+  /*
+    Cue-ball route:
+    WHITE, solid.
+
+    Object-ball route:
+    GREEN, dashed.
+
+    Bank/rail route:
+    ORANGE, solid.
+
+    These are intentionally different so the player can
+    immediately distinguish the route stages.
+  */
   if(s.kind==="combination"){
 
+    /* Cue ball -> first object ball */
     drawLine(
       state.cue,
-      s.ghost,
+      s.firstContactPoint,
+      "#ffffff",
+      lineWidth,
+      false
+    );
+
+    /* First object ball -> second object ball */
+    drawLine(
+      s.combinationBall,
+      s.secondContactPoint,
       "#42d995",
       lineWidth,
       true
     );
 
-    drawLine(
-      s.combinationBall,
-      s.targetBall,
-      "#ffffff",
-      lineWidth,
-      false
-    );
-
+    /* Second object ball -> pocket */
     drawLine(
       s.targetBall,
       s.target,
-      "#ffffff",
+      "#42d995",
       lineWidth,
-      false
+      true
+    );
+
+    drawComboContactPoint(
+      s.firstContactPoint,
+      "#ffffff"
+    );
+
+    drawComboContactPoint(
+      s.secondContactPoint,
+      "#42d995"
     );
 
   }else if(s.kind==="kick"){
 
+    /* Cue-ball / rail route */
     drawLine(
       state.cue,
       s.bankPoint,
-      "#42d995",
-      lineWidth,
-      true
+      "#ff9f43",
+      lineWidth+1,
+      false
     );
 
     drawLine(
       s.bankPoint,
       s.ghost,
+      "#ff9f43",
+      lineWidth+1,
+      false
+    );
+
+    /* Object-ball path remains green + dashed */
+    drawLine(
+      state.object,
+      s.target,
       "#42d995",
       lineWidth,
       true
@@ -2705,31 +2640,34 @@ function drawRoute(){
 
   }else{
 
+    /* Cue-ball path */
     drawLine(
       state.cue,
       s.ghost,
-      "#42d995",
+      "#ffffff",
       lineWidth,
-      true
+      false
     );
   }
 
   if(s.kind==="cut"){
 
+    /* Object-ball path */
     drawLine(
       state.object,
       s.target,
-      "#ffffff",
+      "#42d995",
       lineWidth,
-      false
+      true
     );
 
   }else if(s.kind==="bank"){
 
+    /* Bank / rail path */
     drawLine(
       state.object,
       s.bankPoint,
-      "#ff4652",
+      "#ff9f43",
       lineWidth+1,
       false
     );
@@ -2737,9 +2675,18 @@ function drawRoute(){
     drawLine(
       s.bankPoint,
       s.target,
-      "#ff4652",
+      "#ff9f43",
       lineWidth+1,
       false
+    );
+
+    /* Object-ball route target direction */
+    drawLine(
+      state.object,
+      s.bankPoint,
+      "#42d995",
+      lineWidth,
+      true
     );
 
     drawBankPoint(
@@ -2753,80 +2700,47 @@ function drawRoute(){
     );
   }
 
-  const gp=toScreen(
-    s.ghost
-  );
-
-  const g=geometry();
-
-  const radius=
-    BALL_RADIUS/
-    TABLE_W*
-    g.w;
-
-  ctx.beginPath();
-
-  ctx.arc(
-    gp.x,
-    gp.y,
-    radius,
-    0,
-    Math.PI*2
-  );
-
-  ctx.strokeStyle=
-    "rgba(217,255,63,.45)";
-
-  ctx.lineWidth=1.5;
-
-  ctx.setLineDash(
-    [5,5]
-  );
-
-  ctx.stroke();
-
-  ctx.setLineDash([]);
-
-  /*
-    For a combo, also show the intended contact
-    point on the target ball.
-  */
-  if(
-    s.kind==="combination"&&
-    s.combinationGhost
-  ){
-
-    const tp=toScreen(
-      s.combinationGhost
+  if(s.kind!=="combination"){
+    const gp=toScreen(
+      s.ghost
     );
+
+    const g=geometry();
+
+    const radius=
+      BALL_RADIUS/
+      TABLE_W*
+      g.w;
 
     ctx.beginPath();
 
     ctx.arc(
-      tp.x,
-      tp.y,
-      Math.max(
-        3,
-        canvas.width*.0045
-      ),
+      gp.x,
+      gp.y,
+      radius,
       0,
       Math.PI*2
     );
 
-    ctx.fillStyle="#ff4652";
-    ctx.fill();
-
     ctx.strokeStyle=
-      "rgba(0,0,0,.55)";
+      "rgba(217,255,63,.45)";
 
-    ctx.lineWidth=1;
+    ctx.lineWidth=1.5;
+
+    ctx.setLineDash(
+      [5,5]
+    );
 
     ctx.stroke();
+
+    ctx.setLineDash([]);
   }
 }
 
-function drawBankPoint(p){
-
+function drawComboContactPoint(
+  p,
+  color
+){
   if(!p)
     return;
 
@@ -2845,21 +2759,54 @@ function drawBankPoint(p){
     Math.PI*2
   );
 
-  ctx.fillStyle="#ff4652";
+  ctx.fillStyle=color;
   ctx.fill();
+
+  ctx.strokeStyle=
+    "rgba(0,0,0,.65)";
+
+  ctx.lineWidth=2;
+  ctx.stroke();
+}
+
+function drawBankPoint(p){
+  if(!p)
+    return;
+
+  const q=toScreen(p);
+
+  ctx.beginPath();
+
+  ctx.arc(
+    q.x,
+    q.y,
+    Math.max(
+      4,
+      canvas.width*.006
+    ),
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle="#ff9f43";
+  ctx.fill();
+
+  ctx.strokeStyle=
+    "rgba(0,0,0,.65)";
+
+  ctx.lineWidth=2;
+  ctx.stroke();
 }
 
 /* ============================================================
    POOL BALLS
    ============================================================ */
-
 function drawPoolBall(
   position,
   number,
   selected=false,
   role="obstacle"
 ){
-
   const g=geometry();
 
   const p=toScreen(
@@ -2950,7 +2897,6 @@ function drawPoolBall(
   );
 
   if(ball.type==="stripe"){
-
     ctx.fillStyle="#f5f5f5";
 
     ctx.fillRect(
@@ -3029,7 +2975,6 @@ function drawPoolBall(
     selected||
     role==="object"
   ){
-
     ctx.beginPath();
 
     ctx.arc(
@@ -3055,7 +3000,6 @@ function drawPoolBall(
   }
 
   if(role==="blocker"){
-
     ctx.beginPath();
 
     ctx.arc(
@@ -3080,7 +3024,6 @@ function drawPoolBall(
 }
 
 function drawCueBall(){
-
   const g=geometry();
 
   const p=toScreen(
@@ -3159,7 +3102,6 @@ function drawCueBall(){
   if(
     state.selectedBall==="cue"
   ){
-
     ctx.beginPath();
 
     ctx.arc(
@@ -3184,13 +3126,11 @@ function drawCueBall(){
 }
 
 function drawBalls(){
-
   drawCueBall();
 
   for(
     const ball of state.tableBalls
   ){
-
     drawPoolBall(
       ball,
       ball.number,
@@ -3205,9 +3145,7 @@ function drawBalls(){
 /* ============================================================
    AIM BALLS
    ============================================================ */
-
 function setupBallCanvas(el){
-
   const rect=
     el.getBoundingClientRect();
 
@@ -3235,7 +3173,6 @@ function largeBall(
   type,
   number
 ){
-
   const w=c.canvas.width;
   const h=c.canvas.height;
 
@@ -3253,7 +3190,6 @@ function largeBall(
     Math.min(w,h)*.36;
 
   if(type==="cue"){
-
     const gradient=
       c.createRadialGradient(
         x-r*.36,
@@ -3337,7 +3273,6 @@ function largeBall(
   );
 
   if(ball.type==="stripe"){
-
     c.fillStyle="#f7f7f7";
 
     c.fillRect(
@@ -3454,27 +3389,14 @@ function largeBall(
   return{x,y,r};
 }
 
-function drawCueView(c){
-
-  const ball=
-    largeBall(
-      c,
-      "cue"
-    );
-
-  const s=
-    state.solution;
-
-  if(!s)
+function drawContactMarker(
+  c,
+  ball,
+  direction,
+  markerColor="#ff4652"
+){
+  if(!ball||!direction)
     return;
-
-  const direction=
-    norm(
-      sub(
-        s.ghost,
-        state.cue
-      )
-    );
 
   const markerDistance=
     ball.r*.76;
@@ -3505,11 +3427,11 @@ function drawCueView(c){
     Math.PI*2
   );
 
-  c.fillStyle="#ff4652";
+  c.fillStyle=markerColor;
   c.fill();
 
   c.strokeStyle=
-    "rgba(0,0,0,.35)";
+    "rgba(0,0,0,.45)";
 
   c.lineWidth=
     Math.max(
@@ -3520,149 +3442,130 @@ function drawCueView(c){
   c.stroke();
 }
 
-function drawObjectView(c){
+function drawCueView(c){
+  const ball=
+    largeBall(
+      c,
+      "cue"
+    );
 
   const s=
     state.solution;
 
-  if(
-    s&&
-    s.kind==="combination"
-  ){
+  if(!s)
+    return;
 
-    /*
-      In a combo the second ball view is the target ball,
-      because the player needs to see exactly where the
-      combination ball should contact it.
-    */
-    const ball=
-      largeBall(
-        c,
-        "object",
-        s.targetBall.number
-      );
-
-    const contact=
-      norm(
-        sub(
-          s.combinationGhost,
-          s.targetBall
-        )
-      );
-
-    const markerDistance=
-      ball.r*.76;
-
-    const markerRadius=
-      Math.max(
-        5,
-        ball.r*.115
-      );
-
-    const x=
-      ball.x+
-      contact.x*
-      markerDistance;
-
-    const y=
-      ball.y+
-      contact.y*
-      markerDistance;
-
-    c.beginPath();
-
-    c.arc(
-      x,
-      y,
-      markerRadius,
-      0,
-      Math.PI*2
+  const direction=
+    norm(
+      sub(
+        s.kind==="combination"
+          ?s.firstContactPoint
+          :s.ghost,
+        state.cue
+      )
     );
 
-    c.fillStyle="#ff4652";
-    c.fill();
+  drawContactMarker(
+    c,
+    ball,
+    direction,
+    "#ffffff"
+  );
+}
 
-    c.strokeStyle=
-      "rgba(0,0,0,.35)";
+function drawObjectView(c){
+  const s=
+    state.solution;
 
-    c.lineWidth=
-      Math.max(
-        1,
-        markerRadius*.18
-      );
-
-    c.stroke();
-
-    return;
-  }
+  const displayedNumber=
+    s&&
+    s.kind==="combination"
+      ?s.combinationBall.number
+      :state.object.number;
 
   const ball=
     largeBall(
       c,
       "object",
-      state.object.number
+      displayedNumber
     );
 
   if(!s)
     return;
 
-  const contactObject=
-    state.object;
+  let contactObject;
+  let contactPoint;
+
+  if(s.kind==="combination"){
+    /*
+      This view is specifically the FIRST object ball.
+      It shows where the cue ball must contact it.
+    */
+    contactObject=
+      s.combinationBall;
+
+    contactPoint=
+      s.firstContactPoint;
+  }else{
+    contactObject=
+      state.object;
+
+    contactPoint=
+      s.ghost;
+  }
 
   const contact=
     norm(
       sub(
-        s.ghost,
+        contactPoint,
         contactObject
       )
     );
 
-  const markerDistance=
-    ball.r*.76;
-
-  const markerRadius=
-    Math.max(
-      5,
-      ball.r*.115
-    );
-
-  const x=
-    ball.x+
-    contact.x*
-    markerDistance;
-
-  const y=
-    ball.y+
-    contact.y*
-    markerDistance;
-
-  c.beginPath();
-
-  c.arc(
-    x,
-    y,
-    markerRadius,
-    0,
-    Math.PI*2
+  drawContactMarker(
+    c,
+    ball,
+    contact,
+    "#ffffff"
   );
+}
 
-  c.fillStyle="#ff4652";
-  c.fill();
+function drawTargetView(c){
+  const s=
+    state.solution;
 
-  c.strokeStyle=
-    "rgba(0,0,0,.35)";
+  if(!s||s.kind!=="combination")
+    return;
 
-  c.lineWidth=
-    Math.max(
-      1,
-      markerRadius*.18
+  const ball=
+    largeBall(
+      c,
+      "object",
+      s.targetBall.number
     );
 
-  c.stroke();
+  /*
+    This is the SECOND object ball. Its marker shows the
+    precise side of the second ball that the first ball
+    needs to contact.
+  */
+  const contact=
+    norm(
+      sub(
+        s.secondContactPoint,
+        s.targetBall
+      )
+    );
+
+  drawContactMarker(
+    c,
+    ball,
+    contact,
+    "#42d995"
+  );
 }
 
 function drawBallViews(){
-
   const cueContext=
     setupBallCanvas(
       document.getElementById(
@@ -3677,6 +3580,13 @@ function drawBallViews(){
       )
     );
 
+  const targetContext=
+    setupBallCanvas(
+      document.getElementById(
+        "targetView"
+      )
+    );
+
   drawCueView(
     cueContext
   );
@@ -3684,14 +3594,16 @@ function drawBallViews(){
   drawObjectView(
     objectContext
   );
+
+  drawTargetView(
+    targetContext
+  );
 }
 
 /* ============================================================
    DELETE OVERLAY
    ============================================================ */
-
 function updateDeleteOverlay(){
-
   const selected=
     state.selectedBall==="cue"
       ?state.cue
@@ -3707,7 +3619,6 @@ function updateDeleteOverlay(){
       );
 
   if(!selected){
-
     deleteOverlay.classList.remove(
       "visible"
     );
@@ -3736,8 +3647,8 @@ function updateDeleteOverlay(){
     scaleX;
 
   /*
-    Keep the X away from the ball so dragging the ball
-    does not accidentally activate the delete control.
+    The X remains offset away from the ball so the user
+    can drag the ball without accidentally deleting it.
   */
   const left=
     p.x*scaleX+
@@ -3774,6 +3685,7 @@ deleteOverlay.addEventListener(
   event=>{
     event.preventDefault();
     event.stopPropagation();
+
     removeSelectedBall();
   }
 );
@@ -3781,9 +3693,7 @@ deleteOverlay.addEventListener(
 /* ============================================================
    MASTER DRAW
    ============================================================ */
-
 function draw(){
-
   drawTable();
   drawRoute();
   drawBalls();
@@ -3794,9 +3704,7 @@ function draw(){
 /* ============================================================
    UI RENDER
    ============================================================ */
-
 function render(){
-
   const s=
     state.solution;
 
@@ -3805,6 +3713,11 @@ function render(){
   ).textContent=
     state.object.number;
 
+  /*
+    Explicit user-facing shot type labels.
+    Internal solver names remain untouched so existing
+    calculation logic is preserved.
+  */
   document.getElementById(
     "shotType"
   ).textContent=
@@ -3813,7 +3726,7 @@ function render(){
         s.kind==="combination"
           ?"Combo"
           :capitalize(s.kind)
-       )
+      )
       :"—";
 
   document.getElementById(
@@ -3843,22 +3756,36 @@ function render(){
     instructionFor(s);
 
   /*
-    The old route-status text has been removed entirely.
+    The old route-status text is intentionally removed.
+    There is no status message underneath Shot Type.
   */
 
-  document.getElementById(
-    "cueViewLabel"
-  ).textContent=
-    s&&s.kind==="combination"
-      ?`Cue Ball · ${s.combinationBall.number} First`
-      :"Cue Ball";
+  const whereGrid=
+    document.getElementById(
+      "whereGrid"
+    );
+
+  whereGrid.classList.toggle(
+    "combo",
+    !!(
+      s&&
+      s.kind==="combination"
+    )
+  );
 
   document.getElementById(
     "objectViewLabel"
   ).textContent=
     s&&s.kind==="combination"
-      ?`Target Ball · ${s.targetBall.number}`
+      ?`First Contact · ${s.combinationBall.number}`
       :"Object Ball";
+
+  document.getElementById(
+    "targetViewLabel"
+  ).textContent=
+    s&&s.kind==="combination"
+      ?`Second Contact · ${s.targetBall.number}`
+      :"COMBO TARGET";
 
   renderPockets();
   renderModes();
@@ -3869,7 +3796,6 @@ function render(){
 }
 
 function capitalize(text){
-
   if(!text)
     return text;
 
@@ -3882,18 +3808,14 @@ function capitalize(text){
 /* ============================================================
    POCKET UI
    ============================================================ */
-
 document.getElementById(
   "pocketAuto"
 ).onclick=()=>{
-
   state.selectedPocket=null;
-
   solve();
 };
 
 function renderPockets(){
-
   const container=
     document.getElementById(
       "pockets"
@@ -3904,7 +3826,6 @@ function renderPockets(){
   for(
     const pocket of POCKETS
   ){
-
     const button=
       document.createElement(
         "button"
@@ -3926,7 +3847,6 @@ function renderPockets(){
       pocket.name;
 
     button.onclick=()=>{
-
       state.selectedPocket=
         pocket;
 
@@ -3938,6 +3858,10 @@ function renderPockets(){
     );
   }
 
+  /*
+    Suggested means the solver chooses the pocket.
+    Selecting a specific pocket turns Suggested off.
+  */
   document.getElementById(
     "pocketAuto"
   ).classList.toggle(
@@ -3949,22 +3873,17 @@ function renderPockets(){
 /* ============================================================
    MODE UI
    ============================================================ */
-
 document.getElementById(
   "shotAuto"
 ).onclick=()=>{
-
   state.mode="auto";
-
   solve();
 };
 
 function renderModes(){
-
   document.querySelectorAll(
     ".mode"
   ).forEach(button=>{
-
     button.classList.toggle(
       "active",
       state.mode===
@@ -3972,7 +3891,6 @@ function renderModes(){
     );
 
     button.onclick=()=>{
-
       state.mode=
         button.dataset.mode;
 
@@ -3980,6 +3898,10 @@ function renderModes(){
     };
   });
 
+  /*
+    Suggested remains a real working control.
+    It resets the mode back to the existing automatic solver.
+  */
   document.getElementById(
     "shotAuto"
   ).classList.toggle(
@@ -3991,9 +3913,7 @@ function renderModes(){
 /* ============================================================
    RACK
    ============================================================ */
-
 function rackOrder(){
-
   return[
     [1],
     [2,3],
@@ -4004,7 +3924,6 @@ function rackOrder(){
 }
 
 function renderRack(){
-
   const rack=
     document.getElementById(
       "rack"
@@ -4021,7 +3940,6 @@ function renderRack(){
 
   rackOrder().forEach(
     (numbers,index)=>{
-
       const row=
         document.createElement(
           "div"
@@ -4032,7 +3950,6 @@ function renderRack(){
 
       numbers.forEach(
         number=>{
-
           const ball=
             BALL_MAP[number];
 
@@ -4053,7 +3970,6 @@ function renderRack(){
             state.selectedRackBall===
             number
           ){
-
             button.classList.add(
               "selected"
             );
@@ -4062,7 +3978,6 @@ function renderRack(){
           if(
             placed.has(number)
           ){
-
             button.classList.add(
               "on-table"
             );
@@ -4078,7 +3993,6 @@ function renderRack(){
                 b.role==="object"
             )
           ){
-
             button.classList.add(
               "object-ball"
             );
@@ -4097,7 +4011,6 @@ function renderRack(){
           );
 
           button.onclick=event=>{
-
             event.stopPropagation();
 
             selectRackBall(
@@ -4126,27 +4039,21 @@ function renderRack(){
 /* ============================================================
    BALL ROLES
    ============================================================ */
-
 document.getElementById(
   "objectRole"
 ).onclick=()=>{
-
   state.placementRole="object";
-
   renderRoles();
 };
 
 document.getElementById(
   "obstacleRole"
 ).onclick=()=>{
-
   state.placementRole="obstacle";
-
   renderRoles();
 };
 
 function renderRoles(){
-
   document.getElementById(
     "objectRole"
   ).classList.toggle(
@@ -4175,20 +4082,16 @@ function renderRoles(){
 /* ============================================================
    BLOCKER OWNERSHIP
    ============================================================ */
-
 document.getElementById(
   "myBallBlocker"
 ).onclick=()=>{
-
   state.blockerOwner="my";
-
   renderBlockerType();
 };
 
 document.getElementById(
   "opponentBallBlocker"
 ).onclick=()=>{
-
   state.blockerOwner=
     "opponent";
 
@@ -4196,7 +4099,6 @@ document.getElementById(
 };
 
 function renderBlockerType(){
-
   document.getElementById(
     "myBallBlocker"
   ).classList.toggle(
@@ -4215,9 +4117,7 @@ function renderBlockerType(){
 /* ============================================================
    RACK SELECTION
    ============================================================ */
-
 function selectRackBall(number){
-
   state.selectedRackBall=
     number;
 
@@ -4230,11 +4130,9 @@ function selectRackBall(number){
     );
 
   if(existing){
-
     if(
       existing.role==="object"
     ){
-
       state.object={
         x:existing.x,
         y:existing.y,
@@ -4243,9 +4141,7 @@ function selectRackBall(number){
 
       state.placementRole=
         "object";
-
     }else{
-
       state.placementRole=
         "obstacle";
 
@@ -4262,9 +4158,7 @@ function selectRackBall(number){
 /* ============================================================
    HIT TEST
    ============================================================ */
-
 function nearestBall(p){
-
   const touchRadius=
     Math.max(
       BALL_DIAMETER*1.7,
@@ -4275,7 +4169,6 @@ function nearestBall(p){
     dist(p,state.cue)<=
     touchRadius
   ){
-
     return{
       type:"cue"
     };
@@ -4288,7 +4181,6 @@ function nearestBall(p){
     const ball of
     state.tableBalls
   ){
-
     const d=
       dist(p,ball);
 
@@ -4296,14 +4188,12 @@ function nearestBall(p){
       d<=touchRadius&&
       d<bestDistance
     ){
-
       best=ball;
       bestDistance=d;
     }
   }
 
   if(best){
-
     return{
       type:"object",
       number:best.number,
@@ -4317,12 +4207,10 @@ function nearestBall(p){
 /* ============================================================
    VALID POSITION
    ============================================================ */
-
 function validBallPosition(
   p,
   movingNumber=null
 ){
-
   if(!centerInside(p))
     return false;
 
@@ -4339,7 +4227,6 @@ function validBallPosition(
     const ball of
     state.tableBalls
   ){
-
     if(
       ball.number===
       movingNumber
@@ -4361,11 +4248,9 @@ function validBallPosition(
 /* ============================================================
    TABLE INTERACTION
    ============================================================ */
-
 canvas.addEventListener(
   "pointerdown",
   event=>{
-
     event.preventDefault();
 
     const p=
@@ -4378,11 +4263,9 @@ canvas.addEventListener(
       nearestBall(p);
 
     if(hit){
-
       if(
         hit.type==="cue"
       ){
-
         state.selectedBall=
           "cue";
 
@@ -4390,7 +4273,6 @@ canvas.addEventListener(
           null;
 
         render();
-
         return;
       }
 
@@ -4413,7 +4295,6 @@ canvas.addEventListener(
       if(
         ball.role==="object"
       ){
-
         state.object={
           x:ball.x,
           y:ball.y,
@@ -4422,9 +4303,7 @@ canvas.addEventListener(
 
         state.placementRole=
           "object";
-
       }else{
-
         state.placementRole=
           "obstacle";
 
@@ -4435,7 +4314,6 @@ canvas.addEventListener(
       }
 
       render();
-
       return;
     }
 
@@ -4459,7 +4337,6 @@ canvas.addEventListener(
       state.selectedBall===
       "cue"
     ){
-
       if(
         !validBallPosition(next)
       ){
@@ -4469,7 +4346,6 @@ canvas.addEventListener(
       state.cue=next;
 
       solve();
-
       return;
     }
 
@@ -4486,7 +4362,6 @@ canvas.addEventListener(
       );
 
     if(existing){
-
       if(
         !validBallPosition(
           next,
@@ -4503,17 +4378,14 @@ canvas.addEventListener(
         state.placementRole===
         "object"
       ){
-
         for(
           const b of
           state.tableBalls
         ){
-
           if(
             b.number!==number&&
             b.role==="object"
           ){
-
             b.role="blocker";
 
             if(!b.owner)
@@ -4532,18 +4404,14 @@ canvas.addEventListener(
           y:next.y,
           number
         };
-
       }else{
-
         existing.role=
           "blocker";
 
         existing.owner=
           state.blockerOwner;
       }
-
     }else{
-
       if(
         !validBallPosition(next)
       ){
@@ -4574,17 +4442,14 @@ canvas.addEventListener(
         newBall.role===
         "object"
       ){
-
         for(
           const b of
           state.tableBalls
         ){
-
           if(
             b.number!==number&&
             b.role==="object"
           ){
-
             b.role="blocker";
 
             if(!b.owner)
@@ -4610,9 +4475,7 @@ canvas.addEventListener(
 /* ============================================================
    REMOVE BALL
    ============================================================ */
-
 function removeSelectedBall(){
-
   if(
     !state.selectedRackBall
   ){
@@ -4646,12 +4509,10 @@ function removeSelectedBall(){
     removed&&
     removed.role==="object"
   ){
-
     const replacement=
       state.tableBalls[0];
 
     if(replacement){
-
       replacement.role=
         "object";
 
@@ -4663,9 +4524,7 @@ function removeSelectedBall(){
         y:replacement.y,
         number:replacement.number
       };
-
     }else{
-
       state.object={
         x:65,
         y:20,
@@ -4680,11 +4539,9 @@ function removeSelectedBall(){
 /* ============================================================
    RESET
    ============================================================ */
-
 document.getElementById(
   "reset"
 ).onclick=()=>{
-
   state.cue={
     x:22,
     y:34
@@ -4736,13 +4593,11 @@ document.getElementById(
 /* ============================================================
    RESIZE
    ============================================================ */
-
 let resizeTimer=null;
 
 window.addEventListener(
   "resize",
   ()=>{
-
     clearTimeout(
       resizeTimer
     );
@@ -4750,14 +4605,12 @@ window.addEventListener(
     resizeTimer=
       setTimeout(
         ()=>{
-
           DPR=Math.min(
             window.devicePixelRatio||1,
             2
           );
 
           resizeCanvas();
-
         },
         50
       );
@@ -4765,7 +4618,6 @@ window.addEventListener(
 );
 
 function resizeCanvas(){
-
   const rect=
     canvas.getBoundingClientRect();
 
@@ -4791,10 +4643,8 @@ function resizeCanvas(){
 /* ============================================================
    START
    ============================================================ */
-
 requestAnimationFrame(
   ()=>{
-
     state.tableBalls=[
       {
         number:3,
