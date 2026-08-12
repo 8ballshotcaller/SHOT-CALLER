@@ -101,12 +101,6 @@
       gap: 12px;
     }
 
-    .control-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
     .control-group {
       min-width: 0;
     }
@@ -116,7 +110,6 @@
       color: var(--muted);
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.4px;
       margin-bottom: 6px;
     }
 
@@ -149,10 +142,6 @@
       border-bottom: 1px solid var(--border);
     }
 
-    /*
-      The actual playing surface is always 2:1.
-      The wrapper uses width-based sizing so it cannot get cut off on mobile.
-    */
     .table {
       position: relative;
       width: 100%;
@@ -198,12 +187,35 @@
         0 1px 2px rgba(0, 0, 0, 0.6);
     }
 
-    .pocket.tl { left: 0; top: 0; }
-    .pocket.tc { left: 50%; top: 0; }
-    .pocket.tr { left: 100%; top: 0; }
-    .pocket.bl { left: 0; top: 100%; }
-    .pocket.bc { left: 50%; top: 100%; }
-    .pocket.br { left: 100%; top: 100%; }
+    .pocket.tl {
+      left: 0;
+      top: 0;
+    }
+
+    .pocket.tc {
+      left: 50%;
+      top: 0;
+    }
+
+    .pocket.tr {
+      left: 100%;
+      top: 0;
+    }
+
+    .pocket.bl {
+      left: 0;
+      top: 100%;
+    }
+
+    .pocket.bc {
+      left: 50%;
+      top: 100%;
+    }
+
+    .pocket.br {
+      left: 100%;
+      top: 100%;
+    }
 
     .playing-line {
       position: absolute;
@@ -215,23 +227,25 @@
       border-radius: 2px;
     }
 
+    /* Object ball path = WHITE */
     .line-object {
-      background: #43e06f;
+      background: #ffffff;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.45);
+    }
+
+    /* Cue ball path = GREEN */
+    .line-aim {
+      background: var(--green);
       box-shadow: 0 0 5px rgba(67, 224, 111, 0.55);
     }
 
-    .line-aim {
-      background: rgba(255, 255, 255, 0.88);
-      box-shadow: 0 0 4px rgba(255, 255, 255, 0.35);
-    }
-
     .line-bank {
-      background: #f4c84e;
+      background: var(--yellow);
       box-shadow: 0 0 5px rgba(244, 200, 78, 0.45);
     }
 
     .line-kick {
-      background: #4ea1ff;
+      background: var(--blue);
       box-shadow: 0 0 5px rgba(78, 161, 255, 0.45);
     }
 
@@ -287,21 +301,76 @@
       background: #f7f7f7;
     }
 
-    .one { background: #f5c542; }
-    .two { background: #4b75c8; color: #fff; }
-    .three { background: #d93632; color: #fff; }
-    .four { background: #7447a8; color: #fff; }
-    .five { background: #ee8c21; }
-    .six { background: #238a56; color: #fff; }
-    .seven { background: #a02b30; color: #fff; }
-    .eight { background: #111; color: #fff; }
-    .nine { background: #f5c542; }
-    .ten { background: #4b75c8; color: #fff; }
-    .eleven { background: #d93632; color: #fff; }
-    .twelve { background: #7447a8; color: #fff; }
-    .thirteen { background: #ee8c21; }
-    .fourteen { background: #238a56; color: #fff; }
-    .fifteen { background: #a02b30; color: #fff; }
+    .one {
+      background: #f5c542;
+    }
+
+    .two {
+      background: #4b75c8;
+      color: #fff;
+    }
+
+    .three {
+      background: #d93632;
+      color: #fff;
+    }
+
+    .four {
+      background: #7447a8;
+      color: #fff;
+    }
+
+    .five {
+      background: #ee8c21;
+    }
+
+    .six {
+      background: #238a56;
+      color: #fff;
+    }
+
+    .seven {
+      background: #a02b30;
+      color: #fff;
+    }
+
+    .eight {
+      background: #111;
+      color: #fff;
+    }
+
+    .nine {
+      background: #f5c542;
+    }
+
+    .ten {
+      background: #4b75c8;
+      color: #fff;
+    }
+
+    .eleven {
+      background: #d93632;
+      color: #fff;
+    }
+
+    .twelve {
+      background: #7447a8;
+      color: #fff;
+    }
+
+    .thirteen {
+      background: #ee8c21;
+    }
+
+    .fourteen {
+      background: #238a56;
+      color: #fff;
+    }
+
+    .fifteen {
+      background: #a02b30;
+      color: #fff;
+    }
 
     .ball.stripe::before {
       content: "";
@@ -443,11 +512,11 @@
     }
 
     .legend-line.object {
-      background: var(--green);
+      background: #fff;
     }
 
     .legend-line.aim {
-      background: #fff;
+      background: var(--green);
     }
 
     .legend-line.bank {
@@ -499,10 +568,6 @@
         align-items: end;
       }
 
-      .control-row {
-        display: contents;
-      }
-
       .actions {
         grid-template-columns: 160px 160px;
         justify-content: end;
@@ -539,7 +604,9 @@
     </header>
 
     <section class="panel">
+
       <div class="controls">
+
         <div class="control-group">
           <label class="label" for="ballsInPlay">Balls in play</label>
           <select id="ballsInPlay">
@@ -570,11 +637,13 @@
             <option value="aggressive">Aggressive</option>
           </select>
         </div>
+
       </div>
 
       <div class="table-wrap">
         <div class="table" id="table">
           <div class="cloth" id="cloth">
+
             <div class="pocket tl"></div>
             <div class="pocket tc"></div>
             <div class="pocket tr"></div>
@@ -584,79 +653,106 @@
 
             <div id="lines"></div>
             <div id="balls"></div>
-            <div id="contactDot" class="contact-dot" style="display:none;"></div>
+
+            <div
+              id="contactDot"
+              class="contact-dot"
+              style="display: none;"
+            ></div>
+
           </div>
         </div>
       </div>
 
       <div class="result">
+
         <div class="result-header">
           <h2 class="result-title">Recommended shot</h2>
           <span class="shot-type" id="shotType">Cut</span>
         </div>
 
         <div class="shot-card">
+
           <div class="shot-row">
             <div class="shot-label">Where to hit</div>
-            <div class="shot-value green" id="whereToHit">Center</div>
+            <div class="shot-value green" id="whereToHit">Center hit</div>
           </div>
 
           <div class="shot-row">
             <div class="shot-label">Object ball path</div>
-            <div class="shot-value" id="objectPath">Straight toward the selected pocket</div>
+            <div class="shot-value" id="objectPath">
+              Toward the selected pocket
+            </div>
           </div>
 
           <div class="shot-row">
             <div class="shot-label">Cue ball path</div>
-            <div class="shot-value" id="cuePath">Follow the white line</div>
+            <div class="shot-value" id="cuePath">
+              Follow the green aiming line
+            </div>
           </div>
 
           <div class="shot-row">
             <div class="shot-label">Speed</div>
             <div class="shot-value" id="speed">Medium</div>
           </div>
+
         </div>
 
         <div class="instructions">
           <h3 class="instructions-title">How to play it</h3>
+
           <p class="instructions-text" id="instructions">
-            Move the balls to match the table. Tap a ball to select it, then drag
-            balls to adjust their positions. The recommended route updates automatically.
+            Move the balls to match the table. Tap a ball to select it, then
+            drag balls to adjust their positions. The recommended route
+            updates automatically.
           </p>
         </div>
 
         <div class="legend">
+
           <h3 class="legend-title">Path guide</h3>
+
           <div class="legend-items">
+
             <div class="legend-item">
               <span class="legend-line object"></span>
               Object ball path
             </div>
+
             <div class="legend-item">
               <span class="legend-line aim"></span>
               Cue ball path
             </div>
+
             <div class="legend-item">
               <span class="legend-line bank"></span>
               Bank path
             </div>
+
             <div class="legend-item">
               <span class="legend-line kick"></span>
               Kick path
             </div>
+
           </div>
         </div>
+
       </div>
 
       <div class="actions">
         <button class="action" id="resetBtn">Reset table</button>
-        <button class="action primary" id="suggestBtn">Suggest shot</button>
+        <button class="action primary" id="suggestBtn">
+          Suggest shot
+        </button>
       </div>
+
     </section>
 
     <p class="help">
       Drag balls anywhere on the table. Tap a ball to make it the target.
     </p>
+
   </main>
 
   <script>
@@ -688,73 +784,64 @@
       { x: 100, y: 100 }
     ];
 
-    const ballDefinitions = [
-      { n: 1, cls: "one" },
-      { n: 2, cls: "two" },
-      { n: 3, cls: "three" },
-      { n: 4, cls: "four" },
-      { n: 5, cls: "five" },
-      { n: 6, cls: "six" },
-      { n: 7, cls: "seven" },
-      { n: 8, cls: "eight" },
-      { n: 9, cls: "nine stripe" },
-      { n: 10, cls: "ten stripe" },
-      { n: 11, cls: "eleven stripe" },
-      { n: 12, cls: "twelve stripe" },
-      { n: 13, cls: "thirteen stripe" },
-      { n: 14, cls: "fourteen stripe" },
-      { n: 15, cls: "fifteen stripe" }
-    ];
-
     let balls = [];
     let selectedBallId = null;
     let draggingBallId = null;
     let dragOffset = { x: 0, y: 0 };
-
     let ballIdCounter = 1;
 
-    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+    const clamp = (n, min, max) =>
+      Math.max(min, Math.min(max, n));
 
     function distance(a, b) {
       return Math.hypot(a.x - b.x, a.y - b.y);
     }
 
     function angleBetween(a, b) {
-      return Math.atan2(b.y - a.y, b.x - a.x);
-    }
-
-    function pointAt(start, end, distanceValue) {
-      const d = distance(start, end) || 1;
-      return {
-        x: start.x + ((end.x - start.x) / d) * distanceValue,
-        y: start.y + ((end.y - start.y) / d) * distanceValue
-      };
+      return Math.atan2(
+        b.y - a.y,
+        b.x - a.x
+      );
     }
 
     function getBallById(id) {
-      return balls.find((b) => b.id === id);
+      return balls.find((ball) => ball.id === id);
     }
 
     function getTargetBalls() {
       const mode = ballsInPlay.value;
 
       if (mode === "solids") {
-        return balls.filter((b) => b.number >= 1 && b.number <= 7);
+        return balls.filter(
+          (ball) =>
+            ball.number >= 1 &&
+            ball.number <= 7
+        );
       }
 
       if (mode === "stripes") {
-        return balls.filter((b) => b.number >= 9 && b.number <= 15);
+        return balls.filter(
+          (ball) =>
+            ball.number >= 9 &&
+            ball.number <= 15
+        );
       }
 
       if (mode === "eight") {
-        return balls.filter((b) => b.number === 8);
+        return balls.filter(
+          (ball) => ball.number === 8
+        );
       }
 
       if (mode === "combination") {
-        return balls.filter((b) => b.number !== 0);
+        return balls.filter(
+          (ball) => ball.number !== 0
+        );
       }
 
-      return balls.filter((b) => b.number !== 0);
+      return balls.filter(
+        (ball) => ball.number !== 0
+      );
     }
 
     function createInitialBalls() {
@@ -799,6 +886,7 @@
       ];
 
       selectedBallId = 2;
+
       renderBalls();
       updateRecommendation();
     }
@@ -807,37 +895,57 @@
       const el = document.createElement("div");
 
       el.className = `ball ${ball.className}`;
+
       if (ball.id === selectedBallId) {
         el.classList.add("selected");
       }
 
-      el.textContent = ball.number === 0 ? "" : ball.number;
+      el.textContent =
+        ball.number === 0
+          ? ""
+          : ball.number;
 
       el.style.left = `${ball.x}%`;
       el.style.top = `${ball.y}%`;
 
       el.dataset.id = ball.id;
 
-      el.addEventListener("pointerdown", (event) => {
-        event.preventDefault();
+      el.addEventListener(
+        "pointerdown",
+        (event) => {
+          event.preventDefault();
 
-        selectedBallId = ball.id;
-        draggingBallId = ball.id;
+          selectedBallId = ball.id;
+          draggingBallId = ball.id;
 
-        const rect = cloth.getBoundingClientRect();
-        const px = ((event.clientX - rect.left) / rect.width) * 100;
-        const py = ((event.clientY - rect.top) / rect.height) * 100;
+          const rect =
+            cloth.getBoundingClientRect();
 
-        dragOffset = {
-          x: ball.x - px,
-          y: ball.y - py
-        };
+          const px =
+            ((event.clientX - rect.left) /
+              rect.width) *
+            100;
 
-        renderBalls();
-        updateRecommendation();
+          const py =
+            ((event.clientY - rect.top) /
+              rect.height) *
+            100;
 
-        el.setPointerCapture?.(event.pointerId);
-      });
+          dragOffset = {
+            x: ball.x - px,
+            y: ball.y - py
+          };
+
+          renderBalls();
+          updateRecommendation();
+
+          try {
+            el.setPointerCapture(
+              event.pointerId
+            );
+          } catch (_) {}
+        }
+      );
 
       return el;
     }
@@ -846,50 +954,84 @@
       ballsLayer.innerHTML = "";
 
       balls.forEach((ball) => {
-        ballsLayer.appendChild(createBallElement(ball));
+        ballsLayer.appendChild(
+          createBallElement(ball)
+        );
       });
     }
 
-    cloth.addEventListener("pointermove", (event) => {
-      if (!draggingBallId) return;
+    cloth.addEventListener(
+      "pointermove",
+      (event) => {
+        if (!draggingBallId) return;
 
-      const ball = getBallById(draggingBallId);
-      if (!ball) return;
+        const ball =
+          getBallById(draggingBallId);
 
-      const rect = cloth.getBoundingClientRect();
+        if (!ball) return;
 
-      let x = ((event.clientX - rect.left) / rect.width) * 100;
-      let y = ((event.clientY - rect.top) / rect.height) * 100;
+        const rect =
+          cloth.getBoundingClientRect();
 
-      x += dragOffset.x;
-      y += dragOffset.y;
+        let x =
+          ((event.clientX - rect.left) /
+            rect.width) *
+          100;
 
-      const marginX = 2.3;
-      const marginY = 4.8;
+        let y =
+          ((event.clientY - rect.top) /
+            rect.height) *
+          100;
 
-      ball.x = clamp(x, marginX, 100 - marginX);
-      ball.y = clamp(y, marginY, 100 - marginY);
+        x += dragOffset.x;
+        y += dragOffset.y;
 
-      renderBalls();
-      updateRecommendation();
-    });
+        const marginX = 2.3;
+        const marginY = 4.8;
 
-    window.addEventListener("pointerup", () => {
-      draggingBallId = null;
-    });
+        ball.x = clamp(
+          x,
+          marginX,
+          100 - marginX
+        );
+
+        ball.y = clamp(
+          y,
+          marginY,
+          100 - marginY
+        );
+
+        renderBalls();
+        updateRecommendation();
+      }
+    );
+
+    window.addEventListener(
+      "pointerup",
+      () => {
+        draggingBallId = null;
+      }
+    );
+
+    window.addEventListener(
+      "pointercancel",
+      () => {
+        draggingBallId = null;
+      }
+    );
 
     function nearestPocket(ball) {
       let best = null;
       let bestDistance = Infinity;
 
-      for (const pocket of pockets) {
+      pockets.forEach((pocket) => {
         const d = distance(ball, pocket);
 
         if (d < bestDistance) {
           bestDistance = d;
           best = pocket;
         }
-      }
+      });
 
       return {
         pocket: best,
@@ -898,28 +1040,47 @@
     }
 
     function chooseTarget() {
-      const available = getTargetBalls();
+      const available =
+        getTargetBalls();
 
-      if (!available.length) return null;
+      if (!available.length) {
+        return null;
+      }
 
       if (selectedBallId) {
-        const selected = getBallById(selectedBallId);
+        const selected =
+          getBallById(selectedBallId);
 
-        if (selected && selected.number !== 0) {
+        if (
+          selected &&
+          selected.number !== 0 &&
+          available.some(
+            (ball) =>
+              ball.id === selected.id
+          )
+        ) {
           return selected;
         }
       }
 
-      const cue = balls.find((b) => b.number === 0);
+      const cue = balls.find(
+        (ball) => ball.number === 0
+      );
 
-      if (!cue) return available[0];
+      if (!cue) {
+        return available[0];
+      }
 
       let best = available[0];
       let bestScore = Infinity;
 
       available.forEach((ball) => {
-        const pocketInfo = nearestPocket(ball);
-        const score = distance(cue, ball) + pocketInfo.distance * 0.7;
+        const pocketInfo =
+          nearestPocket(ball);
+
+        const score =
+          distance(cue, ball) +
+          pocketInfo.distance * 0.7;
 
         if (score < bestScore) {
           bestScore = score;
@@ -935,23 +1096,40 @@
       let bestScore = Infinity;
 
       pockets.forEach((pocket) => {
-        const cueToTarget = distance(cue, target);
-        const targetToPocket = distance(target, pocket);
+        const cueToTarget =
+          distance(cue, target);
 
-        /*
-          Favor realistic pockets while avoiding extreme crossing routes.
-        */
-        const shotAngle =
+        const targetToPocket =
+          distance(target, pocket);
+
+        const cueAngle =
+          angleBetween(cue, target);
+
+        const objectAngle =
+          angleBetween(target, pocket);
+
+        let angleDifference =
           Math.abs(
-            angleBetween(cue, target) - angleBetween(target, pocket)
-          ) % (Math.PI * 2);
+            cueAngle - objectAngle
+          );
 
-        const normalizedAngle =
-          shotAngle > Math.PI ? Math.PI * 2 - shotAngle : shotAngle;
+        while (
+          angleDifference > Math.PI
+        ) {
+          angleDifference =
+            Math.abs(
+              angleDifference -
+                Math.PI * 2
+            );
+        }
 
-        const anglePenalty = normalizedAngle * 10;
+        const anglePenalty =
+          angleDifference * 10;
 
-        const score = targetToPocket + anglePenalty + cueToTarget * 0.15;
+        const score =
+          targetToPocket +
+          anglePenalty +
+          cueToTarget * 0.15;
 
         if (score < bestScore) {
           bestScore = score;
@@ -967,90 +1145,166 @@
       contactDot.style.display = "none";
     }
 
-    function drawLine(start, end, className, widthMultiplier = 1) {
-      const rect = cloth.getBoundingClientRect();
+    function drawLine(
+      start,
+      end,
+      className,
+      widthMultiplier = 1
+    ) {
+      const rect =
+        cloth.getBoundingClientRect();
 
-      const sx = (start.x / 100) * rect.width;
-      const sy = (start.y / 100) * rect.height;
-      const ex = (end.x / 100) * rect.width;
-      const ey = (end.y / 100) * rect.height;
+      const sx =
+        (start.x / 100) *
+        rect.width;
+
+      const sy =
+        (start.y / 100) *
+        rect.height;
+
+      const ex =
+        (end.x / 100) *
+        rect.width;
+
+      const ey =
+        (end.y / 100) *
+        rect.height;
 
       const dx = ex - sx;
       const dy = ey - sy;
 
-      const length = Math.hypot(dx, dy);
-      const angle = Math.atan2(dy, dx);
+      const length =
+        Math.hypot(dx, dy);
+
+      const angle =
+        Math.atan2(dy, dx);
 
       if (length < 2) return;
 
-      const line = document.createElement("div");
-      line.className = `playing-line ${className}`;
-      line.style.left = `${sx}px`;
-      line.style.top = `${sy}px`;
-      line.style.width = `${length * widthMultiplier}px`;
-      line.style.transform = `rotate(${angle}rad)`;
+      const line =
+        document.createElement("div");
+
+      line.className =
+        `playing-line ${className}`;
+
+      line.style.left =
+        `${sx}px`;
+
+      line.style.top =
+        `${sy}px`;
+
+      line.style.width =
+        `${length * widthMultiplier}px`;
+
+      line.style.transform =
+        `rotate(${angle}rad)`;
 
       linesLayer.appendChild(line);
     }
 
     function setContactDot(point) {
-      contactDot.style.display = "block";
-      contactDot.style.left = `${point.x}%`;
-      contactDot.style.top = `${point.y}%`;
+      contactDot.style.display =
+        "block";
+
+      contactDot.style.left =
+        `${point.x}%`;
+
+      contactDot.style.top =
+        `${point.y}%`;
     }
 
-    function calculateCut(cue, target, pocket) {
-      /*
-        Ghost-ball approximation:
-        The cue ball needs to contact the object ball on the side opposite
-        the desired object-ball travel direction.
-      */
+    function calculateCut(
+      cue,
+      target,
+      pocket
+    ) {
       const targetToPocket = {
         x: pocket.x - target.x,
         y: pocket.y - target.y
       };
 
       const targetPocketDistance =
-        Math.hypot(targetToPocket.x, targetToPocket.y) || 1;
+        Math.hypot(
+          targetToPocket.x,
+          targetToPocket.y
+        ) || 1;
 
-      const ux = targetToPocket.x / targetPocketDistance;
-      const uy = targetToPocket.y / targetPocketDistance;
+      const ux =
+        targetToPocket.x /
+        targetPocketDistance;
+
+      const uy =
+        targetToPocket.y /
+        targetPocketDistance;
 
       const ballDiameter = 4.4;
 
       const ghostBall = {
-        x: target.x - ux * ballDiameter,
-        y: target.y - uy * ballDiameter
+        x:
+          target.x -
+          ux * ballDiameter,
+        y:
+          target.y -
+          uy * ballDiameter
       };
-
-      const cueAngle = angleBetween(cue, ghostBall);
 
       return {
         ghostBall,
-        cueAngle
+        cueAngle:
+          angleBetween(
+            cue,
+            ghostBall
+          )
       };
     }
 
-    function chooseShotType(cue, target, pocket) {
-      const requested = shotMode.value;
+    function chooseShotType(
+      cue,
+      target,
+      pocket
+    ) {
+      const requested =
+        shotMode.value;
 
-      if (requested === "cut") return "Cut";
-      if (requested === "bank") return "Bank";
-      if (requested === "kick") return "Kick";
-      if (requested === "combo") return "Combination";
-
-      if (ballsInPlay.value === "combination") {
-        return "Combination";
-      }
-
-      const targetPocketDistance = distance(target, pocket);
-      const cueTargetDistance = distance(cue, target);
-
-      if (targetPocketDistance < 25 && cueTargetDistance < 35) {
+      if (requested === "cut") {
         return "Cut";
       }
 
-      if (targetPocketDistance > 48) {
+      if (requested === "bank") {
+        return "Bank";
+      }
+
+      if (requested === "kick") {
+        return "Kick";
+      }
+
+      if (requested === "combo") {
+        return "Combination";
+      }
+
+      if (
+        ballsInPlay.value ===
+        "combination"
+      ) {
+        return "Combination";
+      }
+
+      const targetPocketDistance =
+        distance(target, pocket);
+
+      const cueTargetDistance =
+        distance(cue, target);
+
+      if (
+        targetPocketDistance < 25 &&
+        cueTargetDistance < 35
+      ) {
+        return "Cut";
+      }
+
+      if (
+        targetPocketDistance > 48
+      ) {
         return "Bank";
       }
 
@@ -1060,118 +1314,308 @@
     function updateRecommendation() {
       clearLines();
 
-      const cue = balls.find((b) => b.number === 0);
-      let target = chooseTarget();
+      const cue =
+        balls.find(
+          (ball) => ball.number === 0
+        );
+
+      let target =
+        chooseTarget();
 
       if (!cue || !target) {
         return;
       }
 
       if (target.number === 0) {
-        target = balls.find((b) => b.number !== 0);
+        target =
+          balls.find(
+            (ball) =>
+              ball.number !== 0
+          );
       }
 
       if (!target) return;
 
-      const pocket = choosePocket(target, cue);
-      const type = chooseShotType(cue, target, pocket);
+      const pocket =
+        choosePocket(
+          target,
+          cue
+        );
 
-      target.classList?.remove?.("target");
+      const type =
+        chooseShotType(
+          cue,
+          target,
+          pocket
+        );
 
       renderBalls();
 
-      const renderedTarget = document.querySelector(
-        `.ball[data-id="${target.id}"]`
-      );
+      const renderedTarget =
+        document.querySelector(
+          `.ball[data-id="${target.id}"]`
+        );
 
       if (renderedTarget) {
-        renderedTarget.classList.add("target");
+        renderedTarget.classList.add(
+          "target"
+        );
       }
 
       if (type === "Bank") {
-        drawBankShot(cue, target, pocket);
+        drawBankShot(
+          cue,
+          target,
+          pocket
+        );
       } else if (type === "Kick") {
-        drawKickShot(cue, target, pocket);
-      } else if (type === "Combination") {
-        drawCombinationShot(cue, target, pocket);
+        drawKickShot(
+          cue,
+          target,
+          pocket
+        );
+      } else if (
+        type === "Combination"
+      ) {
+        drawCombinationShot(
+          cue,
+          target,
+          pocket
+        );
       } else {
-        drawCutShot(cue, target, pocket);
+        drawCutShot(
+          cue,
+          target,
+          pocket
+        );
       }
 
-      updateText(cue, target, pocket, type);
+      updateText(
+        cue,
+        target,
+        pocket,
+        type
+      );
     }
 
-    function drawCutShot(cue, target, pocket) {
-      const calc = calculateCut(cue, target, pocket);
+    function drawCutShot(
+      cue,
+      target,
+      pocket
+    ) {
+      const calc =
+        calculateCut(
+          cue,
+          target,
+          pocket
+        );
 
-      /*
-        Green line = actual object-ball path.
-        White line = cue-ball approach path.
-      */
-      drawLine(target, pocket, "line-object");
+      // White = object ball path
+      drawLine(
+        target,
+        pocket,
+        "line-object"
+      );
 
-      drawLine(cue, calc.ghostBall, "line-aim");
+      // Green = cue ball path
+      drawLine(
+        cue,
+        calc.ghostBall,
+        "line-aim"
+      );
 
-      setContactDot(calc.ghostBall);
+      setContactDot(
+        calc.ghostBall
+      );
     }
 
-    function drawBankShot(cue, target, pocket) {
-      const railPoint = findBankPoint(target, pocket);
+    function drawBankShot(
+      cue,
+      target,
+      pocket
+    ) {
+      const railPoint =
+        findBankPoint(
+          target,
+          pocket
+        );
 
-      drawLine(target, railPoint, "line-bank");
-      drawLine(railPoint, pocket, "line-bank");
+      drawLine(
+        target,
+        railPoint,
+        "line-bank"
+      );
 
-      const calc = calculateCut(cue, target, railPoint);
-      drawLine(cue, calc.ghostBall, "line-aim");
+      drawLine(
+        railPoint,
+        pocket,
+        "line-bank"
+      );
 
-      setContactDot(calc.ghostBall);
+      const calc =
+        calculateCut(
+          cue,
+          target,
+          railPoint
+        );
+
+      drawLine(
+        cue,
+        calc.ghostBall,
+        "line-aim"
+      );
+
+      setContactDot(
+        calc.ghostBall
+      );
     }
 
-    function drawKickShot(cue, target, pocket) {
-      const railPoint = findKickPoint(cue, target);
+    function drawKickShot(
+      cue,
+      target,
+      pocket
+    ) {
+      const railPoint =
+        findKickPoint(
+          cue,
+          target
+        );
 
-      drawLine(cue, railPoint, "line-kick");
-      drawLine(railPoint, target, "line-kick");
-      drawLine(target, pocket, "line-object");
+      drawLine(
+        cue,
+        railPoint,
+        "line-kick"
+      );
+
+      drawLine(
+        railPoint,
+        target,
+        "line-kick"
+      );
+
+      // White = object ball path
+      drawLine(
+        target,
+        pocket,
+        "line-object"
+      );
 
       setContactDot(target);
     }
 
-    function drawCombinationShot(cue, target, pocket) {
-      const objectBalls = balls
-        .filter((b) => b.number !== 0 && b.id !== target.id)
-        .sort((a, b) => distance(cue, a) - distance(cue, b));
+    function drawCombinationShot(
+      cue,
+      target,
+      pocket
+    ) {
+      const objectBalls =
+        balls
+          .filter(
+            (ball) =>
+              ball.number !== 0 &&
+              ball.id !== target.id
+          )
+          .sort(
+            (a, b) =>
+              distance(cue, a) -
+              distance(cue, b)
+          );
 
-      const firstBall = objectBalls[0];
-
-      if (!firstBall) {
-        drawCutShot(cue, target, pocket);
+      if (!objectBalls.length) {
+        drawCutShot(
+          cue,
+          target,
+          pocket
+        );
         return;
       }
 
       /*
-        Combination routing:
-        cue -> first object ball -> target object ball -> pocket.
+        Choose the first ball that creates
+        the most direct combination route
+        toward the selected target.
       */
-      drawLine(firstBall, target, "line-object");
-      drawLine(target, pocket, "line-object");
+      let firstBall =
+        objectBalls[0];
 
-      const firstContact = calculateCut(cue, firstBall, target);
+      let bestScore =
+        Infinity;
 
-      drawLine(cue, firstContact.ghostBall, "line-aim");
+      objectBalls.forEach(
+        (candidate) => {
+          const cueToFirst =
+            distance(
+              cue,
+              candidate
+            );
 
-      setContactDot(firstContact.ghostBall);
-    }
+          const firstToTarget =
+            distance(
+              candidate,
+              target
+            );
 
-    function findBankPoint(target, pocket) {
-      const candidates = [];
+          const targetToPocket =
+            distance(
+              target,
+              pocket
+            );
 
-      const cushionInset = 2;
+          const score =
+            cueToFirst +
+            firstToTarget +
+            targetToPocket * 0.35;
+
+          if (
+            score < bestScore
+          ) {
+            bestScore = score;
+            firstBall =
+              candidate;
+          }
+        }
+      );
 
       /*
-        Reflect the pocket across each rail to find a corresponding
-        bank point on the opposite geometry.
+        White = object-ball combination path.
+        Green = cue-ball approach.
       */
+      drawLine(
+        firstBall,
+        target,
+        "line-object"
+      );
+
+      drawLine(
+        target,
+        pocket,
+        "line-object"
+      );
+
+      const firstContact =
+        calculateCut(
+          cue,
+          firstBall,
+          target
+        );
+
+      drawLine(
+        cue,
+        firstContact.ghostBall,
+        "line-aim"
+      );
+
+      setContactDot(
+        firstContact.ghostBall
+      );
+    }
+
+    function findBankPoint(
+      target,
+      pocket
+    ) {
+      const cushionInset = 2;
+
       const reflected = [
         {
           x: -pocket.x,
@@ -1191,124 +1635,344 @@
         }
       ];
 
-      reflected.forEach((r, index) => {
-        let bx;
-        let by;
+      const candidates = [];
 
-        if (index === 0 || index === 1) {
-          bx = index === 0 ? cushionInset : 100 - cushionInset;
+      reflected.forEach(
+        (r, index) => {
+          let bx;
+          let by;
 
-          const t =
-            (bx - target.x) /
-            ((r.x - target.x) || 0.0001);
+          if (
+            index === 0 ||
+            index === 1
+          ) {
+            bx =
+              index === 0
+                ? cushionInset
+                : 100 - cushionInset;
 
-          by = target.y + (r.y - target.y) * t;
-        } else {
-          by = index === 2 ? cushionInset : 100 - cushionInset;
+            const denominator =
+              r.x - target.x;
 
-          const t =
-            (by - target.y) /
-            ((r.y - target.y) || 0.0001);
+            const t =
+              denominator === 0
+                ? 0.5
+                :
+                  (bx - target.x) /
+                  denominator;
 
-          bx = target.x + (r.x - target.x) * t;
+            by =
+              target.y +
+              (r.y - target.y) *
+                t;
+          } else {
+            by =
+              index === 2
+                ? cushionInset
+                : 100 - cushionInset;
+
+            const denominator =
+              r.y - target.y;
+
+            const t =
+              denominator === 0
+                ? 0.5
+                :
+                  (by - target.y) /
+                  denominator;
+
+            bx =
+              target.x +
+              (r.x - target.x) *
+                t;
+          }
+
+          if (
+            Number.isFinite(bx) &&
+            Number.isFinite(by) &&
+            bx >= 2 &&
+            bx <= 98 &&
+            by >= 2 &&
+            by <= 98
+          ) {
+            candidates.push({
+              x: bx,
+              y: by
+            });
+          }
         }
-
-        if (
-          Number.isFinite(bx) &&
-          Number.isFinite(by) &&
-          bx >= 2 &&
-          bx <= 98 &&
-          by >= 2 &&
-          by <= 98
-        ) {
-          candidates.push({ x: bx, y: by });
-        }
-      });
+      );
 
       if (!candidates.length) {
         return {
-          x: clamp((target.x + pocket.x) / 2, 3, 97),
-          y: clamp((target.y + pocket.y) / 2, 5, 95)
+          x: clamp(
+            (target.x + pocket.x) /
+              2,
+            3,
+            97
+          ),
+          y: clamp(
+            (target.y + pocket.y) /
+              2,
+            5,
+            95
+          )
         };
       }
 
-      candidates.sort((a, b) => {
-        return distance(target, a) - distance(target, b);
-      });
+      candidates.sort(
+        (a, b) =>
+          distance(target, a) -
+          distance(target, b)
+      );
 
       return candidates[0];
     }
 
-    function findKickPoint(cue, target) {
-      const midX = (cue.x + target.x) / 2;
-      const midY = (cue.y + target.y) / 2;
+    function findKickPoint(
+      cue,
+      target
+    ) {
+      const midX =
+        (cue.x + target.x) / 2;
 
-      if (Math.abs(cue.x - target.x) > Math.abs(cue.y - target.y)) {
+      const midY =
+        (cue.y + target.y) / 2;
+
+      if (
+        Math.abs(
+          cue.x - target.x
+        ) >
+        Math.abs(
+          cue.y - target.y
+        )
+      ) {
         return {
-          x: clamp(midX, 3, 97),
-          y: cue.y < target.y ? 3 : 97
+          x: clamp(
+            midX,
+            3,
+            97
+          ),
+          y:
+            cue.y < target.y
+              ? 3
+              : 97
         };
       }
 
       return {
-        x: cue.x < target.x ? 3 : 97,
-        y: clamp(midY, 5, 95)
+        x:
+          cue.x < target.x
+            ? 3
+            : 97,
+        y: clamp(
+          midY,
+          5,
+          95
+        )
       };
     }
 
-    function updateText(cue, target, pocket, type) {
-      shotType.textContent = type;
+    function getHitDescription(
+      cue,
+      target,
+      pocket
+    ) {
+      const cueAngle =
+        angleBetween(
+          cue,
+          target
+        );
 
-      if (type === "Combination") {
-        whereToHit.textContent = "Hit the first ball full enough to send the target ball on";
-        objectPath.textContent = "First object ball transfers the target ball toward the pocket";
-        cuePath.textContent = "Use a controlled line into the first object ball";
+      const objectAngle =
+        angleBetween(
+          target,
+          pocket
+        );
+
+      let difference =
+        Math.abs(
+          cueAngle -
+            objectAngle
+        );
+
+      while (
+        difference > Math.PI
+      ) {
+        difference =
+          Math.abs(
+            difference -
+              Math.PI * 2
+          );
+      }
+
+      const degrees =
+        difference *
+        (180 / Math.PI);
+
+      if (degrees < 12) {
+        return "Full hit";
+      }
+
+      if (degrees < 28) {
+        return "Three-quarter hit";
+      }
+
+      if (degrees < 48) {
+        return "Half-ball hit";
+      }
+
+      if (degrees < 68) {
+        return "Quarter-ball hit";
+      }
+
+      return "Thin hit";
+    }
+
+    function updateText(
+      cue,
+      target,
+      pocket,
+      type
+    ) {
+      shotType.textContent =
+        type;
+
+      if (
+        type ===
+        "Combination"
+      ) {
+        whereToHit.textContent =
+          "Hit the first ball cleanly";
+
+        objectPath.textContent =
+          "First ball sends the target ball toward the pocket";
+
+        cuePath.textContent =
+          "Follow the green aiming line into the first ball";
+
         speed.textContent =
-          difficulty.value === "aggressive" ? "Medium-firm" : "Medium";
+          difficulty.value ===
+          "aggressive"
+            ? "Medium-firm"
+            : "Medium";
+
         instructions.textContent =
-          "Play the first object ball into the target ball, then let the target ball continue toward the pocket. Favor a full enough hit to keep the combination predictable.";
+          "Play the first object ball into the target ball, then let the target ball continue toward the pocket. Favor a controlled hit so the combination stays predictable.";
+
         return;
       }
 
-      const angle = Math.abs(
-        (angleBetween(cue, target) - angleBetween(target, pocket)) *
-          (180 / Math.PI)
-      );
+      const hit =
+        getHitDescription(
+          cue,
+          target,
+          pocket
+        );
 
-      const normalizedAngle = Math.min(angle, 360 - angle);
-
-      let hit;
-
-      if (normalizedAngle < 12) {
-        hit = "Full";
-      } else if (normalizedAngle < 28) {
-        hit = "Three-quarter";
-      } else if (normalizedAngle < 48) {
-        hit = "Half";
-      } else if (normalizedAngle < 68) {
-        hit = "Quarter";
-      } else {
-        hit = "Thin";
-      }
-
-      whereToHit.textContent = `${hit} hit`;
+      whereToHit.textContent =
+        hit;
 
       if (type === "Bank") {
-        objectPath.textContent = "Send the object ball to the rail, then into the pocket";
-        cuePath.textContent = "Aim through the contact point for the bank";
+        objectPath.textContent =
+          "Send the object ball to the rail, then toward the pocket";
+
+        cuePath.textContent =
+          "Follow the green aiming line into the contact point";
+
         speed.textContent =
-          difficulty.value === "aggressive" ? "Firm" : "Medium-firm";
+          difficulty.value ===
+          "aggressive"
+            ? "Firm"
+            : "Medium-firm";
+
         instructions.textContent =
-          "Aim for the bank contact point rather than the pocket itself. Use enough speed to reach the rail and still hold the correct rebound line.";
-      } else if (type === "Kick") {
-        objectPath.textContent = "Contact the object ball after the cue ball reaches the rail";
-        cuePath.textContent = "Use the rail contact point shown in blue";
+          "Aim for the rail contact point shown on the table rather than directly at the pocket. Use enough speed to reach the rail while keeping the rebound controlled.";
+
+      } else if (
+        type === "Kick"
+      ) {
+        objectPath.textContent =
+          "Contact the object ball after the cue ball rebounds from the rail";
+
+        cuePath.textContent =
+          "Use the blue rail path shown on the table";
+
         speed.textContent =
-          difficulty.value === "conservative" ? "Soft-medium" : "Medium";
+          difficulty.value ===
+          "conservative"
+            ? "Soft-medium"
+            : "Medium";
+
         instructions.textContent =
-          "Send the cue ball to the indicated rail contact point first. Let the rebound carry it into the object ball.";
+          "Send the cue ball to the indicated rail contact point first. The rebound should carry the cue ball into the object ball.";
+
       } else {
-        objectPath.textContent = "Toward the selected pocket";
-        cuePath.textContent = "Follow the white aiming line into the contact point";
+        objectPath.textContent =
+          "Toward the selected pocket";
+
+        cuePath.textContent =
+          "Follow the green aiming line into the contact point";
+
         speed.textContent =
-          difficulty.value === "
+          difficulty.value ===
+          "aggressive"
+            ? "Medium-firm"
+            : difficulty.value ===
+              "conservative"
+              ? "Soft-medium"
+              : "Medium";
+
+        instructions.textContent =
+          "Aim the cue ball through the contact point shown on the table. The white line shows the object ball's intended path toward the pocket.";
+      }
+    }
+
+    function resetTable() {
+      createInitialBalls();
+    }
+
+    resetBtn.addEventListener(
+      "click",
+      resetTable
+    );
+
+    suggestBtn.addEventListener(
+      "click",
+      () => {
+        updateRecommendation();
+      }
+    );
+
+    ballsInPlay.addEventListener(
+      "change",
+      () => {
+        updateRecommendation();
+      }
+    );
+
+    shotMode.addEventListener(
+      "change",
+      () => {
+        updateRecommendation();
+      }
+    );
+
+    difficulty.addEventListener(
+      "change",
+      () => {
+        updateRecommendation();
+      }
+    );
+
+    window.addEventListener(
+      "resize",
+      () => {
+        updateRecommendation();
+      }
+    );
+
+    createInitialBalls();
+  </script>
+</body>
+</html>
