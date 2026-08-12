@@ -125,10 +125,6 @@ button{
   touch-action:none;
 }
 
-.legend{
-  display:none;
-}
-
 .side{
   display:flex;
   flex-direction:column;
@@ -335,7 +331,7 @@ button{
 
 .modes{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(5,1fr);
   gap:6px;
   margin-top:9px;
 }
@@ -452,12 +448,6 @@ button{
     0 0 0 2px rgba(255,159,67,.65),
     inset -3px -4px 5px rgba(0,0,0,.25),
     0 2px 4px rgba(0,0,0,.25);
-}
-
-.empty{
-  color:#667178;
-  font-size:9px;
-  padding:5px 0;
 }
 
 .ownership-section{
@@ -646,7 +636,7 @@ button{
     <div class="ball-panel combo-only">
       <div class="ball-head">
         <div class="ball-label" id="targetViewLabel">
-          TARGET BALL
+          Target Ball
         </div>
       </div>
 
@@ -739,6 +729,10 @@ button{
       Cut
     </button>
 
+    <button class="mode" data-mode="combo">
+      Combo
+    </button>
+
     <button class="mode" data-mode="bank">
       Bank
     </button>
@@ -812,7 +806,7 @@ button{
     </div>
 
     <div class="ownership-help">
-      Player's balls can be used as combination balls. Opponent's balls are blockers only and will never be used for combos.
+      Player's balls are eligible as combination balls. Opponent's balls are blockers only and will never be used as combination balls.
     </div>
 
   </div>
@@ -1037,7 +1031,7 @@ function clamp(n,a,b){
 }
 
 /* ============================================================
-   GEOMETRY HELPERS
+   GEOMETRY
    ============================================================ */
 
 function centerInside(p){
@@ -1054,6 +1048,7 @@ function pointSegmentDistance(
   a,
   b
 ){
+
   const ab=sub(b,a);
 
   const d=dot(
@@ -1084,13 +1079,9 @@ function pointSegmentDistance(
 }
 
 /*
-  A true physical clearance check.
-
-  A ball occupies a full BALL_RADIUS around its center.
-  The path is therefore rejected whenever the center-line
-  comes within one full ball diameter of another ball.
+  A moving ball center must stay at least one full ball
+  diameter away from the center of every unrelated ball.
 */
-
 function pathClear(
   a,
   b,
@@ -1128,13 +1119,6 @@ function pathClear(
   return true;
 }
 
-/*
-  Explicit collision-point validation.
-
-  The endpoint may approach an intended ball, but the path
-  itself may not pass through any other ball.
-*/
-
 function clearToBall(
   start,
   target,
@@ -1150,21 +1134,6 @@ function clearToBall(
 /* ============================================================
    PHYSICAL CUE APPROACH
    ============================================================ */
-
-/*
-  For a normal shot, the cue ball approaches the ghost-ball
-  position from the side opposite the direction the object
-  ball will travel.
-
-  The objectTravel vector points from the ghost-ball center
-  toward the object ball.
-
-  The cueTravel vector points from the cue ball toward the
-  ghost-ball center.
-
-  A valid hit requires those vectors to point in roughly
-  the same direction.
-*/
 
 function validCueApproach(
   cue,
@@ -1195,22 +1164,13 @@ function validCueApproach(
     return false;
   }
 
-  const alignment=
+  return(
     dot(
       cueTravel,
       objectTravel
-    );
-
-  return alignment>=0.22;
+    )>=.22
+  );
 }
-
-/*
-  Returns a real cut angle from 0 degrees (straight)
-  toward 90 degrees (very thin).
-
-  Anything above 78 degrees is rejected outright.
-  The solver should never generate a 150+ degree shot.
-*/
 
 function cutAngleDegrees(
   cue,
@@ -1335,6 +1295,32 @@ function ghostForDirection(
   );
 }
 
+/*
+  Direction from the actual ball center to the actual contact
+  point on that ball.
+
+  This is the same direction used by the enlarged ball view.
+*/
+function contactDirection(
+  ballCenter,
+  contactPoint
+){
+
+  if(
+    !ballCenter||
+    !contactPoint
+  ){
+    return V(0,0);
+  }
+
+  return norm(
+    sub(
+      contactPoint,
+      ballCenter
+    )
+  );
+}
+
 /* ============================================================
    DIRECT SHOT
    ============================================================ */
@@ -1383,10 +1369,6 @@ function directCandidate(
     return null;
   }
 
-  /*
-    The cue path must be completely clear except for the
-    intended object ball at the final collision.
-  */
   if(
     !clearToBall(
       cue,
@@ -1397,10 +1379,6 @@ function directCandidate(
     return null;
   }
 
-  /*
-    The object ball must have an unobstructed route to
-    the pocket target.
-  */
   if(
     !clearToBall(
       object,
@@ -1439,15 +1417,6 @@ function directCandidate(
 
   const isStraight=
     cutDegrees<=8;
-
-  /*
-    Direct shots are intentionally rewarded.
-
-    The solver should choose a simple direct shot whenever
-    one is physically available instead of replacing it with
-    a bank, kick, or combo merely because another route is
-    mathematically possible.
-  */
 
   const cutPenalty=
     Math.pow(
@@ -1489,10 +1458,7 @@ function directCandidate(
     score:
       cueDistance+
       objectDistance+
-      cutPenalty,
-
-    difficulty:
-      cutDegrees
+      cutPenalty
   };
 }
 
@@ -1518,12 +1484,10 @@ function combinationCandidate(
   }
 
   /*
-    ABSOLUTE COMBO RULE:
+    HARD COMBO RULE:
 
-    Only the player's own ball can be the first ball struck.
-
-    Opponent balls are blockers only. They can never be used
-    as the combination ball.
+    The first ball struck must be the player's ball.
+    Opponent balls are NEVER eligible as combination balls.
   */
   if(
     firstBall.owner!=="my"
@@ -1531,9 +1495,6 @@ function combinationCandidate(
     return null;
   }
 
-  /*
-    The second ball must be the selected target.
-  */
   if(
     secondBall.owner!=="target"
   ){
@@ -1553,10 +1514,12 @@ function combinationCandidate(
   }
 
   const secondToPocket=
-    norm(
-      secondToPocketVector
-    );
+    norm(secondToPocketVector);
 
+  /*
+    The first ball must strike the target ball on the side
+    opposite the target ball's travel to the pocket.
+  */
   const secondBallContactPoint=
     sub(
       secondBall,
@@ -1574,9 +1537,6 @@ function combinationCandidate(
     return null;
   }
 
-  /*
-    First ball must physically travel into the target ball.
-  */
   const firstToSecondVector=
     sub(
       secondBallContactPoint,
@@ -1590,12 +1550,10 @@ function combinationCandidate(
   }
 
   const firstToSecond=
-    norm(
-      firstToSecondVector
-    );
+    norm(firstToSecondVector);
 
   /*
-    Ghost ball for the first ball.
+    Cue-ball ghost position for contacting the player's ball.
   */
   const cueGhost=
     ghostForDirection(
@@ -1610,8 +1568,7 @@ function combinationCandidate(
   }
 
   /*
-    Cue path may not pass through ANY ball other than the
-    intended first and second balls.
+    Cue path must be clear of every other ball.
   */
   if(
     !clearToBall(
@@ -1637,8 +1594,7 @@ function combinationCandidate(
   }
 
   /*
-    First player's ball must have a clear physical route
-    into the target ball.
+    Player's ball must have a clean line into the target.
   */
   if(
     !clearToBall(
@@ -1654,7 +1610,7 @@ function combinationCandidate(
   }
 
   /*
-    Target ball must then have a clear route to the pocket.
+    Target ball must then have a clean line to the pocket.
   */
   if(
     !clearToBall(
@@ -1708,8 +1664,7 @@ function combinationCandidate(
     Math.PI;
 
   /*
-    Very extreme first-ball redirections are not sensible
-    combination shots.
+    Reject physically extreme combinations.
   */
   if(
     !Number.isFinite(transferAngle)||
@@ -1737,20 +1692,19 @@ function combinationCandidate(
     );
 
   /*
-    Combos are deliberately expensive in the solver.
-
-    They should only win when the direct route is blocked
-    or substantially worse.
+    Combo penalty is significant so a random combo does not
+    replace a clearly superior normal shot. However, clean
+    combinations remain valid and selectable as a shot type.
   */
   const score=
     cueDistance+
     firstDistance+
     secondDistance+
-    32+
+    18+
     Math.max(
       0,
       transferAngle-30
-    )*1.7;
+    )*1.4;
 
   return{
     kind:"combination",
@@ -2005,9 +1959,6 @@ function bankCandidate(
     return null;
   }
 
-  /*
-    Object to rail must be clear.
-  */
   if(
     !clearToBall(
       object,
@@ -2018,9 +1969,6 @@ function bankCandidate(
     return null;
   }
 
-  /*
-    Rail to pocket must be clear.
-  */
   if(
     !clearToBall(
       bankPoint,
@@ -2345,10 +2293,13 @@ function combinationCandidatesForPocket(
   const candidates=[];
 
   /*
-    Only player's balls qualify.
+    IMPORTANT:
 
-    This filter is deliberately independent of visual role
-    or table position. Owner is the authority.
+    This deliberately searches ALL balls whose owner is
+    "my". It does not care whether the ball is visually called
+    an object, blocker, or anything else.
+
+    Ownership is the sole authority for combo eligibility.
   */
   const comboBalls=
     state.tableBalls.filter(
@@ -2359,6 +2310,18 @@ function combinationCandidatesForPocket(
     );
 
   if(!comboBalls.length){
+    return candidates;
+  }
+
+  const targetBall=
+    state.tableBalls.find(
+      ball=>
+        ball.owner==="target"&&
+        ball.number===
+        state.object.number
+    );
+
+  if(!targetBall){
     return candidates;
   }
 
@@ -2376,7 +2339,7 @@ function combinationCandidatesForPocket(
         combinationCandidate(
           state.cue,
           combinationBall,
-          state.object,
+          targetBall,
           pocket,
           target
         );
@@ -2465,18 +2428,6 @@ function kickCandidatesForPocket(
    SOLVER
    ============================================================ */
 
-/*
-  Solver strategy:
-
-  1. Find physically valid direct shots first.
-  2. If a direct shot exists, prefer it unless a different
-     direct shot is clearly easier.
-  3. Only consider combos when appropriate.
-  4. Banks are secondary alternatives.
-  5. Kicks are last-resort defensive/escape geometry.
-  6. Never allow an opponent ball to become a combo ball.
-*/
-
 function solve(){
 
   const pockets=
@@ -2508,7 +2459,8 @@ function solve(){
 
     if(
       state.mode==="auto"||
-      state.mode==="cut"
+      state.mode==="cut"||
+      state.mode==="combo"
     ){
 
       combos.push(
@@ -2545,88 +2497,107 @@ function solve(){
 
   let best=null;
 
-  /*
-    AUTO MODE
-
-    Direct is king.
-
-    A simple direct shot should never be replaced by a combo,
-    bank, or kick merely because the latter has a shorter raw
-    geometric distance.
-
-    Combos are allowed to win only when there is no usable
-    direct route, or when the direct route is substantially
-    harder than a clean combo.
-  */
-
   if(
     state.mode==="auto"
   ){
 
-    if(direct.length){
+    direct.sort(
+      (a,b)=>
+        a.score-b.score
+    );
 
-      direct.sort(
-        (a,b)=>
-          a.score-b.score
-      );
+    combos.sort(
+      (a,b)=>
+        a.score-b.score
+    );
+
+    banks.sort(
+      (a,b)=>
+        a.score-b.score
+    );
+
+    kicks.sort(
+      (a,b)=>
+        a.score-b.score
+    );
+
+    /*
+      A clean, intentional player's-ball combination gets
+      real priority when it is geometrically strong.
+
+      This fixes the previous behavior where the solver would
+      effectively pretend the player's ball did not exist.
+    */
+    if(combos.length){
+
+      const combo=combos[0];
+
+      const comboQuality=
+        combo.transferAngle<=38;
+
+      const hasDirect=
+        direct.length>0;
+
+      if(
+        !hasDirect||
+        comboQuality&&
+        (
+          !direct.length||
+          direct[0].kind!=="straight"&&
+          combo.score<=direct[0].score*1.18
+        )
+      ){
+
+        best=combo;
+      }
+    }
+
+    /*
+      If a clearly superior direct shot exists, keep it.
+    */
+    if(
+      !best&&
+      direct.length
+    ){
 
       best=direct[0];
+    }
 
-      /*
-        A combo may replace a direct shot only when the direct
-        option is genuinely difficult.
+    /*
+      If the combo exists but the direct shot was selected,
+      still allow a clean combo to replace a difficult cut.
+    */
+    if(
+      best&&
+      best.kind!=="combination"&&
+      combos.length
+    ){
 
-        This prevents the solver from turning an obvious
-        straight/cut shot into a needless combination.
-      */
-      if(combos.length){
+      const combo=combos[0];
 
-        combos.sort(
-          (a,b)=>
-            a.score-b.score
-        );
+      if(
+        best.kind==="cut"&&
+        best.cutDegrees>=42&&
+        combo.transferAngle<=42&&
+        combo.score<=best.score*1.12
+      ){
 
-        const combo=combos[0];
-
-        const directDifficulty=
-          best.kind==="straight"
-            ?0
-            :best.cutDegrees;
-
-        const comboIsClearlyBetter=
-          directDifficulty>=52&&
-          combo.score<
-            best.score*1.08;
-
-        if(comboIsClearlyBetter){
-          best=combo;
-        }
+        best=combo;
       }
+    }
 
-    }else if(combos.length){
-
-      combos.sort(
-        (a,b)=>
-          a.score-b.score
-      );
-
-      best=combos[0];
-
-    }else if(banks.length){
-
-      banks.sort(
-        (a,b)=>
-          a.score-b.score
-      );
+    if(
+      !best&&
+      banks.length
+    ){
 
       best=banks[0];
+    }
 
-    }else if(kicks.length){
-
-      kicks.sort(
-        (a,b)=>
-          a.score-b.score
-      );
+    if(
+      !best&&
+      kicks.length
+    ){
 
       best=kicks[0];
     }
@@ -2640,11 +2611,12 @@ function solve(){
         s=>s.kind==="straight"
       );
 
+    straight.sort(
+      (a,b)=>
+        a.score-b.score
+    );
+
     if(straight.length){
-      straight.sort(
-        (a,b)=>
-          a.score-b.score
-      );
       best=straight[0];
     }
 
@@ -2657,28 +2629,40 @@ function solve(){
         s=>s.kind==="cut"
       );
 
-    const all=[
-      ...cuts,
-      ...combos
-    ];
+    cuts.sort(
+      (a,b)=>
+        a.score-b.score
+    );
 
-    if(all.length){
-      all.sort(
-        (a,b)=>
-          a.score-b.score
-      );
-      best=all[0];
+    if(cuts.length){
+      best=cuts[0];
+    }else if(combos.length){
+      best=combos[0];
+    }
+
+  }else if(
+    state.mode==="combo"
+  ){
+
+    combos.sort(
+      (a,b)=>
+        a.score-b.score
+    );
+
+    if(combos.length){
+      best=combos[0];
     }
 
   }else if(
     state.mode==="bank"
   ){
 
+    banks.sort(
+      (a,b)=>
+        a.score-b.score
+    );
+
     if(banks.length){
-      banks.sort(
-        (a,b)=>
-          a.score-b.score
-      );
       best=banks[0];
     }
 
@@ -2686,11 +2670,12 @@ function solve(){
     state.mode==="kick"
   ){
 
+    kicks.sort(
+      (a,b)=>
+        a.score-b.score
+    );
+
     if(kicks.length){
-      kicks.sort(
-        (a,b)=>
-          a.score-b.score
-      );
       best=kicks[0];
     }
   }
@@ -2774,58 +2759,159 @@ function speedForShot(s){
 }
 
 /* ============================================================
-   CONTACT LANGUAGE
+   ACCURATE CONTACT LOCATION
    ============================================================ */
 
-function contactSide(s){
+/*
+  The language is now derived from the EXACT vector used to
+  place the red contact dot.
 
-  if(!s){
+  That means the enlarged ball and the sentence cannot describe
+  two different contact locations.
+*/
+
+function ballFaceDirectionName(direction){
+
+  if(!direction){
     return"center";
   }
 
-  const object=
-    s.kind==="combination"
-      ?s.combinationBall
-      :state.object;
+  const x=direction.x;
+  const y=direction.y;
+
+  const ax=Math.abs(x);
+  const ay=Math.abs(y);
+
+  /*
+    The coordinate system is:
+      y < 0 = top
+      y > 0 = bottom
+      x < 0 = left
+      x > 0 = right
+  */
+
+  if(
+    ax<.16&&
+    ay<.16
+  ){
+    return"center";
+  }
+
+  if(
+    ax<.32
+  ){
+
+    return y<0
+      ?"top"
+      :"bottom";
+  }
+
+  if(
+    ay<.32
+  ){
+
+    return x<0
+      ?"left"
+      :"right";
+  }
+
+  if(
+    x<0&&
+    y<0
+  ){
+    return"upper-left";
+  }
+
+  if(
+    x>0&&
+    y<0
+  ){
+    return"upper-right";
+  }
+
+  if(
+    x<0&&
+    y>0
+  ){
+    return"lower-left";
+  }
+
+  return"lower-right";
+}
+
+function cueContactDirection(s){
+
+  if(!s){
+    return V(0,0);
+  }
 
   const contact=
     s.kind==="combination"
       ?s.firstContactPoint
       :s.ghost;
 
-  const v=
-    norm(
-      sub(
-        contact,
-        object
-      )
+  return contactDirection(
+    state.cue,
+    contact
+  );
+}
+
+function objectContactDirection(s){
+
+  if(!s){
+    return V(0,0);
+  }
+
+  if(
+    s.kind==="combination"
+  ){
+
+    return contactDirection(
+      s.combinationBall,
+      s.firstContactPoint
     );
+  }
 
-  const x=v.x;
+  return contactDirection(
+    state.object,
+    s.ghost
+  );
+}
+
+function targetContactDirection(s){
 
   if(
-    Math.abs(x)<.12
+    !s||
+    s.kind!=="combination"
   ){
-    return"center";
+    return V(0,0);
   }
 
-  if(
-    x<-.70
-  ){
-    return"left-hand side";
-  }
+  return contactDirection(
+    s.targetBall,
+    s.secondContactPoint
+  );
+}
 
-  if(
-    x>.70
-  ){
-    return"right-hand side";
-  }
+function cueContactName(s){
 
-  if(x<0){
-    return"left side";
-  }
+  return ballFaceDirectionName(
+    cueContactDirection(s)
+  );
+}
 
-  return"right side";
+function objectContactName(s){
+
+  return ballFaceDirectionName(
+    objectContactDirection(s)
+  );
+}
+
+function targetContactName(s){
+
+  return ballFaceDirectionName(
+    targetContactDirection(s)
+  );
 }
 
 /* ============================================================
@@ -2837,8 +2923,7 @@ function spinForShot(s){
   if(!s){
     return{
       name:"top spin",
-      shortName:"top spin",
-      cls:"spin"
+      shortName:"top spin"
     };
   }
 
@@ -2847,8 +2932,7 @@ function spinForShot(s){
   ){
     return{
       name:"center-ball hit",
-      shortName:"center-ball hit",
-      cls:"spin"
+      shortName:"center-ball hit"
     };
   }
 
@@ -2856,20 +2940,14 @@ function spinForShot(s){
     s.kind==="combination"
   ){
 
-    if(
-      s.transferAngle>45
-    ){
-      return{
-        name:"bottom spin",
-        shortName:"bottom spin",
-        cls:"spin"
-      };
-    }
-
+    /*
+      Combination shots use a center-ball hit by default.
+      Do not call this "bottom spin" unless the solver has
+      actually calculated a spin requirement.
+    */
     return{
       name:"top spin",
-      shortName:"top spin",
-      cls:"spin"
+      shortName:"top spin"
     };
   }
 
@@ -2878,8 +2956,7 @@ function spinForShot(s){
   ){
     return{
       name:"top spin",
-      shortName:"top spin",
-      cls:"spin"
+      shortName:"top spin"
     };
   }
 
@@ -2888,15 +2965,13 @@ function spinForShot(s){
   ){
     return{
       name:"bottom spin",
-      shortName:"bottom spin",
-      cls:"spin"
+      shortName:"bottom spin"
     };
   }
 
   return{
     name:"top spin",
-    shortName:"top spin",
-    cls:"spin"
+    shortName:"top spin"
   };
 }
 
@@ -2918,12 +2993,7 @@ function englishForShot(s){
   ){
 
     return{
-      name:
-        s.rail==="left"||
-        s.rail==="right"
-          ?"a touch of running English"
-          :"a touch of side",
-
+      name:"a touch of running English",
       cls:"english"
     };
   }
@@ -2995,6 +3065,18 @@ function pocketShortName(
 function instructionHTML(s){
 
   if(!s){
+
+    if(
+      state.mode==="combo"
+    ){
+
+      return(
+        `Place a player's ball and a target ball so the `+
+        `player's ball can be struck first and transferred `+
+        `into the target ball.`
+      );
+    }
+
     return(
       "Place the cue ball and target ball."
     );
@@ -3022,6 +3104,9 @@ function instructionHTML(s){
   const spinMarkup=
     `<span class="highlight">${spin.name}</span>`;
 
+  /*
+    COMBINATION
+  */
   if(
     s.kind==="combination"
   ){
@@ -3032,21 +3117,29 @@ function instructionHTML(s){
     const second=
       s.targetBall.number;
 
-    const firstAim=
-      aimPhrase(
-        s,
-        first
-      );
+    const cueSide=
+      cueContactName(s);
 
-    const secondContact=
-      directionDescription(
-        norm(
-          sub(
-            s.secondContactPoint,
-            s.targetBall
-          )
-        )
-      );
+    const firstSide=
+      objectContactName(s);
+
+    const secondSide=
+      targetContactName(s);
+
+    const cuePhrase=
+      cueSide==="center"
+        ?"Hit the center of the cue ball"
+        :`Contact the cue ball on its ${cueSide}`;
+
+    const firstPhrase=
+      firstSide==="center"
+        ?`Hit the center of the ${first}`
+        :`Contact the ${first} on its ${firstSide}`;
+
+    const secondPhrase=
+      secondSide==="center"
+        ?`hit the center of the ${second}`
+        :`contact the ${second} on its ${secondSide}`;
 
     return(
       `Use ${spinMarkup}`+
@@ -3055,20 +3148,30 @@ function instructionHTML(s){
           ?` with ${englishMarkup}`
           :""
       )+
-      `. ${firstAim.name} to send the `+
+      `. ${cuePhrase} and ${firstPhrase} to send the `+
       `<span class="neutral-emphasis">${first}</span>`+
       ` into the `+
       `<span class="neutral-emphasis">${second}</span>. `+
-      `Contact the `+
-      `<span class="neutral-emphasis">${second} on its ${secondContact}</span>`+
+      `${secondPhrase.charAt(0).toUpperCase()+secondPhrase.slice(1)}`+
       ` to send it to the `+
       `${pocketMarkup}.`
     );
   }
 
+  /*
+    KICK
+  */
   if(
     s.kind==="kick"
   ){
+
+    const contact=
+      objectContactName(s);
+
+    const contactPhrase=
+      contact==="center"
+        ?`contact the center of the ${state.object.number}`
+        :`contact the ${state.object.number} on its ${contact}`;
 
     return(
       `Use ${spinMarkup}`+
@@ -3079,22 +3182,25 @@ function instructionHTML(s){
       )+
       `. Kick off the `+
       `<span class="highlight">${railText(s.rail)}</span>`+
-      ` and contact the `+
-      `<span class="neutral-emphasis">${state.object.number} on its ${contactSide(s)}</span>`+
-      ` to send it toward the `+
+      ` and ${contactPhrase} to send it toward the `+
       `${pocketMarkup}.`
     );
   }
 
+  /*
+    BANK
+  */
   if(
     s.kind==="bank"
   ){
 
-    const aim=
-      aimPhrase(
-        s,
-        state.object.number
-      );
+    const contact=
+      objectContactName(s);
+
+    const contactPhrase=
+      contact==="center"
+        ?`hit the center of the ${state.object.number}`
+        :`contact the ${contact} side of the ${state.object.number}`;
 
     return(
       `Use ${spinMarkup}`+
@@ -3103,7 +3209,7 @@ function instructionHTML(s){
           ?` with ${englishMarkup}`
           :""
       )+
-      `. ${aim.name} to bank the `+
+      `. ${capitalize(contactPhrase)} to bank the `+
       `<span class="neutral-emphasis">${state.object.number}</span>`+
       ` off the `+
       `<span class="highlight">${railText(s.rail)}</span>`+
@@ -3112,9 +3218,20 @@ function instructionHTML(s){
     );
   }
 
+  /*
+    STRAIGHT
+  */
   if(
     s.kind==="straight"
   ){
+
+    const cueSide=
+      cueContactName(s);
+
+    const cuePhrase=
+      cueSide==="center"
+        ?"Hit the center of the cue ball"
+        :`Contact the cue ball on its ${cueSide}`;
 
     return(
       `Use ${spinMarkup}`+
@@ -3123,18 +3240,31 @@ function instructionHTML(s){
           ?` with ${englishMarkup}`
           :""
       )+
-      `. Hit the center of the cue ball and send the `+
+      `. ${cuePhrase} and send the `+
       `<span class="neutral-emphasis">${state.object.number}</span>`+
       ` straight toward the `+
       `${pocketMarkup}.`
     );
   }
 
-  const aim=
-    aimPhrase(
-      s,
-      state.object.number
-    );
+  /*
+    CUT
+  */
+  const cueSide=
+    cueContactName(s);
+
+  const objectSide=
+    objectContactName(s);
+
+  const cuePhrase=
+    cueSide==="center"
+      ?"Hit the center of the cue ball"
+      :`Contact the cue ball on its ${cueSide}`;
+
+  const objectPhrase=
+    objectSide==="center"
+      ?`hit the center of the ${state.object.number}`
+      :`contact the ${objectSide} side of the ${state.object.number}`;
 
   return(
     `Use ${spinMarkup}`+
@@ -3143,106 +3273,11 @@ function instructionHTML(s){
         ?` with ${englishMarkup}`
         :""
     )+
-    `. ${aim.name} to cut the `+
+    `. ${cuePhrase} and ${objectPhrase} to cut the `+
     `<span class="neutral-emphasis">${state.object.number}</span>`+
     ` to the `+
     `${pocketMarkup}.`
   );
-}
-
-/* ============================================================
-   AIM PHRASE
-   ============================================================ */
-
-function aimPhrase(
-  s,
-  number
-){
-
-  const side=
-    contactSide(s);
-
-  if(
-    side==="center"
-  ){
-    return{
-      name:
-        `hit the center of the ${number}`,
-      cls:"neutral-emphasis"
-    };
-  }
-
-  return{
-    name:
-      `contact the ${side} of the ${number}`,
-    cls:"neutral-emphasis"
-  };
-}
-
-/* ============================================================
-   DIRECTION DESCRIPTION
-   ============================================================ */
-
-function directionDescription(
-  direction
-){
-
-  if(!direction){
-    return"center";
-  }
-
-  const x=direction.x;
-  const y=direction.y;
-
-  const threshold=.25;
-
-  if(
-    Math.abs(x)<threshold&&
-    Math.abs(y)<threshold
-  ){
-    return"center";
-  }
-
-  if(
-    Math.abs(x)>=threshold&&
-    Math.abs(y)>=threshold
-  ){
-
-    if(
-      x<0&&
-      y<0
-    ){
-      return"upper-left side";
-    }
-
-    if(
-      x>0&&
-      y<0
-    ){
-      return"upper-right side";
-    }
-
-    if(
-      x<0&&
-      y>0
-    ){
-      return"lower-left side";
-    }
-
-    return"lower-right side";
-  }
-
-  if(
-    Math.abs(x)>Math.abs(y)
-  ){
-    return x<0
-      ?"left side"
-      :"right side";
-  }
-
-  return y<0
-    ?"top"
-    :"bottom";
 }
 
 /* ============================================================
@@ -3699,7 +3734,7 @@ function drawPockets(g){
 }
 
 /* ============================================================
-   ROUTES
+   ROUTES + VISIBLE GHOST BALL
    ============================================================ */
 
 function drawLine(
@@ -3742,6 +3777,104 @@ function drawLine(
   ctx.setLineDash([]);
 }
 
+function drawGhostBall(
+  position,
+  emphasized=false
+){
+
+  if(!position){
+    return;
+  }
+
+  const g=geometry();
+
+  const p=
+    toScreen(position);
+
+  const radius=
+    BALL_RADIUS/
+    TABLE_W*
+    g.w;
+
+  /*
+    The ghost ball is intentionally much more visible than
+    before: translucent white fill + lime outline + dashed
+    circumference. It remains physically sized to the ball.
+  */
+
+  ctx.save();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    radius,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle=
+    emphasized
+      ?"rgba(255,255,255,.15)"
+      :"rgba(255,255,255,.10)";
+
+  ctx.fill();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    radius,
+    0,
+    Math.PI*2
+  );
+
+  ctx.strokeStyle=
+    emphasized
+      ?"rgba(217,255,63,.95)"
+      :"rgba(217,255,63,.82)";
+
+  ctx.lineWidth=
+    Math.max(
+      2,
+      radius*.075
+    );
+
+  ctx.setLineDash(
+    [6,5]
+  );
+
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+
+  /*
+    Center point makes the actual ghost-ball position obvious
+    without pretending that the ghost ball is another ball.
+  */
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    Math.max(
+      1.5,
+      radius*.10
+    ),
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle=
+    "rgba(217,255,63,.95)";
+
+  ctx.fill();
+
+  ctx.restore();
+}
+
 function drawRoute(){
 
   const s=state.solution;
@@ -3756,11 +3889,6 @@ function drawRoute(){
       canvas.width*.0026
     );
 
-  /*
-    The table itself carries the shot visualization.
-    No legend or textual route explanation is drawn beneath it.
-  */
-
   if(
     s.kind==="combination"
   ){
@@ -3773,12 +3901,28 @@ function drawRoute(){
       false
     );
 
+    /*
+      Ghost ball for the cue ball contacting the player's ball.
+    */
+    drawGhostBall(
+      s.firstContactPoint,
+      true
+    );
+
     drawLine(
       s.combinationBall,
       s.secondContactPoint,
       "#45d9ff",
       lineWidth,
       true
+    );
+
+    /*
+      Contact ghost for the target ball.
+    */
+    drawGhostBall(
+      s.secondContactPoint,
+      false
     );
 
     drawLine(
@@ -3817,6 +3961,11 @@ function drawRoute(){
       s.target,
       "#45d9ff",
       lineWidth,
+      true
+    );
+
+    drawGhostBall(
+      s.ghost,
       true
     );
 
@@ -3871,49 +4020,13 @@ function drawRoute(){
   }
 
   /*
-    Small ghost-ball outline.
-
-    This is intentionally scaled to the actual ball size
-    rather than using a visually oversized marker.
+    ALWAYS render the physical ghost ball for normal direct
+    and bank shots.
   */
-
-  if(
-    s.kind!=="combination"
-  ){
-
-    const gp=
-      toScreen(s.ghost);
-
-    const g=geometry();
-
-    const radius=
-      BALL_RADIUS/
-      TABLE_W*
-      g.w;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      gp.x,
-      gp.y,
-      radius,
-      0,
-      Math.PI*2
-    );
-
-    ctx.strokeStyle=
-      "rgba(217,255,63,.45)";
-
-    ctx.lineWidth=1.5;
-
-    ctx.setLineDash(
-      [5,5]
-    );
-
-    ctx.stroke();
-
-    ctx.setLineDash([]);
-  }
+  drawGhostBall(
+    s.ghost,
+    true
+  );
 }
 
 /* ============================================================
@@ -4587,11 +4700,11 @@ function largeBall(
    ============================================================ */
 
 /*
-  A standard pool cue tip is roughly 12–14 mm while a
-  regulation ball is about 57 mm.
+  The red dot is placed from the exact same contact vector
+  that generates the written contact description.
 
-  The dot is therefore deliberately kept at roughly 22%
-  of the ball diameter, rather than being a large X or marker.
+  It is deliberately small enough to resemble a cue-tip
+  contact point rather than an oversized target marker.
 */
 
 function drawContactMarker(
@@ -4602,18 +4715,19 @@ function drawContactMarker(
 
   if(
     !ball||
-    !direction
+    !direction||
+    len(direction)<.01
   ){
     return;
   }
 
   const markerDistance=
-    ball.r*.76;
+    ball.r*.78;
 
   const markerRadius=
     Math.max(
-      2,
-      ball.r*.11
+      2.5,
+      ball.r*.105
     );
 
   const x=
@@ -4641,11 +4755,11 @@ function drawContactMarker(
   c.fill();
 
   c.strokeStyle=
-    "rgba(0,0,0,.78)";
+    "rgba(0,0,0,.82)";
 
   c.lineWidth=
     Math.max(
-      .75,
+      .8,
       markerRadius*.12
     );
 
@@ -4667,15 +4781,11 @@ function drawCueView(c){
     return;
   }
 
+  /*
+    EXACT SAME VECTOR AS THE TABLE ROUTE.
+  */
   const direction=
-    norm(
-      sub(
-        s.kind==="combination"
-          ?s.firstContactPoint
-          :s.ghost,
-        state.cue
-      )
-    );
+    cueContactDirection(s);
 
   drawContactMarker(
     c,
@@ -4706,40 +4816,16 @@ function drawObjectView(c){
     return;
   }
 
-  let contactObject;
-  let contactPoint;
-
-  if(
-    s.kind==="combination"
-  ){
-
-    contactObject=
-      s.combinationBall;
-
-    contactPoint=
-      s.firstContactPoint;
-
-  }else{
-
-    contactObject=
-      state.object;
-
-    contactPoint=
-      s.ghost;
-  }
-
-  const contact=
-    norm(
-      sub(
-        contactPoint,
-        contactObject
-      )
-    );
+  /*
+    EXACT SAME VECTOR USED BY THE DESCRIPTION.
+  */
+  const direction=
+    objectContactDirection(s);
 
   drawContactMarker(
     c,
     ball,
-    contact
+    direction
   );
 }
 
@@ -4762,18 +4848,13 @@ function drawTargetView(c){
       s.targetBall.number
     );
 
-  const contact=
-    norm(
-      sub(
-        s.secondContactPoint,
-        s.targetBall
-      )
-    );
+  const direction=
+    targetContactDirection(s);
 
   drawContactMarker(
     c,
     ball,
-    contact
+    direction
   );
 }
 
@@ -4821,6 +4902,10 @@ function draw(){
 
   drawTable();
 
+  /*
+    Route and ghost ball are drawn before the actual balls,
+    so the ghost ball never disappears behind an object ball.
+  */
   drawRoute();
 
   drawBalls();
@@ -4859,15 +4944,15 @@ function render(){
     "shotPocket"
   ).textContent=
     s
-      ?s.pocket.name
+      ?titleCasePocket(s.pocket.name)
       :"—";
 
   document.getElementById(
     "shotRail"
   ).textContent=
     s&&s.rail
-      ?capitalize(
-          railText(s.rail)
+      ?titleCaseRail(
+          s.rail
         )
       :"—";
 
@@ -4932,6 +5017,34 @@ function capitalize(text){
   );
 }
 
+function titleCasePocket(text){
+
+  if(!text){
+    return text;
+  }
+
+  return text
+    .split(" ")
+    .map(
+      word=>
+        word.charAt(0).toUpperCase()+
+        word.slice(1).toLowerCase()
+    )
+    .join(" ");
+}
+
+function titleCaseRail(rail){
+
+  return railText(rail)
+    .split(" ")
+    .map(
+      word=>
+        word.charAt(0).toUpperCase()+
+        word.slice(1).toLowerCase()
+    )
+    .join(" ");
+}
+
 /* ============================================================
    POCKET UI
    ============================================================ */
@@ -4978,7 +5091,9 @@ function renderPockets(){
     }
 
     button.textContent=
-      pocket.name;
+      titleCasePocket(
+        pocket.name
+      );
 
     button.onclick=()=>{
 
@@ -5284,21 +5399,88 @@ function setBallOwner(owner){
     return;
   }
 
-  const ball=
+  let ball=
     state.tableBalls.find(
       b=>
         b.number===
         number
     );
 
+  /*
+    If a rack ball is selected but not yet on the table,
+    create it immediately. This makes ownership assignment
+    reliable instead of requiring a separate hidden state.
+  */
   if(!ball){
-    return;
+
+    const hasTarget=
+      state.tableBalls.some(
+        b=>
+          b.owner==="target"
+      );
+
+    const newBall={
+      number,
+      x:state.object.x,
+      y:state.object.y,
+      owner:
+        owner==="target"
+          ?"target"
+          :hasTarget
+            ?owner
+            :"target",
+      role:
+        owner==="target"||
+        !hasTarget
+          ?"object"
+          :"blocker"
+    };
+
+    /*
+      If the requested location is occupied, place the new
+      ball at a safe visible default position.
+    */
+    if(
+      !validBallPosition(
+        newBall,
+        null
+      )
+    ){
+
+      const candidates=[
+        V(35,15),
+        V(45,15),
+        V(55,15),
+        V(35,25),
+        V(45,25),
+        V(55,25),
+        V(35,35),
+        V(45,35),
+        V(55,35)
+      ];
+
+      const safe=
+        candidates.find(
+          p=>
+            validBallPosition(p)
+        );
+
+      if(safe){
+        newBall.x=safe.x;
+        newBall.y=safe.y;
+      }
+    }
+
+    state.tableBalls.push(
+      newBall
+    );
+
+    ball=newBall;
   }
 
   /*
     Target must always be unique.
   */
-
   if(
     owner==="target"
   ){
@@ -5339,10 +5521,7 @@ function setBallOwner(owner){
     /*
       If the target is changed into a player's or opponent's
       ball, another ball becomes the target.
-
-      The target is never allowed to disappear.
     */
-
     if(
       state.object.number===
       ball.number
@@ -5745,6 +5924,12 @@ canvas.addEventListener(
       state.tableBalls.push(
         newBall
       );
+
+      /*
+        The first additional ball placed after a target now
+        correctly becomes a PLAYER'S BALL rather than being
+        treated as an opponent/blocker.
+      */
 
       if(
         newBall.owner==="target"
