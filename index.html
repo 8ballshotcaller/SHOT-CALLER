@@ -398,6 +398,12 @@ button{
   border-color:var(--lime);
 }
 
+.mode.suggested:not(.active){
+  color:var(--lime);
+  border-color:rgba(217,255,63,.46);
+  background:rgba(217,255,63,.06);
+}
+
 .rack{
   position:relative;
   margin:11px auto 3px;
@@ -690,16 +696,34 @@ button{
       .brand-name {
         display: flex;
         align-items: baseline;
-        gap: 5px;
-        font-family: Georgia, "Times New Roman", serif;
+         gap: 5px;
+         font-family: inherit;
         font-size: 24px;
-        font-weight: 700;
-        letter-spacing: -.035em;
+         font-weight: 850;
+         letter-spacing: .015em;
         text-transform: none;
       }
-      .brand-name span:last-child {
-        color: var(--lime);
-        font-style: italic;
+       .brand-name span:last-child {
+         color: inherit;
+         font-style: normal;
+       }
+       .inline-eight {
+         width: .78em;
+         height: .78em;
+         margin: 0 .06em;
+         display: inline-grid;
+         place-items: center;
+         vertical-align: .02em;
+         border: 1px solid rgba(217,255,63,.75);
+         border-radius: 50%;
+         background: radial-gradient(circle at 32% 25%, #fafcfc 0 10%, #ccd3d5 22%, #47565c 72%, #121719 100%);
+         color: #f5f7f8;
+         font-family: inherit;
+         font-size: .54em;
+         font-weight: 900;
+         line-height: 1;
+         text-align: center;
+         box-shadow: inset -1px -2px 2px rgba(0,0,0,.35);
       }
       .pro-instruction {
         border-left-width: 4px;
@@ -710,7 +734,7 @@ button{
       .call-step { color: var(--lime); }
       @media (max-width: 520px) {
         .brand-mark { width: 27px; height: 27px; }
-        .brand-name { font-size: 20px; gap: 4px; }
+      .brand-name { font-size: 20px; gap: 4px; }
       }
     </style>
   </head>
@@ -722,7 +746,7 @@ button{
 <header class="header">
   <div class="brand">
     <div class="brand-mark" aria-hidden="true"><span class="mark-eight">8</span><span class="mark-ring"></span></div>
-     <div class="brand-name"><span>Shot</span><span>Caller</span></div>
+      <div class="brand-name"><span>Sh<span class="inline-eight">8</span>t</span><span>Caller</span></div>
   </div>
 
   <button class="reset" id="reset">
@@ -750,7 +774,7 @@ button{
     </div>
 
     <div class="section-accent">
-      Ball <span id="whereBall">â</span>
+      Ball <span id="whereBall">—</span>
     </div>
   </div>
 
@@ -795,7 +819,7 @@ button{
         Type
       </div>
       <div class="stat-value" id="shotType">
-        â
+        —
       </div>
     </div>
 
@@ -804,7 +828,7 @@ button{
         Pocket
       </div>
       <div class="stat-value" id="shotPocket">
-        â
+        —
       </div>
     </div>
 
@@ -813,7 +837,7 @@ button{
         Rail
       </div>
       <div class="stat-value" id="shotRail">
-        â
+        —
       </div>
     </div>
 
@@ -822,7 +846,7 @@ button{
         Speed
       </div>
       <div class="stat-value" id="shotSpeed">
-        â
+        —
       </div>
     </div>
 
@@ -838,28 +862,9 @@ button{
 
   <div class="section-head">
     <div class="section-title">
-      Pocket
-    </div>
-
-    <button class="section-action active" id="pocketAuto">
-      Suggested
-    </button>
-  </div>
-
-  <div class="pockets" id="pockets"></div>
-
-</section>
-
-<section class="card full-card section">
-
-  <div class="section-head">
-    <div class="section-title">
       Shot Type
     </div>
 
-    <button class="section-action active" id="shotAuto">
-      Suggested
-    </button>
   </div>
 
   <div class="modes">
@@ -874,6 +879,10 @@ button{
 
     <button class="mode" data-mode="combo">
       Combo
+    </button>
+
+    <button class="mode suggested" data-mode="auto">
+      Suggested
     </button>
 
     <button class="mode" data-mode="bank">
@@ -912,10 +921,6 @@ button{
 
       <div class="section-title">
         Ball Role
-      </div>
-
-      <div class="section-accent" id="ownershipAccent">
-        Select a ball
       </div>
 
     </div>
@@ -3131,7 +3136,7 @@ function solve(){
 function speedForShot(s){
 
   if(!s){
-    return"â";
+    return"—";
   }
 
   if(
@@ -3877,6 +3882,7 @@ function drawTable(){
     g.h
   );
 
+  drawRails(g);
   ctx.strokeStyle=
     "rgba(7,6,4,.95)";
 
@@ -3895,6 +3901,30 @@ function drawTable(){
 
   drawDiamonds(g);
   drawPockets(g);
+}
+
+/*
+  The original cloth rectangle already established the physical
+  table viewport. These four visible cushion faces are purely a
+  presentation layer around that same viewport; the solver still
+  uses the unchanged RAIL constants above.
+*/
+function drawRails(g){
+  const depth=Math.max(5,Math.min(canvas.width,canvas.height)*.035);
+  const railGradient=ctx.createLinearGradient(0,0,0,canvas.height);
+  railGradient.addColorStop(0,"#6d4a28");
+  railGradient.addColorStop(.5,"#321e11");
+  railGradient.addColorStop(1,"#4f3018");
+  ctx.fillStyle=railGradient;
+
+  ctx.fillRect(g.x-depth,g.y-depth,g.w+depth*2,depth);
+  ctx.fillRect(g.x-depth,g.y+g.h,g.w+depth*2,depth);
+  ctx.fillRect(g.x-depth,g.y,depth,g.h);
+  ctx.fillRect(g.x+g.w,g.y,depth,g.h);
+
+  ctx.strokeStyle="rgba(245,204,142,.18)";
+  ctx.lineWidth=Math.max(1,depth*.12);
+  ctx.strokeRect(g.x-depth*.35,g.y-depth*.30,g.w+depth*.70,g.h+depth*.60);
 }
 
 /* ============================================================
@@ -5519,7 +5549,7 @@ function render(){
     state.object&&
     state.object.number
       ?state.object.number
-      :"â";
+      :"—";
 
   document.getElementById(
     "shotType"
@@ -5532,14 +5562,14 @@ function render(){
             ?"Straight"
             :capitalize(s.kind)
       )
-      :"â";
+      :"—";
 
   document.getElementById(
     "shotPocket"
   ).textContent=
     s
       ?titleCasePocket(s.pocket.name)
-      :"â";
+      :"—";
 
   document.getElementById(
     "shotRail"
@@ -5548,14 +5578,14 @@ function render(){
       ?titleCaseRail(
           s.rail
         )
-      :"â";
+      :"—";
 
   document.getElementById(
     "shotSpeed"
   ).textContent=
     s
       ?speedForShot(s)
-      :"â";
+      :"—";
 
   document.getElementById(
     "instruction"
@@ -5639,89 +5669,17 @@ function titleCaseRail(rail){
     .join(" ");
 }
 
-/* ============================================================
-   POCKET UI
-   ============================================================ */
-
-document.getElementById(
-  "pocketAuto"
-).onclick=()=>{
-
-  state.selectedPocket=null;
-
-  solve();
-};
-
 function renderPockets(){
-
-  const container=
-    document.getElementById(
-      "pockets"
-    );
-
-  container.innerHTML="";
-
-  for(
-    const pocket of POCKETS
-  ){
-
-    const button=
-      document.createElement(
-        "button"
-      );
-
-    button.className=
-      "pocket";
-
-    const active=
-      state.selectedPocket&&
-      state.selectedPocket.id===
-      pocket.id;
-
-    if(active){
-      button.classList.add(
-        "selected"
-      );
-    }
-
-    button.textContent=
-      titleCasePocket(
-        pocket.name
-      );
-
-    button.onclick=()=>{
-
-      state.selectedPocket=
-        pocket;
-
-      solve();
-    };
-
-    container.appendChild(
-      button
-    );
-  }
-
-  document.getElementById(
-    "pocketAuto"
-  ).classList.toggle(
-    "active",
-    !state.selectedPocket
-  );
+  /*
+    Pocket choice is intentionally canvas-only. The six real
+    pocket mouths are rendered and hit-tested in table space.
+    With no selected mouth the solver remains in suggested mode.
+  */
 }
 
 /* ============================================================
    MODE UI
    ============================================================ */
-
-document.getElementById(
-  "shotAuto"
-).onclick=()=>{
-
-  state.mode="auto";
-
-  solve();
-};
 
 function renderModes(){
 
@@ -5730,11 +5688,9 @@ function renderModes(){
   ).forEach(
     button=>{
 
-      button.classList.toggle(
-        "active",
-        state.mode===
-        button.dataset.mode
-      );
+      const active=state.mode===button.dataset.mode;
+      button.classList.toggle("active",active);
+      button.setAttribute("aria-pressed",String(active));
 
       button.onclick=()=>{
 
@@ -5747,12 +5703,6 @@ function renderModes(){
     }
   );
 
-  document.getElementById(
-    "shotAuto"
-  ).classList.toggle(
-    "active",
-    state.mode==="auto"
-  );
 }
 
 /* ============================================================
@@ -6298,28 +6248,10 @@ function renderOwnership(){
     }
   );
 
-  const accent=
-    document.getElementById(
-      "ownershipAccent"
-    );
-
   if(!selected){
-
-    accent.textContent=
-      "Select a ball";
-
     return;
   }
 
-  const labels={
-    target:"Target Ball",
-    my:"Player's Ball",
-    opponent:"Opponent's Ball"
-  };
-
-  accent.textContent=
-    labels[selected.owner]||
-    "Select a ball";
 }
 
 /* ============================================================
@@ -6381,6 +6313,22 @@ function nearestBall(p){
   }
 
   return null;
+}
+
+function nearestPocket(p){
+  const hitRadius=Math.max(POCKET_SIZE*1.45,5.2);
+  let nearest=null;
+  let nearestDistance=Infinity;
+
+  for(const pocket of POCKETS){
+    const d=dist(p,pocket);
+    if(d<=hitRadius&&d<nearestDistance){
+      nearest=pocket;
+      nearestDistance=d;
+    }
+  }
+
+  return nearest;
 }
 
 /* ============================================================
@@ -6672,6 +6620,22 @@ canvas.addEventListener(
 
       render();
 
+      return;
+    }
+
+    const pocket=nearestPocket(p);
+    if(pocket){
+      /*
+        Tapping the active mouth returns the solver to its
+        suggested-pocket search, so there is no second HTML
+        pocket control to hunt for on small screens.
+      */
+      state.selectedPocket=
+        state.selectedPocket&&
+        state.selectedPocket.id===pocket.id
+          ?null
+          :pocket;
+      solve();
       return;
     }
 
