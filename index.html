@@ -1040,9 +1040,11 @@ const state={
 const canvas=document.getElementById("table");
 const ctx=canvas.getContext("2d");
 
+const MAX_DPR=3;
+
 let DPR=Math.min(
   window.devicePixelRatio||1,
-  2
+  MAX_DPR
 );
 
 /* ============================================================
@@ -6818,7 +6820,7 @@ window.addEventListener(
 
           DPR=Math.min(
             window.devicePixelRatio||1,
-            2
+            MAX_DPR
           );
 
           resizeCanvas();
