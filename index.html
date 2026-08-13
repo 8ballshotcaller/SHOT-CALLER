@@ -76,10 +76,10 @@ button{
 }
 
 .brand-name{
-  font-size:22px;
-  font-weight:950;
-  letter-spacing:-.06em;
-  line-height:.9;
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:.015em;
+  line-height:1;
 }
 
 .reset{
@@ -87,9 +87,13 @@ button{
   background:#141a1e;
   color:#e9edef;
   border-radius:9px;
-  padding:8px 13px;
-  font-size:12px;
+  min-width:54px;
+  min-height:30px;
+  padding:5px 12px;
+  font-size:10px;
   font-weight:850;
+  letter-spacing:.04em;
+  text-transform:uppercase;
 }
 
 .layout{
@@ -200,6 +204,20 @@ button{
     0 2px 7px rgba(217,255,63,.12);
 }
 
+.section-action:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+  background:#11171a;
+  border-color:rgba(255,255,255,.10);
+  color:#7d888e;
+  box-shadow:none;
+}
+
+.section-action:disabled:hover{
+  background:#11171a;
+  border-color:rgba(255,255,255,.10);
+}
+
 .where-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -280,17 +298,17 @@ button{
 
 .pro-instruction{
   margin-top:9px;
-  padding:11px 13px;
+  padding:9px 11px;
   border-left:3px solid var(--lime);
   background:#0b1013;
   border-radius:0 9px 9px 0;
   color:#e3e8ea;
-  font-size:12px;
-  line-height:1.35;
+  font-size:11px;
+  line-height:1.25;
   font-weight:800;
   display:flex;
   flex-direction:column;
-  gap:7px;
+  gap:5px;
 }
 
 .call-line{
@@ -301,7 +319,7 @@ button{
 
 .call-step{
   flex:0 0 auto;
-  min-width:44px;
+  min-width:48px;
   font-size:9px;
   letter-spacing:.09em;
   text-transform:uppercase;
@@ -598,6 +616,38 @@ button{
   }
 }
 </style>
+<style>
+  /* Shot Caller revision polish: keep every control in the side rail. */
+  .header { padding: 0 2px; }
+  .brand { gap: 12px; }
+  .brand-name {
+    letter-spacing: .09em;
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .brand-name::first-letter { color: inherit; }
+  .reset, #deleteBall {
+    min-width: 74px;
+    min-height: 34px;
+    padding: 7px 14px;
+    font-size: 10px;
+    font-weight: 950;
+    letter-spacing: .08em;
+  }
+  .ownership-help { display: grid; gap: 4px; }
+  .ownership-section.eight-ball-auto .ownership-label,
+  .ownership-section.eight-ball-auto .ownership-buttons {
+    display: none;
+  }
+  .ownership-section.eight-ball-auto .ownership-help {
+    margin-top: 8px;
+  }
+  @media (max-width: 520px) {
+    .brand-name { font-size: 19px; letter-spacing: .075em; }
+    .reset, #deleteBall { min-width: 74px; min-height: 34px; }
+  }
+</style>
 </head>
 
 <body>
@@ -643,7 +693,7 @@ button{
     <div class="ball-panel">
       <div class="ball-head">
         <div class="ball-label" id="cueViewLabel">
-          Cue Ball · Where To Hit
+          Cue Ball
         </div>
       </div>
 
@@ -782,6 +832,10 @@ button{
     <div class="section-accent" id="rackAccent">
       Select
     </div>
+
+    <button class="section-action" id="deleteBall" disabled>
+      Remove
+    </button>
   </div>
 
   <div class="rack" id="rack"></div>
@@ -833,7 +887,8 @@ button{
     </div>
 
     <div class="ownership-help">
-      A player's ball can be used to hit a combo. Opponent's balls are blockers only.
+      <div>A player's ball can be used to hit a combo.</div>
+      <div>Opponent's balls are blockers only.</div>
     </div>
 
   </div>
@@ -1249,19 +1304,18 @@ function pocketTargets(pocket){
     pocket.type==="side"
   ){
 
-    [-1.15,-.65,0,.65,1.15]
+    /*
+      Use the actual pocket opening as the aim reference. These
+      small samples model the usable mouth without moving the
+      target onto an arbitrary point on the cloth.
+    */
+    [-1.20,-.60,0,.60,1.20]
       .forEach(offset=>{
 
         targets.push(
           V(
-            clamp(
-              pocket.x+offset,
-              BALL_RADIUS,
-              TABLE_W-BALL_RADIUS
-            ),
-            pocket.y===0
-              ?RAIL.top
-              :RAIL.bottom
+            pocket.x+offset,
+            pocket.y
           )
         );
 
@@ -1280,20 +1334,15 @@ function pocketTargets(pocket){
         :-1;
 
     [
-      [.35,.35],
-      [.60,.60],
-      [.85,.85]
-    ].forEach(([x,y])=>{
+      0,
+      .70,
+      1.40
+    ].forEach(inset=>{
 
       targets.push(
         V(
-          pocket.x+
-            sx*x*
-            POCKET_SIZE*.48,
-
-          pocket.y+
-            sy*y*
-            POCKET_SIZE*.48
+          pocket.x+sx*inset,
+          pocket.y+sy*inset
         )
       );
 
@@ -1547,6 +1596,15 @@ function directCandidate(
       target
     );
 
+  const objectContactPoint=
+    sub(
+      object,
+      mul(
+        objectDirection,
+        BALL_RADIUS
+      )
+    );
+
   const isStraight=
     cutDegrees<=12;
 
@@ -1585,6 +1643,7 @@ function directCandidate(
     rail:null,
 
     ghost,
+    objectContactPoint,
 
     bankPoint:null,
 
@@ -1732,6 +1791,28 @@ function combinationCandidate(
 
   const firstToSecond=
     norm(firstToSecondVector);
+
+  /*
+    Keep physical surface contacts separate from the center-to-
+    center ghost positions drawn on the table.
+  */
+  const firstBallContactPoint=
+    sub(
+      firstBall,
+      mul(
+        firstToSecond,
+        BALL_RADIUS
+      )
+    );
+
+  const targetBallContactPoint=
+    sub(
+      secondBall,
+      mul(
+        secondToPocket,
+        BALL_RADIUS
+      )
+    );
 
   /*
     Cue-ball ghost position for contacting the player's ball.
@@ -1913,9 +1994,11 @@ function combinationCandidate(
     targetBall:secondBall,
 
     firstContactPoint:cueGhost,
+    firstBallContactPoint,
 
     secondContactPoint:
       secondBallContactPoint,
+    targetBallContactPoint,
 
     contactBall:firstBall,
 
@@ -2224,6 +2307,15 @@ function bankCandidate(
       )
     );
 
+  const objectContactPoint=
+    sub(
+      object,
+      mul(
+        objectDirection,
+        BALL_RADIUS
+      )
+    );
+
   const incoming=
     norm(
       sub(
@@ -2294,6 +2386,7 @@ function bankCandidate(
     rail,
 
     ghost,
+    objectContactPoint,
     bankPoint,
 
     cueDirection,
@@ -2437,6 +2530,15 @@ function kickCandidate(
       pocket
     );
 
+  const objectContactPoint=
+    sub(
+      object,
+      mul(
+        objectDirection,
+        BALL_RADIUS
+      )
+    );
+
   return{
     kind:"kick",
 
@@ -2445,6 +2547,7 @@ function kickCandidate(
     rail,
 
     ghost,
+    objectContactPoint,
 
     bankPoint:kickPoint,
 
@@ -2652,6 +2755,46 @@ function kickCandidatesForPocket(
    ============================================================ */
 
 function solve(){
+
+  /*
+    Deleting the last target is a valid editing state. Keep the
+    solver untouched until a real target exists instead of
+    attempting geometry with a missing object ball.
+  */
+  if(
+    !state.object||
+    !state.object.number||
+    !state.tableBalls.some(
+      ball=>
+        ball.owner==="target"&&
+        ball.number===
+        state.object.number
+    )
+  ){
+    state.solution=null;
+    state.contactBall=null;
+    render();
+    return;
+  }
+
+  /*
+    In standard 8-ball, the 8 is not a legal target while any
+    player's own balls remain on the table. Stop all shot types
+    here so auto mode cannot suggest an automatic-loss shot.
+  */
+  if(
+    state.object.number===8&&
+    state.tableBalls.some(
+      ball=>
+        ball.number!==8&&
+        ball.owner==="my"
+    )
+  ){
+    state.solution=null;
+    state.contactBall=null;
+    render();
+    return;
+  }
 
   const pockets=
     state.selectedPocket
@@ -3090,6 +3233,7 @@ function objectContactDirection(s){
 
     return contactDirection(
       s.combinationBall,
+      s.firstBallContactPoint||
       s.firstContactPoint
     );
   }
@@ -3102,6 +3246,7 @@ function objectContactDirection(s){
 
   return contactDirection(
     state.object,
+    s.objectContactPoint||
     s.ghost
   );
 }
@@ -3117,6 +3262,7 @@ function targetContactDirection(s){
 
   return contactDirection(
     s.targetBall,
+    s.targetBallContactPoint||
     s.secondContactPoint
   );
 }
@@ -3283,7 +3429,7 @@ function pocketShortName(
 /*
   Short, glanceable language. In a real game there is no time
   to read a paragraph, so the call is delivered as three short
-  lines: cue ball, contact, result.
+  lines: cue ball, contact, pocket.
 */
 
 function shortSpinText(vector){
@@ -3384,6 +3530,21 @@ function instructionHTML(s){
   if(!s){
 
     if(
+      state.object&&
+      state.object.number===8&&
+      state.tableBalls.some(
+        ball=>
+          ball.number!==8&&
+          ball.owner==="my"
+      )
+    ){
+      return callLine(
+        "8-Ball",
+        "Clear your player's balls before shooting the 8-ball."
+      );
+    }
+
+    if(
       state.mode==="combo"
     ){
 
@@ -3443,7 +3604,7 @@ function instructionHTML(s){
         `<span class="neutral-emphasis">${objectFace}</span>`
       ),
       callLine(
-        "Result",
+        "Line",
         `${ballMarkup} into the ${second} on its `+
         `<span class="neutral-emphasis">${shortFaceText(call.targetVector)}</span>`+
         ` &rarr; ${pocketMarkup}`
@@ -3468,7 +3629,7 @@ function instructionHTML(s){
         `<span class="neutral-emphasis">${objectFace}</span>`
       ),
       callLine(
-        "Result",
+        "Line",
         `${ballMarkup} &rarr; ${pocketMarkup}`
       )
     );
@@ -3490,7 +3651,7 @@ function instructionHTML(s){
         `<span class="neutral-emphasis">${objectFace}</span>`
       ),
       callLine(
-        "Result",
+        "Line",
         `${ballMarkup} off the `+
         `<span class="highlight">${railText(s.rail)}</span>`+
         ` &rarr; ${pocketMarkup}`
@@ -3512,7 +3673,7 @@ function instructionHTML(s){
           `<span class="neutral-emphasis">${objectFace}</span>`
     ),
     callLine(
-      "Result",
+      "Line",
       `${ballMarkup} &rarr; ${pocketMarkup}`
     )
   );
@@ -4952,7 +5113,8 @@ function drawContactMarker(
   c,
   ball,
   direction,
-  distanceFactor=.78
+  distanceFactor=.92,
+  showGuide=false
 ){
 
   if(
@@ -4986,6 +5148,40 @@ function drawContactMarker(
     ball.y+
     direction.y*
     markerDistance;
+
+  if(showGuide){
+
+    c.beginPath();
+
+    c.moveTo(
+      ball.x,
+      ball.y
+    );
+
+    c.lineTo(
+      x,
+      y
+    );
+
+    c.strokeStyle=
+      "rgba(255,70,82,.58)";
+
+    c.lineWidth=
+      Math.max(
+        1.2,
+        ball.r*.035
+      );
+
+    c.setLineDash(
+      [
+        Math.max(2,ball.r*.08),
+        Math.max(3,ball.r*.12)
+      ]
+    );
+
+    c.stroke();
+    c.setLineDash([]);
+  }
 
   c.beginPath();
 
@@ -5201,17 +5397,8 @@ function drawObjectView(c){
     c,
     ball,
     direction,
-    s.kind==="cut"
-      ?(
-        .42+
-        .54*
-        clamp(
-          (s.cutDegrees-12)/66,
-          0,
-          1
-        )
-      )
-      :.78
+    .92,
+    true
   );
 }
 
@@ -5252,7 +5439,9 @@ function drawTargetView(c){
   drawContactMarker(
     c,
     ball,
-    direction
+    direction,
+    .92,
+    true
   );
 }
 
@@ -5323,7 +5512,10 @@ function render(){
   document.getElementById(
     "whereBall"
   ).textContent=
-    state.object.number;
+    state.object&&
+    state.object.number
+      ?state.object.number
+      :"—";
 
   document.getElementById(
     "shotType"
@@ -5384,15 +5576,15 @@ function render(){
   ).textContent=
     s&&
     s.kind==="combination"
-      ?`${s.combinationBall.number} · Where The Cue Ball Contacts`
-      :`${state.object.number} · Where The Cue Ball Contacts`;
+      ?"Combo Ball"
+      :"Object Ball";
 
   document.getElementById(
     "targetViewLabel"
   ).textContent=
     s&&
     s.kind==="combination"
-      ?`${s.targetBall.number} · Where The ${s.combinationBall.number} Contacts`
+      ?"Target Ball"
       :"Target Ball";
 
   renderPockets();
@@ -5712,6 +5904,14 @@ function renderRack(){
     state.selectedRackBall
       ?`Ball ${state.selectedRackBall} Selected`
       :"Select";
+
+  const deleteButton=
+    document.getElementById(
+      "deleteBall"
+    );
+
+  deleteButton.disabled=
+    !getSelectedTableBall();
 }
 
 /* ============================================================
@@ -5790,6 +5990,8 @@ function getSelectedTableBall(){
 
 function setBallOwner(owner){
 
+  if(state.selectedRackBall===8){ owner="target"; }
+
   const number=
     state.selectedRackBall;
 
@@ -5822,11 +6024,13 @@ function setBallOwner(owner){
       x:state.object.x,
       y:state.object.y,
       owner:
-        owner==="target"
+        number===8
           ?"target"
-          :hasTarget
-            ?owner
-            :"target",
+          :owner==="target"
+            ?"target"
+            :hasTarget
+              ?owner
+              :"target",
       role:
         owner==="target"||
         !hasTarget
@@ -5963,6 +6167,85 @@ function setBallOwner(owner){
   solve();
 }
 
+function deleteSelectedBall(){
+
+  const selected=
+    getSelectedTableBall();
+
+  if(!selected){
+    return;
+  }
+
+  const wasTarget=
+    selected.owner==="target"||
+    state.object&&
+    state.object.number===
+    selected.number;
+
+  state.tableBalls=
+    state.tableBalls.filter(
+      ball=>
+        ball.number!==
+        selected.number
+    );
+
+  if(wasTarget){
+
+    const replacement=
+      state.tableBalls.find(
+        ball=>
+          ball.owner==="target"
+      )||
+      state.tableBalls[0]||
+      null;
+
+    if(replacement){
+
+      state.tableBalls.forEach(
+        ball=>{
+          if(ball.number===replacement.number){
+            ball.owner="target";
+            ball.role="object";
+          }else if(ball.owner==="target"){
+            ball.owner="my";
+            ball.role="blocker";
+          }
+        }
+      );
+
+      state.object={
+        x:replacement.x,
+        y:replacement.y,
+        number:replacement.number
+      };
+
+      state.selectedRackBall=
+        replacement.number;
+
+    }else{
+
+      state.object={
+        x:65,
+        y:20,
+        number:null
+      };
+
+      state.selectedRackBall=null;
+    }
+
+  }else{
+    state.selectedRackBall=null;
+  }
+
+  state.selectedBall=null;
+  state.contactBall=null;
+  solve();
+}
+
+document.getElementById(
+  "deleteBall"
+).onclick=deleteSelectedBall;
+
 document.querySelectorAll(
   ".ownership-button"
 ).forEach(
@@ -5988,6 +6271,8 @@ function renderOwnership(){
 
   const selected=
     getSelectedTableBall();
+
+  document.querySelector(".ownership-section")?.classList.toggle("eight-ball-auto", selected?.number===8);
 
   const buttons=
     document.querySelectorAll(
@@ -6246,14 +6531,37 @@ function moveSelectedBall(p){
       x:next.x,
       y:next.y,
       owner:
-        hasTarget
-          ?"my"
-          :"target",
+        number===8
+          ?"target"
+          :hasTarget
+            ?"my"
+            :"target",
       role:
-        hasTarget
-          ?"blocker"
-          :"object"
+        number===8
+          ?"object"
+          :hasTarget
+            ?"blocker"
+            :"object"
     };
+
+    /*
+      The 8-ball is always treated as the final target. Keep the
+      target role unique when it is added or moved into play.
+    */
+    if(
+      newBall.owner==="target"
+    ){
+      state.tableBalls.forEach(
+        ball=>{
+          if(
+            ball.owner==="target"
+          ){
+            ball.owner="my";
+            ball.role="blocker";
+          }
+        }
+      );
+    }
 
     state.tableBalls.push(
       newBall
