@@ -31,6 +31,7 @@ html,
 body{
   margin:0;
   min-height:100%;
+  overflow-x:hidden;
   background:
     radial-gradient(
       circle at 50% -10%,
@@ -690,7 +691,7 @@ button{
       .brand-name {
         display: flex;
         align-items: baseline;
-        gap: 5px;
+         gap: 0;
         font-family: Georgia, "Times New Roman", serif;
         font-size: 24px;
         font-weight: 700;
@@ -701,6 +702,39 @@ button{
         color: var(--lime);
         font-style: italic;
       }
+      .brand-name .wordmark-part,
+      .brand-name .wordmark-caller {
+        color: inherit;
+        font-style: normal;
+      }
+      .brand-name .wordmark-caller {
+        margin-left: 8px;
+        color: var(--lime);
+        letter-spacing: .015em;
+      }
+      .wordmark-ball {
+        width: 1.08em;
+        height: 1.08em;
+        margin: 0 .08em;
+        display: inline-grid;
+        place-items: center;
+        align-self: center;
+        border: 1px solid rgba(245,247,248,.75);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 31% 25%, #66757b 0 5%, #20282c 26%, #101416 72%, #050708 100%);
+        color: #f5f7f8;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+        font-size: .54em;
+        font-style: normal;
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: 0;
+        box-shadow:
+          inset -2px -3px 4px rgba(0,0,0,.42),
+          0 0 0 2px rgba(217,255,63,.12);
+        transform: translateY(-.02em);
+      }
       .pro-instruction {
         border-left-width: 4px;
         padding: 10px 12px 10px 13px;
@@ -710,7 +744,17 @@ button{
       .call-step { color: var(--lime); }
       @media (max-width: 520px) {
         .brand-mark { width: 27px; height: 27px; }
-        .brand-name { font-size: 20px; gap: 4px; }
+        .brand-name { font-size: clamp(16px, 5.1vw, 20px); gap: 0; }
+        .brand-name .wordmark-caller { margin-left: 6px; }
+      }
+      @media (max-width: 620px) {
+        .table-stage {
+          width: 100%;
+          aspect-ratio: 2 / 1;
+        }
+        #table {
+          max-width: 100%;
+        }
       }
     </style>
   </head>
@@ -721,8 +765,9 @@ button{
 
 <header class="header">
   <div class="brand">
-    <div class="brand-mark" aria-hidden="true"><span class="mark-eight">8</span><span class="mark-ring"></span></div>
-     <div class="brand-name"><span>Shot</span><span>Caller</span></div>
+    <div class="brand-name" aria-label="Shot Caller">
+      <span class="wordmark-part">SH</span><span class="wordmark-ball" role="img" aria-label="8-ball">8</span><span class="wordmark-part">T</span><span class="wordmark-caller">CALLER</span>
+    </div>
   </div>
 
   <button class="reset" id="reset">
@@ -3684,7 +3729,7 @@ function geometry(){
     All drawing and pointer conversion use this same expanded geometry,
     so the felt, pockets, balls and shot routes remain one coordinate system.
   */
-  const zoom=w<620?1.06:1.10;
+  const zoom=w<620?1:1.10;
   return{
     x:(w-baseW*zoom)/2,
     y:(h-baseH*zoom)/2,
