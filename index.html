@@ -162,6 +162,15 @@ button{
   letter-spacing:-.02em;
 }
 
+.subsection-title{
+  margin-top:12px;
+  margin-bottom:6px;
+  color:#dce3e6;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:-.01em;
+}
+
 .section-accent{
   color:var(--lime);
   font-size:10px;
@@ -773,7 +782,7 @@ button{
 
   <div class="section-head">
     <div class="section-title">
-      TIP
+      The Call
     </div>
 
     <div class="section-accent">
@@ -853,6 +862,10 @@ button{
       </div>
     </div>
 
+  </div>
+
+  <div class="subsection-title">
+    Shot Breakdown
   </div>
 
   <div class="pro-instruction" id="instruction">
@@ -986,6 +999,17 @@ const TABLE_H=50;
 
 const BALL_DIAMETER=2.25;
 const BALL_RADIUS=BALL_DIAMETER/2;
+
+/*
+  The playing surface is 100 x 50 inches. A real pool table's
+  cushion/rail assembly adds roughly two ball diameters to each
+  overall dimension, so the visible table is fitted as one
+  proportioned object rather than stretching the felt to the
+  canvas edges.
+*/
+const TABLE_RAIL_DEPTH=4.5;
+const OUTER_TABLE_W=TABLE_W+TABLE_RAIL_DEPTH*2;
+const OUTER_TABLE_H=TABLE_H+TABLE_RAIL_DEPTH*2;
 
 const RAIL={
   top:BALL_RADIUS,
@@ -1287,6 +1311,67 @@ function clearToBall(
     target,
     ignored
   );
+}
+
+/*
+  A candidate is invalid if the cue ball's planned travel reaches
+  a pocket before the intended contact point. This is deliberately
+  separate from scratchAnalysis(), which remains a player-facing
+  warning for otherwise valid shots whose execution can go wrong.
+*/
+function pathCrossesPocket(
+  start,
+  end,
+  ignoreNumbers=[]
+){
+  const travel=sub(end,start);
+  const travelDistance=len(travel);
+
+  if(travelDistance<.01){
+    return false;
+  }
+
+  const unit=norm(travel);
+
+  for(const pocket of POCKETS){
+    const toPocket=sub(pocket,start);
+    const along=dot(toPocket,unit);
+
+    if(
+      along<=BALL_RADIUS||
+      along>=travelDistance-BALL_RADIUS
+    ){
+      continue;
+    }
+
+    const closest=add(
+      start,
+      mul(unit,along)
+    );
+
+    const acceptance=
+      pocket.type==="side"
+        ?pocket.opening*.62
+        :pocket.opening*.76;
+
+    if(
+      dist(closest,pocket)>acceptance
+    ){
+      continue;
+    }
+
+    if(
+      pathClear(
+        start,
+        pocket,
+        ignoreNumbers
+      )
+    ){
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /* ============================================================
@@ -1628,6 +1713,16 @@ function directCandidate(
 
   if(
     !clearToBall(
+      cue,
+      ghost,
+      [object.number]
+    )
+  ){
+    return null;
+  }
+
+  if(
+    pathCrossesPocket(
       cue,
       ghost,
       [object.number]
@@ -2375,6 +2470,16 @@ function bankCandidate(
     return null;
   }
 
+  if(
+    pathCrossesPocket(
+      cue,
+      ghost,
+      [object.number]
+    )
+  ){
+    return null;
+  }
+
   const cueDirection=
     norm(
       sub(
@@ -2569,7 +2674,27 @@ function kickCandidate(
   }
 
   if(
+    pathCrossesPocket(
+      cue,
+      kickPoint,
+      [object.number]
+    )
+  ){
+    return null;
+  }
+
+  if(
     !clearToBall(
+      kickPoint,
+      ghost,
+      [object.number]
+    )
+  ){
+    return null;
+  }
+
+  if(
+    pathCrossesPocket(
       kickPoint,
       ghost,
       [object.number]
@@ -3773,10 +3898,23 @@ function shotCall(s){
   const tip=
     tipCall(s);
 
+  /*
+    The cue-ball panel is the source of truth for the TIP text.
+    Combination shots rotate the first-contact direction into the
+    same player-facing view used by drawCueView; every other shot
+    uses the calculated tip vector directly.
+  */
+  const tipVector=
+    cueTipViewVector(s);
+
   return{
-    tip:tip,
-    tipVector:tip.vector,
-    tipText:tip.text,
+    tip:{
+      ...tip,
+      vector:tipVector,
+      text:shortSpinText(tipVector)
+    },
+    tipVector:tipVector,
+    tipText:shortSpinText(tipVector),
     objectVector:objectContactDirection(s),
     objectText:faceText(
       objectContactDirection(s)
@@ -3786,6 +3924,19 @@ function shotCall(s){
       targetContactDirection(s)
     )
   };
+}
+
+function cueTipViewVector(s){
+  if(!s){
+    return V(0,0);
+  }
+
+  return s.kind==="combination"
+    ?playerViewDirection(
+      s,
+      cueContactDirection(s)
+    )
+    :tipCall(s).vector;
 }
 
 /* ============================================================
@@ -3820,16 +3971,16 @@ function shortSpinText(vector){
   }
 
   const vertical=
-    vector.y<=-.18
+    vector.y<-.04
       ?"Top spin"
-      :vector.y>=.18
-        ?"Draw"
+      :vector.y>.04
+        ?"Bottom spin"
         :"";
 
   const horizontal=
-    vector.x<=-.18
+    vector.x<-.04
       ?"Left English"
-      :vector.x>=.18
+      :vector.x>.04
         ?"Right English"
         :"";
 
@@ -3842,7 +3993,7 @@ function shortSpinText(vector){
   }
 
   if(horizontal){
-    return"Center height, "+horizontal;
+    return horizontal;
   }
 
   return"Center ball, no English";
@@ -3916,20 +4067,39 @@ function scratchNotice(s){
   }
 
   const route=s.scratch.route;
-  const routeText=
-    route&&
-    route.type==="rail"
-      ?`after a ${railText(route.rail)} rebound`
-      :"on the current cue-ball path";
-
   const highRisk=
     (s.scratch.risk||0)>=.84;
 
+  const angleRisk=
+    (s.cutDegrees||0)>=45;
+
+  let warning;
+
+  if(
+    route&&
+    route.type==="rail"
+  ){
+    warning=
+      highRisk
+        ?"Careful — this rebound line could result in a scratch."
+        :"Careful — too much speed after the rebound could result in a scratch.";
+  }else if(
+    highRisk
+  ){
+    warning=
+      angleRisk
+        ?"Careful — a wider angle could result in a scratch."
+        :"Careful — this line could result in a scratch.";
+  }else{
+    warning=
+      angleRisk
+        ?"Careful — a wider angle could result in a scratch."
+        :"Careful — too much speed could result in a scratch.";
+  }
+
   return callLine(
     "Scratch",
-    highRisk
-      ?`The cue ball is tracking ${routeText} toward a scratch. Choose another line or another shot.`
-      :`The cue ball is tracking ${routeText} toward a scratch. Use the softer speed shown above.`,
+    warning,
     "scratch-warning"
   );
 }
@@ -3971,7 +4141,7 @@ function instructionHTML(s){
   if(s.kind==="combination"){
     return withScratch(
       callLine(
-        "Tip",
+        "TIP",
         `${spinMarkup}. Send the ${ballMarkup} into ${s.targetBall.number}.`
       ),
       s
@@ -3981,7 +4151,7 @@ function instructionHTML(s){
   if(s.kind==="kick"){
     return withScratch(
       callLine(
-        "Tip",
+        "TIP",
         `${spinMarkup}. Take the ${railText(s.rail)} first, then contact the ${ballMarkup}.`
       ),
       s
@@ -3991,7 +4161,7 @@ function instructionHTML(s){
   if(s.kind==="bank"){
     return withScratch(
       callLine(
-        "Tip",
+        "TIP",
         `${spinMarkup}. Hit the ${ballMarkup} ${objectFace}, using the ${railText(s.rail)}.`
       ),
       s
@@ -4000,7 +4170,7 @@ function instructionHTML(s){
 
   return withScratch(
     callLine(
-      "Tip",
+      "TIP",
       s.kind==="straight"
         ?`${spinMarkup}. Hit the ${ballMarkup} center.`
         :`${spinMarkup}. Contact the ${ballMarkup} ${objectFace}.`
@@ -4033,27 +4203,35 @@ function geometry(){
   const w=canvas.width;
   const h=canvas.height;
   /*
-    Fit the complete physical table inside the backing canvas. The
-    previous revision applied a viewport zoom after calculating the
-    inset, which made the two side rails extend beyond the canvas on
-    narrow screens. One fitted scale is now shared by every visual
-    element and the pointer transform.
+    Fit the complete physical table, including its rails, inside
+    the backing canvas. The solver's coordinates still describe
+    the 100 x 50 inch playing surface; the outer bounds are used
+    only for the visible table geometry.
   */
-  const inset=Math.min(w,h)*.085;
+  const inset=Math.min(w,h)*.045;
   const availableW=Math.max(1,w-inset*2);
   const availableH=Math.max(1,h-inset*2);
   const scale=Math.min(
-    availableW/TABLE_W,
-    availableH/TABLE_H
+    availableW/OUTER_TABLE_W,
+    availableH/OUTER_TABLE_H
   );
+  const outerW=OUTER_TABLE_W*scale;
+  const outerH=OUTER_TABLE_H*scale;
+  const outerX=(w-outerW)/2;
+  const outerY=(h-outerH)/2;
   const tableW=TABLE_W*scale;
   const tableH=TABLE_H*scale;
   return{
-    x:(w-tableW)/2,
-    y:(h-tableH)/2,
+    x:outerX+TABLE_RAIL_DEPTH*scale,
+    y:outerY+TABLE_RAIL_DEPTH*scale,
     w:tableW,
     h:tableH,
-    scale
+    scale,
+    outerX,
+    outerY,
+    outerW,
+    outerH,
+    railDepth:TABLE_RAIL_DEPTH*scale
   };
 }
 
@@ -4194,11 +4372,11 @@ function drawTable(){
 
   roundedRect(
     ctx,
-    0,
-    0,
-    w,
-    h,
-    Math.min(w,h)*.035
+    g.outerX,
+    g.outerY,
+    g.outerW,
+    g.outerH,
+    Math.min(g.outerW,g.outerH)*.035
   );
 
   ctx.fill();
@@ -4257,18 +4435,15 @@ function drawTable(){
 }
 
 /*
-  The original cloth rectangle already established the physical
-  table viewport. These four visible cushion faces are purely a
-  presentation layer around that same viewport; the solver still
-  uses the unchanged RAIL constants above.
+  The visible cushion faces are the space between the fitted outer
+  table and the playing surface. All four faces use the same
+  physical depth, so the brown side rails cannot become oversized
+  just because the canvas is wider than the table's true outline.
+  The solver still uses the unchanged RAIL constants above.
 */
 function drawRails(g){
-  const depth=Math.min(
-    g.x,
-    g.y,
-    Math.max(5,Math.min(canvas.width,canvas.height)*.035)
-  );
-  const sideDepth=depth*.8;
+  const depth=g.railDepth;
+  const sideDepth=depth;
   const railGradient=ctx.createLinearGradient(0,0,0,canvas.height);
   railGradient.addColorStop(0,"#6d4a28");
   railGradient.addColorStop(.5,"#321e11");
@@ -5806,12 +5981,7 @@ function drawCueView(c){
     Normal shots continue to use the spin/tip call.
   */
   const direction=
-    s.kind==="combination"
-      ?playerViewDirection(
-        s,
-        cueContactDirection(s)
-      )
-      :shotCall(s).tipVector;
+    cueTipViewVector(s);
 
   if(
     len(direction)<.02
