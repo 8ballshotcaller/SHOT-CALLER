@@ -112,12 +112,17 @@ button{
 .table-card{
   padding:9px;
   min-width:0;
+  overflow:hidden;
 }
 
 .table-stage{
   width:100%;
   aspect-ratio:2/1;
   position:relative;
+  max-width:100%;
+  margin:0 auto;
+  overflow:hidden;
+  border-radius:10px;
 }
 
 #table{
@@ -329,6 +334,14 @@ button{
 
 .call-text{
   flex:1;
+}
+
+.call-line.scratch-warning{
+  color:#ffd4d7;
+}
+
+.call-line.scratch-warning .call-step{
+  color:var(--red);
 }
 
 .pro-instruction .highlight{
@@ -702,29 +715,17 @@ button{
          font-weight: 850;
          letter-spacing: .015em;
         text-transform: none;
+         line-height: 1;
       }
+       .brand-name > span {
+         display: inline-flex;
+         align-items: center;
+         line-height: 1;
+       }
        .brand-name span:last-child {
          color: inherit;
          font-style: normal;
        }
-       .inline-eight {
-         width: .78em;
-         height: .78em;
-         margin: 0 .06em;
-         display: inline-grid;
-         place-items: center;
-         vertical-align: .02em;
-         border: 1px solid rgba(217,255,63,.75);
-         border-radius: 50%;
-         background: radial-gradient(circle at 32% 25%, #fafcfc 0 10%, #ccd3d5 22%, #47565c 72%, #121719 100%);
-         color: #f5f7f8;
-         font-family: inherit;
-         font-size: .54em;
-         font-weight: 900;
-         line-height: 1;
-         text-align: center;
-         box-shadow: inset -1px -2px 2px rgba(0,0,0,.35);
-      }
       .pro-instruction {
         border-left-width: 4px;
         padding: 10px 12px 10px 13px;
@@ -735,6 +736,8 @@ button{
       @media (max-width: 520px) {
         .brand-mark { width: 27px; height: 27px; }
       .brand-name { font-size: 20px; gap: 4px; }
+      .table-card { padding: 6px; }
+      .table-stage { width: 100%; }
       }
     </style>
   </head>
@@ -746,7 +749,7 @@ button{
 <header class="header">
   <div class="brand">
     <div class="brand-mark" aria-hidden="true"><span class="mark-eight">8</span><span class="mark-ring"></span></div>
-      <div class="brand-name"><span>Sh<span class="inline-eight">8</span>t</span><span>Caller</span></div>
+      <div class="brand-name"><span>Shot</span><span>Caller</span></div>
   </div>
 
   <button class="reset" id="reset">
@@ -770,7 +773,7 @@ button{
 
   <div class="section-head">
     <div class="section-title">
-      The Call
+      TIP
     </div>
 
     <div class="section-accent">
@@ -2824,6 +2827,283 @@ function kickCandidatesForPocket(
 }
 
 /* ============================================================
+   SCRATCH TRAJECTORY
+
+   Scratch detection uses the same cue approach and object-ball
+   direction already used by the candidate. It traces the cue
+   ball's post-contact path with a tangent component for stun and
+   a forward-roll component for natural follow, then checks all
+   six pocket mouths directly and after one rail.
+   ============================================================ */
+
+function cross2(a,b){
+  return a.x*b.y-a.y*b.x;
+}
+
+function reflectedDirection(direction,rail){
+  if(rail==="top"||rail==="bottom"){
+    return V(direction.x,-direction.y);
+  }
+
+  return V(-direction.x,direction.y);
+}
+
+function rayPocketRoute(
+  origin,
+  direction,
+  pocket,
+  ignoreNumbers
+){
+  const unit=norm(direction);
+  const toPocket=sub(pocket,origin);
+  const along=dot(toPocket,unit);
+
+  if(along<=BALL_RADIUS){
+    return null;
+  }
+
+  const closest=add(
+    origin,
+    mul(unit,along)
+  );
+  const miss=dist(
+    closest,
+    pocket
+  );
+  const acceptance=
+    pocket.type==="side"
+      ?pocket.opening*.62
+      :pocket.opening*.76;
+
+  if(miss>acceptance){
+    return null;
+  }
+
+  if(!pathClear(origin,pocket,ignoreNumbers)){
+    return null;
+  }
+
+  return{
+    type:"direct",
+    pocket,
+    points:[origin,pocket],
+    distance:dist(origin,pocket)
+  };
+}
+
+function scratchRouteForPocket(
+  origin,
+  direction,
+  pocket,
+  ignoreNumbers
+){
+  const routes=[];
+  const direct=rayPocketRoute(
+    origin,
+    direction,
+    pocket,
+    ignoreNumbers
+  );
+
+  if(direct){
+    routes.push(direct);
+  }
+
+  const far=add(
+    origin,
+    mul(norm(direction),200)
+  );
+
+  [
+    "top",
+    "bottom",
+    "left",
+    "right"
+  ].forEach(rail=>{
+    const hit=railIntersection(
+      origin,
+      far,
+      rail
+    );
+
+    if(
+      !hit||
+      !usableRailPoint(hit,rail)||
+      !pathClear(origin,hit,ignoreNumbers)
+    ){
+      return;
+    }
+
+    const bounced=reflectedDirection(
+      norm(direction),
+      rail
+    );
+    const postRail=rayPocketRoute(
+      hit,
+      bounced,
+      pocket,
+      ignoreNumbers
+    );
+
+    if(!postRail||!pathClear(hit,pocket,ignoreNumbers)){
+      return;
+    }
+
+    routes.push({
+      type:"rail",
+      rail,
+      pocket,
+      points:[origin,hit,pocket],
+      distance:
+        dist(origin,hit)+dist(hit,pocket)
+    });
+  });
+
+  routes.sort(
+    (a,b)=>
+      a.distance-b.distance
+  );
+
+  return routes[0]||null;
+}
+
+function scratchAnalysis(s){
+  if(
+    !s||
+    !s.objectDirection||
+    !s.cueDirection
+  ){
+    return{
+      risk:0,
+      penalty:0,
+      pocket:null,
+      route:null,
+      direction:null
+    };
+  }
+
+  const incoming=norm(s.cueDirection);
+  const outgoing=norm(s.objectDirection);
+  const cut=clamp(
+    s.cutDegrees||0,
+    0,
+    90
+  );
+
+  if(
+    len(incoming)<.01||
+    len(outgoing)<.01
+  ){
+    return{
+      risk:0,
+      penalty:0,
+      pocket:null,
+      route:null,
+      direction:null
+    };
+  }
+
+  /*
+    A near-straight rolling shot can continue toward the pocket.
+    On a cut, the tangent side is selected from the signed
+    incoming/outgoing turn instead of assuming one fixed side.
+  */
+  let scratchDirection;
+
+  if(cut<8){
+    scratchDirection=outgoing;
+  }else{
+    const tangent=
+      cross2(incoming,outgoing)>=0
+        ?V(-outgoing.y,outgoing.x)
+        :V(outgoing.y,-outgoing.x);
+    const forwardWeight=clamp(
+      .14+cut/240,
+      .14,
+      .38
+    );
+
+    scratchDirection=norm(
+      add(
+        mul(tangent,1-forwardWeight),
+        mul(outgoing,forwardWeight)
+      )
+    );
+  }
+
+  const contact=
+    s.kind==="combination"
+      ?s.combinationBall
+      :state.object;
+  const origin=add(
+    contact,
+    mul(scratchDirection,BALL_RADIUS*1.08)
+  );
+  const ignoreNumbers=[
+    state.object.number
+  ];
+
+  if(
+    s.kind==="combination"&&
+    s.combinationBall
+  ){
+    ignoreNumbers.push(
+      s.combinationBall.number
+    );
+  }
+
+  const routes=POCKETS.map(
+    pocket=>
+      scratchRouteForPocket(
+        origin,
+        scratchDirection,
+        pocket,
+        ignoreNumbers
+      )
+  ).filter(Boolean);
+
+  routes.sort(
+    (a,b)=>
+      a.distance-b.distance
+  );
+
+  const route=routes[0]||null;
+
+  if(!route){
+    return{
+      risk:0,
+      penalty:0,
+      pocket:null,
+      route:null,
+      direction:scratchDirection
+    };
+  }
+
+  const distanceFactor=clamp(
+    1-route.distance/90,
+    .18,
+    1
+  );
+  const risk=clamp(
+    .58+
+      distanceFactor*.28+
+      (route.type==="rail"?.08:0),
+    .58,
+    .98
+  );
+
+  return{
+    risk,
+    penalty:
+      34+
+      risk*34,
+    pocket:route.pocket,
+    route,
+    direction:scratchDirection
+  };
+}
+
+/* ============================================================
    SOLVER
    ============================================================ */
 
@@ -2933,6 +3213,24 @@ function solve(){
       );
     }
   }
+
+  /*
+    Score scratch risk before sorting candidates so a shot that
+    pockets the object ball but sends the cue ball to a pocket is
+    not treated as the logical recommendation.
+  */
+  [
+    ...direct,
+    ...combos,
+    ...banks,
+    ...kicks
+  ].forEach(candidate=>{
+    const scratch=
+      scratchAnalysis(candidate);
+
+    candidate.scratch=scratch;
+    candidate.score+=scratch.penalty;
+  });
 
   let best=null;
 
@@ -3139,29 +3437,27 @@ function speedForShot(s){
     return"—";
   }
 
+  let base;
+
   if(
     s.kind==="kick"
   ){
 
-    return s.kickDistance>42
+    base=s.kickDistance>42
       ?"Hard"
       :s.kickDistance>25
         ?"Medium"
         :"Soft";
-  }
-
-  if(
+  }else if(
     s.kind==="bank"
   ){
 
-    return s.objectDistance>55
+    base=s.objectDistance>55
       ?"Hard"
       :s.objectDistance>32
         ?"Medium"
         :"Soft";
-  }
-
-  if(
+  }else if(
     s.kind==="combination"
   ){
 
@@ -3169,32 +3465,44 @@ function speedForShot(s){
       s.cueDistance+
       s.objectDistance;
 
-    return total>75
+    base=total>75
       ?"Hard"
       :total>45
         ?"Medium"
         :"Soft";
-  }
-
-  if(
+  }else if(
     s.cutDegrees>55
   ){
-    return"Medium";
-  }
-
-  if(
+    base="Medium";
+  }else if(
     s.objectDistance<18
   ){
+    base="Soft";
+  }else if(
+    s.objectDistance>55
+  ){
+    base="Hard";
+  }else{
+    base="Medium";
+  }
+
+  /*
+    A scratch-prone line gets a speed call that agrees with the
+    warning. A softer hit can reduce a rolling scratch, but a
+    high-confidence route is still called out as a line problem
+    instead of pretending speed alone fixes it.
+  */
+  const risk=s.scratch&&s.scratch.risk||0;
+
+  if(risk>=.84){
     return"Soft";
   }
 
-  if(
-    s.objectDistance>55
-  ){
-    return"Hard";
+  if(risk>=.58&&base==="Hard"){
+    return"Medium";
   }
 
-  return"Medium";
+  return base;
 }
 
 /* ============================================================
@@ -3588,14 +3896,46 @@ function shortFaceText(direction){
   return"just "+side+" of center";
 }
 
-function callLine(step,text){
+function callLine(step,text,className=""){
 
   return(
-    `<div class="call-line">`+
+    `<div class="call-line ${className}">`+
     `<span class="call-step">${step}</span>`+
     `<span class="call-text">${text}</span>`+
     `</div>`
   );
+}
+
+function scratchNotice(s){
+  if(
+    !s||
+    !s.scratch||
+    !s.scratch.pocket
+  ){
+    return"";
+  }
+
+  const route=s.scratch.route;
+  const routeText=
+    route&&
+    route.type==="rail"
+      ?`after a ${railText(route.rail)} rebound`
+      :"on the current cue-ball path";
+
+  const highRisk=
+    (s.scratch.risk||0)>=.84;
+
+  return callLine(
+    "Scratch",
+    highRisk
+      ?`The cue ball is tracking ${routeText} toward a scratch. Choose another line or another shot.`
+      :`The cue ball is tracking ${routeText} toward a scratch. Use the softer speed shown above.`,
+    "scratch-warning"
+  );
+}
+
+function withScratch(markup,s){
+  return markup+scratchNotice(s);
 }
 
 function instructionHTML(s){
@@ -3621,7 +3961,6 @@ function instructionHTML(s){
   }
 
   const call=shotCall(s);
-  const pocketMarkup=`<span class="highlight">${pocketShortName(s.pocket)}</span>`;
   const spinMarkup=`<span class="highlight">${shortSpinText(call.tipVector)}</span>`;
   const objectFace=shortFaceText(call.objectVector);
   const objectNumber=s.kind==="combination"
@@ -3630,31 +3969,43 @@ function instructionHTML(s){
   const ballMarkup=`<span class="neutral-emphasis">${objectNumber}</span>`;
 
   if(s.kind==="combination"){
-    return callLine(
-      "Call",
-      `${spinMarkup}. Send the ${ballMarkup} into ${s.targetBall.number}, then finish at ${pocketMarkup}.`
+    return withScratch(
+      callLine(
+        "Tip",
+        `${spinMarkup}. Send the ${ballMarkup} into ${s.targetBall.number}.`
+      ),
+      s
     );
   }
 
   if(s.kind==="kick"){
-    return callLine(
-      "Call",
-      `${spinMarkup}. Take the ${railText(s.rail)} first, then contact the ${ballMarkup}.`
+    return withScratch(
+      callLine(
+        "Tip",
+        `${spinMarkup}. Take the ${railText(s.rail)} first, then contact the ${ballMarkup}.`
+      ),
+      s
     );
   }
 
   if(s.kind==="bank"){
-    return callLine(
-      "Call",
-      `${spinMarkup}. Hit the ${ballMarkup} ${objectFace}, using the ${railText(s.rail)}.`
+    return withScratch(
+      callLine(
+        "Tip",
+        `${spinMarkup}. Hit the ${ballMarkup} ${objectFace}, using the ${railText(s.rail)}.`
+      ),
+      s
     );
   }
 
-  return callLine(
-    "Call",
-    s.kind==="straight"
-      ?`${spinMarkup}. Center the ${ballMarkup} and send it to ${pocketMarkup}.`
-      :`${spinMarkup}. Contact the ${ballMarkup} ${objectFace}; the visual route ends at ${pocketMarkup}.`
+  return withScratch(
+    callLine(
+      "Tip",
+      s.kind==="straight"
+        ?`${spinMarkup}. Hit the ${ballMarkup} center.`
+        :`${spinMarkup}. Contact the ${ballMarkup} ${objectFace}.`
+    ),
+    s
   );
 }
 
@@ -3681,21 +4032,28 @@ function railText(rail){
 function geometry(){
   const w=canvas.width;
   const h=canvas.height;
-  const inset=Math.min(w,h)*.085;
-  const baseW=w-inset*2;
-  const baseH=h-inset*2;
   /*
-    The table is presented through a small, deliberate viewport zoom.
-    All drawing and pointer conversion use this same expanded geometry,
-    so the felt, pockets, balls and shot routes remain one coordinate system.
+    Fit the complete physical table inside the backing canvas. The
+    previous revision applied a viewport zoom after calculating the
+    inset, which made the two side rails extend beyond the canvas on
+    narrow screens. One fitted scale is now shared by every visual
+    element and the pointer transform.
   */
-  const zoom=w<620?1.06:1.10;
+  const inset=Math.min(w,h)*.085;
+  const availableW=Math.max(1,w-inset*2);
+  const availableH=Math.max(1,h-inset*2);
+  const scale=Math.min(
+    availableW/TABLE_W,
+    availableH/TABLE_H
+  );
+  const tableW=TABLE_W*scale;
+  const tableH=TABLE_H*scale;
   return{
-    x:(w-baseW*zoom)/2,
-    y:(h-baseH*zoom)/2,
-    w:baseW*zoom,
-    h:baseH*zoom,
-    zoom
+    x:(w-tableW)/2,
+    y:(h-tableH)/2,
+    w:tableW,
+    h:tableH,
+    scale
   };
 }
 
@@ -3724,15 +4082,10 @@ function fromScreen(
 
   const g=geometry();
 
-  const px=
-    (clientX-rect.left)*
-    canvas.width/
-    rect.width;
-
-  const py=
-    (clientY-rect.top)*
-    canvas.height/
-    rect.height;
+  const scaleX=canvas.width/Math.max(1,rect.width);
+  const scaleY=canvas.height/Math.max(1,rect.height);
+  const px=(clientX-rect.left)*scaleX;
+  const py=(clientY-rect.top)*scaleY;
 
   return V(
     (px-g.x)/
@@ -3910,7 +4263,12 @@ function drawTable(){
   uses the unchanged RAIL constants above.
 */
 function drawRails(g){
-  const depth=Math.max(5,Math.min(canvas.width,canvas.height)*.035);
+  const depth=Math.min(
+    g.x,
+    g.y,
+    Math.max(5,Math.min(canvas.width,canvas.height)*.035)
+  );
+  const sideDepth=depth*.8;
   const railGradient=ctx.createLinearGradient(0,0,0,canvas.height);
   railGradient.addColorStop(0,"#6d4a28");
   railGradient.addColorStop(.5,"#321e11");
@@ -3919,8 +4277,8 @@ function drawRails(g){
 
   ctx.fillRect(g.x-depth,g.y-depth,g.w+depth*2,depth);
   ctx.fillRect(g.x-depth,g.y+g.h,g.w+depth*2,depth);
-  ctx.fillRect(g.x-depth,g.y,depth,g.h);
-  ctx.fillRect(g.x+g.w,g.y,depth,g.h);
+  ctx.fillRect(g.x-sideDepth,g.y,sideDepth,g.h);
+  ctx.fillRect(g.x+g.w,g.y,sideDepth,g.h);
 
   ctx.strokeStyle="rgba(245,204,142,.18)";
   ctx.lineWidth=Math.max(1,depth*.12);
@@ -4435,6 +4793,37 @@ function drawRoute(){
     s.ghost,
     true
   );
+}
+
+function drawScratchRoute(s){
+  if(
+    !s||
+    !s.scratch||
+    !s.scratch.route||
+    !s.scratch.route.points
+  ){
+    return;
+  }
+
+  const lineWidth=Math.max(
+    1.5,
+    canvas.width*.0018
+  );
+  const points=s.scratch.route.points;
+
+  for(
+    let i=0;
+    i<points.length-1;
+    i+=1
+  ){
+    drawLine(
+      points[i],
+      points[i+1],
+      "rgba(255,70,82,.9)",
+      lineWidth,
+      true
+    );
+  }
 }
 
 /* ============================================================
@@ -5338,6 +5727,57 @@ function renderedAimDirection(s){
   return norm(renderedVector);
 }
 
+/*
+  The contact vector is stored in table coordinates, but a player
+  sees the enlarged object ball from behind the cue. Rotate the
+  marker into a view where the cue-to-object approach points up
+  the ball. This is a pure basis change: no quadrant is guessed
+  and no physical shot geometry is changed.
+*/
+function playerViewDirection(
+  s,
+  direction
+){
+  if(
+    !direction||
+    len(direction)<.01
+  ){
+    return V(0,0);
+  }
+
+  const approach=
+    s&&
+    s.cueDirection&&
+    len(s.cueDirection)>.01
+      ?norm(s.cueDirection)
+      :norm(
+        sub(
+          state.object,
+          state.cue
+        )
+      );
+
+  if(len(approach)<.01){
+    return norm(direction);
+  }
+
+  const angle=
+    -Math.PI/2-
+    Math.atan2(
+      approach.y,
+      approach.x
+    );
+  const cos=Math.cos(angle);
+  const sin=Math.sin(angle);
+
+  return norm(
+    V(
+      direction.x*cos-direction.y*sin,
+      direction.x*sin+direction.y*cos
+    )
+  );
+}
+
 function drawCueView(c){
 
   const ball=
@@ -5359,11 +5799,19 @@ function drawCueView(c){
   }
 
   /*
-    TIP PLACEMENT ONLY.
-    This is the exact vector the sentence describes.
+    For a combination the cue ball's actionable visual is the
+    actual cue-to-first-contact approach. A centered tip marker
+    hides the required line and makes the combo look like a
+    center-ball shot even when the first-ball geometry is cut.
+    Normal shots continue to use the spin/tip call.
   */
   const direction=
-    shotCall(s).tipVector;
+    s.kind==="combination"
+      ?playerViewDirection(
+        s,
+        cueContactDirection(s)
+      )
+      :shotCall(s).tipVector;
 
   if(
     len(direction)<.02
@@ -5381,8 +5829,10 @@ function drawCueView(c){
     c,
     ball,
     direction,
-    .48+
-      len(direction)*.62
+    s.kind==="combination"
+      ?.88
+      :.48+len(direction)*.62,
+    s.kind==="combination"
   );
 }
 
@@ -5413,7 +5863,10 @@ function drawObjectView(c){
     Same vector the sentence describes.
   */
   const direction=
-    shotCall(s).objectVector;
+    playerViewDirection(
+      s,
+      shotCall(s).objectVector
+    );
 
   if(
     len(direction)<.02
@@ -5456,7 +5909,10 @@ function drawTargetView(c){
     );
 
   const direction=
-    shotCall(s).targetVector;
+    playerViewDirection(
+      s,
+      shotCall(s).targetVector
+    );
 
   if(
     len(direction)<.02
@@ -5528,6 +5984,9 @@ function draw(){
     so the ghost ball never disappears behind an object ball.
   */
   drawRoute();
+  drawScratchRoute(
+    state.solution
+  );
 
   drawBalls();
 
