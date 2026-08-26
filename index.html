@@ -29,7 +29,6 @@ html,
 body{
 margin:0;
 min-height:100%;
-overflow-y:auto;
 background:
 radial-gradient(
 circle at 50% -10%,
@@ -63,84 +62,25 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 }
-.table-hint{
-margin-top:9px;
-padding:9px 5px 1px;
-border-top:1px solid rgba(255,255,255,.055);
-width:100%;
-transform:none;
-color:var(--muted);
-font-size:9px;
-line-height:1.35;
-letter-spacing:.01em;
-text-align:left;
-}
-.table-hint strong{
-display:block;
-margin-bottom:2px;
-color:var(--text);
-font-weight:800;
-}
-.table-hint-line{
-display:block;
-white-space:normal;
-}
-.table-lock-bar{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-margin:0 0 8px;
-padding:0 5px 8px;
-border-bottom:1px solid rgba(255,255,255,.055);
-}
-.table-lock-copy{
-min-width:0;
-display:flex;
-flex-direction:column;
-gap:2px;
-}
-.table-lock-status{
-color:#e3e8ea;
-font-size:10px;
-font-weight:900;
-}
-.table-lock-help{
-color:var(--muted);
-font-size:9px;
-line-height:1.25;
-}
-.table-lock.active{
-background:var(--lime);
-border-color:var(--lime);
-color:#10150b;
-box-shadow:
-0 0 0 1px rgba(217,255,63,.15),
-0 2px 7px rgba(217,255,63,.12);
-}
 .brand{
 display:flex;
 align-items:center;
 gap:9px;
 }
 .brand-name{
-font-size:24px;
-font-weight:900;
-letter-spacing:.015em;
-line-height:1;
+font-size:22px;
+font-weight:950;
+letter-spacing:-.06em;
+line-height:.9;
 }
 .reset{
 border:1px solid var(--line);
 background:#141a1e;
 color:#e9edef;
 border-radius:9px;
-min-width:54px;
-min-height:30px;
-padding:5px 12px;
-font-size:10px;
+padding:8px 13px;
+font-size:12px;
 font-weight:850;
-letter-spacing:.04em;
-text-transform:uppercase;
 }
 .layout{
 display:grid;
@@ -156,18 +96,11 @@ box-shadow:0 18px 45px rgba(0,0,0,.25);
 .table-card{
 padding:9px;
 min-width:0;
-overflow:hidden;
 }
 .table-stage{
 width:100%;
-/* Match the visible table's 59:109 outer proportions so it does not
-leave a large centered gap above the rails on tall mobile screens. */
-aspect-ratio:59/109;
+aspect-ratio:2/1;
 position:relative;
-max-width:100%;
-margin:0 auto;
-overflow:hidden;
-border-radius:10px;
 }
 #table{
 position:absolute;
@@ -175,20 +108,19 @@ inset:0;
 width:100%;
 height:100%;
 display:block;
-/* Let vertical swipes scroll the page unless a game gesture is active. */
-touch-action:pan-y;
+touch-action:none;
 }
 .side{
 display:flex;
 flex-direction:column;
 gap:8px;
 }
+}
+}
 .full-card{
 width:100%;
-}
 .section{
 padding:13px 14px;
-}
 .section-head{
 display:flex;
 align-items:center;
@@ -200,14 +132,6 @@ gap:10px;
 font-size:13px;
 font-weight:950;
 letter-spacing:-.02em;
-}
-.subsection-title{
-margin-top:12px;
-margin-bottom:6px;
-color:#dce3e6;
-font-size:11px;
-font-weight:900;
-letter-spacing:-.01em;
 }
 .section-accent{
 color:var(--lime);
@@ -251,27 +175,15 @@ box-shadow:
 0 0 0 1px rgba(217,255,63,.15),
 0 2px 7px rgba(217,255,63,.12);
 }
-.section-action:disabled{
-opacity:.38;
-cursor:not-allowed;
-background:#11171a;
-border-color:rgba(255,255,255,.10);
-color:#7d888e;
-box-shadow:none;
-}
-.section-action:disabled:hover{
-background:#11171a;
-border-color:rgba(255,255,255,.10);
-}
 .where-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:8px;
 margin-top:9px;
 }
-}
 .where-grid.combo{
 grid-template-columns:repeat(3,1fr);
+}
 .ball-panel{
 background:#0a0e10;
 border:1px solid rgba(255,255,255,.055);
@@ -331,17 +243,17 @@ text-overflow:ellipsis;
 }
 .pro-instruction{
 margin-top:9px;
-padding:9px 11px;
+padding:11px 13px;
 border-left:3px solid var(--lime);
 background:#0b1013;
 border-radius:0 9px 9px 0;
 color:#e3e8ea;
-font-size:11px;
-line-height:1.25;
+font-size:12px;
+line-height:1.35;
 font-weight:800;
 display:flex;
 flex-direction:column;
-gap:5px;
+gap:7px;
 }
 .call-line{
 display:flex;
@@ -350,7 +262,7 @@ gap:8px;
 }
 .call-step{
 flex:0 0 auto;
-min-width:48px;
+min-width:44px;
 font-size:9px;
 letter-spacing:.09em;
 text-transform:uppercase;
@@ -358,14 +270,8 @@ color:#7d888e;
 font-weight:900;
 }
 }
-}
 .call-text{
 flex:1;
-.call-line.scratch-warning{
-color:#ffd4d7;
-.call-line.scratch-warning .call-step{
-color:var(--red);
-}
 .pro-instruction .highlight{
 color:#f5f7f8;
 font-weight:950;
@@ -421,11 +327,6 @@ font-weight:900;
 background:var(--lime);
 color:#10150b;
 border-color:var(--lime);
-}
-.mode.suggested:not(.active){
-color:var(--lime);
-border-color:rgba(217,255,63,.46);
-background:rgba(217,255,63,.06);
 }
 .rack{
 position:relative;
@@ -495,11 +396,11 @@ outline-offset:2px;
 z-index:2;
 }
 }
-}
 .rack-ball.on-table{
 opacity:.42;
 .rack-ball.object-ball{
 opacity:1;
+}
 .rack-ball.my-ball{
 box-shadow:
 0 0 0 2px rgba(69,217,255,.65),
@@ -592,9 +493,9 @@ padding:12px;
 .where-grid{
 gap:5px;
 }
-}
 .controls{
 grid-template-columns:repeat(2,1fr);
+}
 .rack-ball{
 width:27px;
 height:27px;
@@ -614,126 +515,12 @@ grid-template-columns:1fr;
 }
 }
 </style>
-<style>
-/* Shot Caller revision polish: keep every control in the side rail. */
-.header { padding: 0 2px; }
-.brand { gap: 12px; }
-.brand-name {
-letter-spacing: .09em;
-font-size: 22px;
-font-weight: 800;
-text-transform: uppercase;
-}
-.brand-name::first-letter { color: inherit; }
-.reset, #deleteBall {
-min-width: 74px;
-min-height: 34px;
-padding: 7px 14px;
-font-size: 10px;
-font-weight: 950;
-letter-spacing: .08em;
-}
-.reset, .table-lock {
-width: 116px;
-min-width: 116px;
-height: 34px;
-min-height: 34px;
-}
-.ownership-help { display: grid; gap: 4px; }
-.ownership-section.eight-ball-auto .ownership-label,
-.ownership-section.eight-ball-auto .ownership-buttons {
-display: none;
-}
-.ownership-section.eight-ball-auto .ownership-help {
-margin-top: 8px;
-}
-@media (max-width: 520px) {
-.brand-name { font-size: 19px; letter-spacing: .075em; }
-.reset, #deleteBall { min-width: 74px; min-height: 34px; }
-}
-</style>
-<style>
-/* Focused product identity: a cue-ball mark and a two-beat wordmark. */
-.brand { gap: 10px; }
-.brand-mark {
-width: 30px;
-height: 30px;
-position: relative;
-display: grid;
-place-items: center;
-border: 1px solid rgba(217,255,63,.72);
-border-radius: 50%;
-background: radial-gradient(circle at 32% 27%, #f9fbfb 0 11%, #d2d8da 18%,
-#536269 64%, #151b1e 100%);
-box-shadow: inset -3px -4px 5px rgba(0,0,0,.34), 0 0 0 3px rgba(217,255,63,.08);
-transform: rotate(-9deg);
-}
-.brand-mark::after {
-content: "";
-position: absolute;
-inset: -5px;
-border: 1px solid rgba(217,255,63,.20);
-border-left-color: transparent;
-border-bottom-color: transparent;
-border-radius: 50%;
-transform: rotate(28deg);
-}
-.mark-eight {
-width: 17px;
-height: 17px;
-display: grid;
-place-items: center;
-border-radius: 50%;
-background: #101518;
-color: #eef4f1;
-font-size: 10px;
-line-height: 1;
-font-weight: 950;
-transform: rotate(9deg);
-}
-.mark-ring { display: none; }
-.brand-name {
-display: flex;
-align-items: baseline;
-gap: 5px;
-font-family: inherit;
-font-size: 24px;
-font-weight: 850;
-letter-spacing: .015em;
-text-transform: none;
-line-height: 1;
-}
-.brand-name > span {
-display: inline-flex;
-align-items: center;
-line-height: 1;
-}
-.brand-name span:last-child {
-color: inherit;
-font-style: normal;
-}
-.pro-instruction {
-border-left-width: 4px;
-padding: 10px 12px 10px 13px;
-background: linear-gradient(90deg, rgba(217,255,63,.075), #0b1013 42%);
-box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
-}
-.call-step { color: var(--lime); }
-@media (max-width: 520px) {
-.brand-mark { width: 27px; height: 27px; }
-.brand-name { font-size: 20px; gap: 4px; }
-.table-card { padding: 6px; }
-.table-stage { width: 100%; }
-}
-</style>
 </head>
 <body>
 <div class="app">
 <header class="header">
 <div class="brand">
-<div class="brand-mark" aria-hidden="true"><span class="mark-eight">8</
-span><span class="mark-ring"></span></div>
-<div class="brand-name"><span>Shot</span><span>Caller</span></div>
+<div class="brand-name">Shot Caller</div>
 </div>
 <button class="reset" id="reset">
 Reset
@@ -741,30 +528,8 @@ Reset
 </header>
 <main class="layout">
 <section class="card table-card">
-<div class="table-lock-bar">
-<div class="table-lock-copy">
-<div class="table-lock-status" id="tableLockStatus">Table unlocked</div>
-<div class="table-lock-help" id="tableLockHelp">Drag balls to set up the layout.</
-div>
-</div>
-<button
-class="section-action table-lock"
-id="tableLock"
-type="button"
-aria-pressed="false"
->
-Lock Table
-</button>
-</div>
 <div class="table-stage">
 <canvas id="table"></canvas>
-</div>
-<div class="table-hint" aria-label="How to use">
-<strong>How to use:</strong>
-<span class="table-hint-line">Select the pocket youâre aiming for, or let Shot Caller
-choose for you.</span>
-<span class="table-hint-line">Tap a ball, then tap anywhere on the table to
-reposition it.</span>
 </div>
 </section>
 <aside class="side">
@@ -781,7 +546,7 @@ Ball <span id="whereBall">â</span>
 <div class="ball-panel">
 <div class="ball-head">
 <div class="ball-label" id="cueViewLabel">
-Cue Ball
+Cue Ball Â· Where To Hit
 </div>
 </div>
 <canvas class="ball-view" id="cueView"></canvas>
@@ -837,9 +602,6 @@ Speed
 </div>
 </div>
 </div>
-<div class="subsection-title">
-Shot Breakdown
-</div>
 <div class="pro-instruction" id="instruction">
 Place the cue ball and target ball.
 </div>
@@ -847,8 +609,22 @@ Place the cue ball and target ball.
 <section class="card full-card section">
 <div class="section-head">
 <div class="section-title">
+Pocket
+</div>
+<button class="section-action active" id="pocketAuto">
+Suggested
+</button>
+</div>
+<div class="pockets" id="pockets"></div>
+</section>
+<section class="card full-card section">
+<div class="section-head">
+<div class="section-title">
 Shot Type
 </div>
+<button class="section-action active" id="shotAuto">
+Suggested
+</button>
 </div>
 <div class="modes">
 <button class="mode" data-mode="straight">
@@ -859,9 +635,6 @@ Cut
 </button>
 <button class="mode" data-mode="combo">
 Combo
-</button>
-<button class="mode suggested" data-mode="auto">
-Suggested
 </button>
 <button class="mode" data-mode="bank">
 Bank
@@ -879,15 +652,15 @@ Balls In Play
 <div class="section-accent" id="rackAccent">
 Select
 </div>
-<button class="section-action" id="deleteBall" disabled>
-Remove
-</button>
 </div>
 <div class="rack" id="rack"></div>
 <div class="ownership-section">
 <div class="section-head">
 <div class="section-title">
 Ball Role
+</div>
+<div class="section-accent" id="ownershipAccent">
+Select a ball
 </div>
 </div>
 <div class="ownership-label">
@@ -917,8 +690,7 @@ Opponent's Ball
 </button>
 </div>
 <div class="ownership-help">
-<div>A player's ball can be used to hit a combo.</div>
-<div>Opponent's balls are blockers only.</div>
+A player's ball can be used to hit a combo. Opponent's balls are blockers only.
 </div>
 </div>
 </section>
@@ -930,54 +702,16 @@ Opponent's Ball
 /* ============================================================
 PHYSICAL TABLE
 ============================================================ */
-/*
-The original table is 100 x 50 inches. Its physical orientation is
-now turned clockwise by 90 degrees, so the logical playing surface
-is 50 x 100 inches. Keeping the solver in table space means all
-shot, collision, pocket, and interaction calculations follow the
-rotated table without a separate screen-space transform.
-*/
 const TABLE
-_W=50;
+_W=100;
 const TABLE
-_H=100;
+_H=50;
 const BALL
 _DIAMETER=2.25;
 const BALL
 RADIUS=BALL
 _
 _DIAMETER/2;
-/*
-The playing surface is now represented as 50 x 100 inches after
-the physical 90-degree turn. A real pool table's cushion/rail
-assembly adds roughly two ball diameters to each overall dimension,
-so the visible table is fitted as one proportioned object rather
-than stretching the felt to the canvas edges.
-*/
-const TABLE
-RAIL
-_
-_DEPTH=4.5;
-const OUTER
-TABLE
-W=TABLE
-W+TABLE
-RAIL
-_
-_
-_
-_
-_DEPTH*2;
-const OUTER
-TABLE
-H=TABLE
-H+TABLE
-RAIL
-_
-_
-_
-_
-_DEPTH*2;
 const RAIL={
 top:BALL_RADIUS,
 bottom:TABLE
@@ -1005,9 +739,9 @@ SIZE
 },
 {
 id:"TM",
-name:"Left Side",
-x:0,
-y:50,
+name:"Top Side",
+x:50,
+y:0,
 type:"side",
 opening:POCKET_
 SIZE
@@ -1015,7 +749,7 @@ SIZE
 {
 id:"TR",
 name:"Top Right Corner",
-x:50,
+x:100,
 y:0,
 type:"corner",
 opening:POCKET_
@@ -1025,14 +759,14 @@ SIZE
 id:"BL",
 name:"Bottom Left Corner",
 x:0,
-y:100,
+y:50,
 type:"corner",
 opening:POCKET_
 SIZE
 },
 {
 id:"BM",
-name:"Right Side",
+name:"Bottom Side",
 x:50,
 y:50,
 type:"side",
@@ -1042,8 +776,8 @@ SIZE
 {
 id:"BR",
 name:"Bottom Right Corner",
-x:50,
-y:100,
+x:100,
+y:50,
 type:"corner",
 opening:POCKET_
 SIZE
@@ -1078,19 +812,19 @@ STATE
 ============================================================ */
 const state={
 cue:{
-x:16,
-y:22
+x:22,
+y:34
 },
 object:{
-x:30,
-y:65,
+x:65,
+y:20,
 number:3
 },
 tableBalls:[
 {
 number:3,
-x:30,
-y:65,
+x:65,
+y:20,
 role:"object",
 owner:"target"
 }
@@ -1100,21 +834,16 @@ selectedRackBall:3,
 selectedPocket:null,
 mode:"auto",
 solution:null,
-contactBall:null,
-tableLocked:false
+contactBall:null
 };
 /* ============================================================
 DOM
 ============================================================ */
 const canvas=document.getElementById("table");
 const ctx=canvas.getContext("2d");
-const MAX
-_DPR=3;
 let DPR=Math.min(
 window.devicePixelRatio||1,
-MAX
-DPR
-_
+2
 );
 /* ============================================================
 VECTOR MATH
@@ -1266,58 +995,6 @@ target,
 ignored
 );
 }
-/*
-A candidate is invalid if the cue ball's planned travel reaches
-a pocket before the intended contact point. This is deliberately
-separate from scratchAnalysis(), which remains a player-facing
-warning for otherwise valid shots whose execution can go wrong.
-*/
-function pathCrossesPocket(
-start,
-end,
-ignoreNumbers=[]
-){
-const travel=sub(end,start);
-const travelDistance=len(travel);
-if(travelDistance<.01){
-return false;
-}
-const unit=norm(travel);
-for(const pocket of POCKETS){
-const toPocket=sub(pocket,start);
-const along=dot(toPocket,unit);
-if(
-along<=BALL_RADIUS||
-along>=travelDistance-BALL_
-RADIUS
-){
-continue;
-}
-const closest=add(
-start,
-mul(unit,along)
-);
-const acceptance=
-pocket.type==="side"
-?pocket.opening*.62
-:pocket.opening*.76;
-if(
-dist(closest,pocket)>acceptance
-){
-continue;
-}
-if(
-pathClear(
-start,
-pocket,
-ignoreNumbers
-)
-){
-}
-return true;
-}
-return false;
-}
 /* ============================================================
 PHYSICAL CUE APPROACH
 ============================================================ */
@@ -1395,24 +1072,23 @@ const targets=[];
 if(
 pocket.type==="side"
 ){
-/*
-Use the actual pocket opening as the aim reference. These
-small samples model the usable mouth without moving the
-target onto an arbitrary point on the cloth.
-*/
-[-1.20,-.60,0,.60,1.20]
+[-1.15,-.65,0,.65,1.15]
 .forEach(offset=>{
 targets.push(
-pocket.x===0||
-pocket.x===TABLE_
-W
-?V(
-pocket.x,
-pocket.y+offset
-)
-:V(
+V(
+clamp(
 pocket.x+offset,
-pocket.y
+BALL
+_RADIUS,
+TABLE
+W-BALL
+RADIUS
+_
+_
+),
+pocket.y===0
+?RAIL.top
+:RAIL.bottom
 )
 );
 });
@@ -1426,14 +1102,21 @@ pocket.y===0
 ?1
 :-1;
 [
-0,
-.70,
-1.40
-].forEach(inset=>{
+[.35,.35],
+[.60,.60],
+[.85,.85]
+].forEach(([x,y])=>{
 targets.push(
 V(
-pocket.x+sx*inset,
-pocket.y+sy*inset
+pocket.x+
+sx*x*
+POCKET
+_SIZE*.48,
+pocket.y+
+sy*y*
+POCKET
+SIZE*.48
+_
 )
 );
 });
@@ -1454,10 +1137,10 @@ that arrival line.
 function pocketFacing(pocket){
 if(pocket.type==="side"){
 return V(
-pocket.x===0
+0,
+pocket.y===0
 ?-1
-:1,
-0
+:1
 );
 }
 const sx=
@@ -1614,30 +1297,7 @@ ghost,
 return null;
 }
 if(
-pathCrossesPocket(
-cue,
-ghost,
-[object.number]
-)
-){
-}
-if(
-return null;
 !clearToBall(
-object,
-target,
-[object.number]
-)
-){
-}
-/*
-*/
-if(
-return null;
-The intended pocket must be the first pocket the object ball
-can reach on this line. Otherwise a line that crosses another
-pocket before the called target can produce a misleading call.
-pathCrossesPocket(
 object,
 target,
 [object.number]
@@ -1666,16 +1326,6 @@ const objectDistance=
 dist(
 object,
 target
-);
-const objectContactPoint=
-sub(
-object,
-mul(
-objectDirection,
-BALL
-RADIUS
-_
-)
 );
 const isStraight=
 cutDegrees<=12;
@@ -1708,7 +1358,6 @@ pocket,
 target,
 rail:null,
 ghost,
-objectContactPoint,
 bankPoint:null,
 cueDirection:
 norm(
@@ -1744,11 +1393,11 @@ pocket,
 pocketTarget
 ){
 if(
-){
 !firstBall||
 !secondBall||
 firstBall.number===
 secondBall.number
+){
 return null;
 }
 /*
@@ -1793,13 +1442,13 @@ _
 )
 );
 if(
-)
-){
-}
-/*
 !centerInside(
 secondBallContactPoint
+)
+){
 return null;
+}
+/*
 The combination ball must be on the pocket-opposite side
 of the target. Without this check, a line that passes through
 the target could be accepted even though the first ball is
@@ -1837,30 +1486,6 @@ return null;
 const firstToSecond=
 norm(firstToSecondVector);
 /*
-Keep physical surface contacts separate from the center-to-
-center ghost positions drawn on the table.
-*/
-const firstBallContactPoint=
-sub(
-firstBall,
-mul(
-firstToSecond,
-BALL
-RADIUS
-_
-)
-);
-const targetBallContactPoint=
-sub(
-secondBall,
-mul(
-secondToPocket,
-BALL
-RADIUS
-_
-)
-);
-/*
 Cue-ball ghost position for contacting the player's ball.
 */
 const cueGhost=
@@ -1880,22 +1505,10 @@ if(
 !clearToBall(
 cue,
 cueGhost,
-[firstBall.number]
-)
-){
-return null;
-}
-/*
-*/
-if(
-The cue ball must contact the legal first ball before it can
-reach the target ball. Do not ignore the target on this leg:
-doing so can recommend a foul where the opponent's/8 ball is
-actually hit first.
-pathCrossesPocket(
-cue,
-cueGhost,
-[firstBall.number]
+[
+firstBall.number,
+secondBall.number
+]
 )
 ){
 return null;
@@ -1922,18 +1535,6 @@ secondBall.number
 ]
 )
 ){
-return null;
-}
-if(
-pathCrossesPocket(
-firstBall,
-secondBallContactPoint,
-[
-firstBall.number,
-secondBall.number
-]
-)
-){
 }
 /*
 */
@@ -1949,8 +1550,8 @@ secondBall.number
 ]
 )
 ){
-}
 return null;
+}
 const cueDirection=
 norm(
 sub(
@@ -2043,10 +1644,8 @@ target:pocketTarget,
 combinationBall:firstBall,
 targetBall:secondBall,
 firstContactPoint:cueGhost,
-firstBallContactPoint,
 secondContactPoint:
 secondBallContactPoint,
-targetBallContactPoint,
 contactBall:firstBall,
 ghost:cueGhost,
 combinationGhost:
@@ -2084,8 +1683,8 @@ p.x,
 );
 }
 if(
-){
 rail==="bottom"
+){
 return V(
 p.x,
 2*RAIL.bottom-p.y
@@ -2149,10 +1748,10 @@ t=
 }
 if(
 ){
-}
 t<=.00001||
 t>=.99999
 return null;
+}
 return V(
 a.x+dx*t,
 a.y+dy*t
@@ -2264,20 +1863,6 @@ target,
 [object.number]
 )
 ){
-return null;
-}
-if(
-pathCrossesPocket(
-object,
-bankPoint,
-[object.number]
-)||
-pathCrossesPocket(
-bankPoint,
-target,
-[object.number]
-)
-){
 }
 return null;
 const objectDirection=
@@ -2313,15 +1898,6 @@ ghost,
 [object.number]
 )
 ){
-return null;
-}
-if(
-pathCrossesPocket(
-cue,
-ghost,
-[object.number]
-)
-){
 }
 return null;
 const cueDirection=
@@ -2329,16 +1905,6 @@ norm(
 sub(
 ghost,
 cue
-)
-);
-const objectContactPoint=
-sub(
-object,
-mul(
-objectDirection,
-BALL
-RADIUS
-_
 )
 );
 const incoming=
@@ -2401,7 +1967,6 @@ pocket,
 target,
 rail,
 ghost,
-objectContactPoint,
 bankPoint,
 cueDirection,
 objectDirection,
@@ -2486,28 +2051,10 @@ kickPoint,
 [object.number]
 )
 ){
+return null;
 }
 if(
-return null;
-pathCrossesPocket(
-cue,
-kickPoint,
-[object.number]
-)
-){
-}
-if(
-return null;
 !clearToBall(
-kickPoint,
-ghost,
-[object.number]
-)
-){
-return null;
-}
-if(
-pathCrossesPocket(
 kickPoint,
 ghost,
 [object.number]
@@ -2539,23 +2086,12 @@ dist(
 object,
 pocket
 );
-const objectContactPoint=
-sub(
-object,
-mul(
-objectDirection,
-BALL
-RADIUS
-_
-)
-);
 return{
 kind:"kick",
 pocket,
 target:pocket,
 rail,
 ghost,
-objectContactPoint,
 bankPoint:kickPoint,
 cueDirection:
 norm(
@@ -2716,302 +2252,9 @@ candidates.push(candidate);
 return candidates;
 }
 /* ============================================================
-SCRATCH TRAJECTORY
-Scratch detection uses the same cue approach and object-ball
-direction already used by the candidate. It traces the cue
-ball's post-contact path with a tangent component for stun and
-a forward-roll component for natural follow, then checks all
-six pocket mouths directly and after one rail.
-============================================================ */
-function cross2(a,b){
-return a.x*b.y-a.y*b.x;
-}
-function reflectedDirection(direction,rail){
-if(rail==="top"||rail==="bottom"){
-return V(direction.x,-direction.y);
-}
-return V(-direction.x,direction.y);
-}
-function rayPocketRoute(
-origin,
-direction,
-pocket,
-ignoreNumbers
-){
-const unit=norm(direction);
-const toPocket=sub(pocket,origin);
-const along=dot(toPocket,unit);
-if(along<=BALL_RADIUS){
-return null;
-}
-const closest=add(
-origin,
-mul(unit,along)
-);
-const miss=dist(
-closest,
-pocket
-);
-const acceptance=
-pocket.type==="side"
-?pocket.opening*.62
-:pocket.opening*.76;
-if(miss>acceptance){
-return null;
-}
-/*
-*/
-if(
-pocketApproachPenalty(
-pocket,
-unit
-)===null
-){
-return null;
-}
-The route must enter the mouth from the table side. This is
-especially important after the 90-degree rotation, where side
-pockets face left/right rather than top/bottom.
-if(!pathClear(origin,pocket,ignoreNumbers)){
-return null;
-}
-return{
-type:"direct",
-pocket,
-points:[origin,pocket],
-distance:dist(origin,pocket)
-};
-}
-function scratchRouteForPocket(
-origin,
-direction,
-pocket,
-ignoreNumbers
-){
-const routes=[];
-const direct=rayPocketRoute(
-origin,
-direction,
-pocket,
-ignoreNumbers
-);
-if(direct){
-routes.push(direct);
-}
-const far=add(
-origin,
-mul(norm(direction),200)
-);
-[
-"top",
-"bottom",
-"left",
-"right"
-].forEach(rail=>{
-const hit=railIntersection(
-origin,
-far,
-rail
-);
-if(
-!hit||
-!usableRailPoint(hit,rail)||
-!pathClear(origin,hit,ignoreNumbers)
-){
-return;
-}
-const bounced=reflectedDirection(
-norm(direction),
-rail
-);
-const postRail=rayPocketRoute(
-hit,
-bounced,
-pocket,
-ignoreNumbers
-);
-}
-if(!postRail||!pathClear(hit,pocket,ignoreNumbers)){
-return;
-routes.push({
-type:"rail",
-rail,
-pocket,
-points:[origin,hit,pocket],
-distance:
-dist(origin,hit)+dist(hit,pocket)
-});
-});
-routes.sort(
-(a,b)=>
-a.distance-b.distance
-);
-return routes[0]||null;
-}
-function scratchAnalysis(s){
-if(
-!s||
-!s.objectDirection||
-!s.cueDirection
-){
-return{
-risk:0,
-penalty:0,
-pocket:null,
-route:null,
-direction:null
-};
-}
-const incoming=norm(s.cueDirection);
-const outgoing=norm(s.objectDirection);
-const cut=clamp(
-s.cutDegrees||0,
-0,
-90
-);
-if(
-len(incoming)<.01||
-len(outgoing)<.01
-){
-return{
-risk:0,
-penalty:0,
-pocket:null,
-route:null,
-direction:null
-};
-}
-/*
-A near-straight rolling shot can continue toward the pocket.
-On a cut, the tangent side is selected from the signed
-incoming/outgoing turn instead of assuming one fixed side.
-*/
-let scratchDirection;
-if(cut<8){
-scratchDirection=outgoing;
-}else{
-const tangent=
-cross2(incoming,outgoing)>=0
-?V(-outgoing.y,outgoing.x)
-:V(outgoing.y,-outgoing.x);
-const forwardWeight=clamp(
-.14+cut/240,
-.14,
-.38
-);
-scratchDirection=norm(
-add(
-mul(tangent,1-forwardWeight),
-mul(outgoing,forwardWeight)
-)
-);
-}
-const contact=
-s.kind==="combination"
-?s.combinationBall
-:state.object;
-const origin=add(
-contact,
-mul(scratchDirection,BALL_RADIUS*1.08)
-);
-const ignoreNumbers=[
-state.object.number
-];
-if(
-s.kind==="combination"&&
-s.combinationBall
-){
-ignoreNumbers.push(
-s.combinationBall.number
-);
-}
-const routes=POCKETS.map(
-pocket=>
-scratchRouteForPocket(
-origin,
-scratchDirection,
-pocket,
-ignoreNumbers
-)
-).filter(Boolean);
-routes.sort(
-(a,b)=>
-a.distance-b.distance
-);
-const route=routes[0]||null;
-if(!route){
-return{
-risk:0,
-penalty:0,
-pocket:null,
-route:null,
-direction:scratchDirection
-};
-}
-const distanceFactor=clamp(
-1-route.distance/90,
-.18,
-1
-);
-const risk=clamp(
-.58+
-distanceFactor*.28+
-(route.type==="rail"?.08:0),
-.58,
-.98
-);
-return{
-risk,
-penalty:
-34+
-risk*34,
-pocket:route.pocket,
-route,
-direction:scratchDirection
-};
-}
-/* ============================================================
 SOLVER
 ============================================================ */
 function solve(){
-/*
-Deleting the last target is a valid editing state. Keep the
-solver untouched until a real target exists instead of
-attempting geometry with a missing object ball.
-*/
-if(
-!state.object||
-!state.object.number||
-!state.tableBalls.some(
-ball=>
-ball.owner==="target"&&
-ball.number===
-state.object.number
-){
-)
-state.solution=null;
-state.contactBall=null;
-render();
-return;
-}
-/*
-In standard 8-ball, the 8 is not a legal target while any
-player's own balls remain on the table. Stop all shot types
-here so auto mode cannot suggest an automatic-loss shot.
-*/
-if(
-state.object.number===8&&
-state.tableBalls.some(
-ball=>
-ball.number!==8&&
-ball.owner==="my"
-){
-)
-state.solution=null;
-state.contactBall=null;
-render();
-return;
-}
 const pockets=
 state.selectedPocket
 ?[state.selectedPocket]
@@ -3066,41 +2309,90 @@ pocket
 );
 }
 }
-/*
-Score scratch risk before sorting candidates so a shot that
-pockets the object ball but sends the cue ball to a pocket is
-not treated as the logical recommendation.
-*/
-[
-...direct,
-...combos,
-...banks,
-...kicks
-].forEach(candidate=>{
-const scratch=
-scratchAnalysis(candidate);
-candidate.scratch=scratch;
-candidate.score+=scratch.penalty;
-});
 let best=null;
 if(
 state.mode==="auto"
 ){
-/*
-Auto mode compares every legal, clear candidate after
-geometry, difficulty, and scratch risk have been scored.
-The previous direct-first fallback could keep a difficult
-cut even when a safer bank or kick was available.
-*/
-best=[
-...direct,
-...combos,
-...banks,
-...kicks
-].sort(
+direct.sort(
 (a,b)=>
 a.score-b.score
-)[0]||null;
+);
+combos.sort(
+(a,b)=>
+a.score-b.score
+);
+banks.sort(
+(a,b)=>
+a.score-b.score
+);
+kicks.sort(
+(a,b)=>
+a.score-b.score
+);
+/*
+A clean, intentional player's-ball combination gets
+real priority when it is geometrically strong.
+This fixes the previous behavior where the solver would
+effectively pretend the player's ball did not exist.
+*/
+if(combos.length){
+const combo=combos[0];
+const comboQuality=
+combo.transferAngle<=38;
+const hasDirect=
+direct.length>0;
+if(
+(
+!hasDirect||
+comboQuality&&
+!direct.length||
+direct[0].kind!=="straight"&&
+combo.score<=direct[0].score*1.18
+)
+){
+best=combo;
+}
+}
+/*
+*/
+if(
+!best&&
+direct.length
+){
+If a clearly superior direct shot exists, keep it.
+best=direct[0];
+}
+/*
+If the combo exists but the direct shot was selected,
+still allow a clean combo to replace a difficult cut.
+*/
+if(
+best&&
+best.kind!=="combination"&&
+combos.length
+){
+const combo=combos[0];
+if(
+){
+best.kind==="cut"&&
+best.cutDegrees>=42&&
+combo.transferAngle<=42&&
+combo.score<=best.score*1.12
+best=combo;
+}
+}
+if(
+!best&&
+banks.length
+){
+best=banks[0];
+}
+if(
+){
+!best&&
+kicks.length
+best=kicks[0];
+}
 }else if(
 state.mode==="straight"
 ){
@@ -3158,9 +2450,9 @@ kicks.sort(
 (a,b)=>
 a.score-b.score
 );
-}
 if(kicks.length){
 best=kicks[0];
+}
 }
 state.solution=best;
 state.contactBall=
@@ -3176,80 +2468,65 @@ function speedForShot(s){
 if(!s){
 return"â";
 }
-let base;
 if(
 s.kind==="kick"
 ){
-base=s.kickDistance>42
+return s.kickDistance>42
 ?"Hard"
 :s.kickDistance>25
 ?"Medium"
 :"Soft";
-}else if(
+}
+if(
 s.kind==="bank"
 ){
-base=s.objectDistance>55
+return s.objectDistance>55
 ?"Hard"
 :s.objectDistance>32
 ?"Medium"
 :"Soft";
-}else if(
-s.kind==="combination"
+}
+if(
 ){
+s.kind==="combination"
 const total=
 s.cueDistance+
 s.objectDistance;
-base=total>75
+return total>75
 ?"Hard"
 :total>45
 ?"Medium"
 :"Soft";
-}else if(
+}
+if(
 s.cutDegrees>55
 ){
-base="Medium";
-}else if(
-s.objectDistance<18
-){
-base="Soft";
-}else if(
-s.objectDistance>55
-){
-base="Hard";
-}else{
-base="Medium";
-}
-/*
-A scratch-prone line gets a speed call that agrees with the
-warning. A softer hit can reduce a rolling scratch, but a
-high-confidence route is still called out as a line problem
-instead of pretending speed alone fixes it.
-*/
-const risk=s.scratch&&s.scratch.risk||0;
-if(risk>=.84){
-return"Soft";
-}
-if(risk>=.58&&base==="Hard"){
 return"Medium";
 }
-return base;
+if(
+s.objectDistance<18
+){
+return"Soft";
+}
+if(
+s.objectDistance>55
+){
+return"Hard";
+}
+return"Medium";
 }
 /* ============================================================
 ACCURATE CONTACT LOCATION
 ============================================================ */
 /*
-The language is now derived from the EXACT vector used to
-place the red contact dot.
-That means the enlarged ball and the sentence cannot describe
-two different contact locations.
 */
 function faceText(direction){
 if(
 !direction||
 len(direction)<.02
 ){
-return"dead center";
 }
+return"dead center";
 const x=direction.x;
 const y=direction.y;
 const ax=Math.abs(x);
@@ -3260,17 +2537,21 @@ ay<.15
 ){
 return"dead center";
 }
+The language is now derived from the EXACT vector used to
+place the red contact dot.
+That means the enlarged ball and the sentence cannot describe
+two different contact locations.
 const horizontal=
 ax<.15
 ?""
 :ax<.45
 ?(
 x<0
+?"a hair left of center"
+:"a hair right of center"
 )
 :ax<.8
 ?(
-?"a hair left of center"
-:"a hair right of center"
 x<0
 ?"a quarter ball left of center"
 :"a quarter ball right of center"
@@ -3324,7 +2605,6 @@ s.kind==="combination"
 ){
 return contactDirection(
 s.combinationBall,
-s.firstBallContactPoint||
 s.firstContactPoint
 );
 }
@@ -3335,7 +2615,6 @@ return V(0,0);
 }
 return contactDirection(
 state.object,
-s.objectContactPoint||
 s.ghost
 );
 }
@@ -3348,7 +2627,6 @@ return V(0,0);
 }
 return contactDirection(
 s.targetBall,
-s.targetBallContactPoint||
 s.secondContactPoint
 );
 }
@@ -3385,13 +2663,13 @@ s.kind==="bank"||
 s.kind==="kick"||
 s.kind==="combination"
 ){
+return{
+vector:V(0,0),
+text:"Center ball, no English"
 Rail routes are solved with mirror geometry. Calling side
 English there without changing the rebound calculation would
 make the written call disagree with the drawn path, so those
 shots stay at center ball.
-return{
-vector:V(0,0),
-text:"Center ball, no English"
 };
 }
 const cut=
@@ -3401,9 +2679,9 @@ s.cueDistance||0;
 const objectDistance=
 s.objectDistance||0;
 if(
-){
 s.kind==="straight"||
 cut<=12
+){
 const vector=
 V(
 0,
@@ -3455,22 +2733,10 @@ text:shortSpinText(vector)
 function shotCall(s){
 const tip=
 tipCall(s);
-/*
-The cue-ball panel is the source of truth for the TIP text.
-Combination shots rotate the first-contact direction into the
-same player-facing view used by drawCueView; every other shot
-uses the calculated tip vector directly.
-*/
-const tipVector=
-cueTipViewVector(s);
 return{
-tip:{
-...tip,
-vector:tipVector,
-text:shortSpinText(tipVector)
-},
-tipVector:tipVector,
-tipText:shortSpinText(tipVector),
+tip:tip,
+tipVector:tip.vector,
+tipText:tip.text,
 objectVector:objectContactDirection(s),
 objectText:faceText(
 objectContactDirection(s)
@@ -3480,18 +2746,6 @@ targetText:faceText(
 targetContactDirection(s)
 )
 };
-}
-function cueTipViewVector(s){
-if(!s){
-return V(0,0);
-}
-/*
-The cue-ball panel is a tip/spin instruction, not a second
-aim diagram. Combination routes are already drawn on the table;
-keeping this vector tied to tipCall() prevents the red marker
-and the written TIP call from disagreeing.
-*/
-return tipCall(s).vector;
 }
 /* ============================================================
 POCKET LANGUAGE
@@ -3510,33 +2764,33 @@ SHOT INSTRUCTION
 /*
 Short, glanceable language. In a real game there is no time
 to read a paragraph, so the call is delivered as three short
-lines: cue ball, contact, pocket.
+lines: cue ball, contact, result.
 */
 function shortSpinText(vector){
 if(!vector){
 return"Center ball";
 }
 const vertical=
-vector.y<-.04
+vector.y<=-.18
 ?"Top spin"
-:vector.y>.04
-?"Bottom spin"
+:vector.y>=.18
+?"Draw"
 :"";
 const horizontal=
-vector.x<-.04
+vector.x<=-.18
 ?"Left English"
-:vector.x>.04
+:vector.x>=.18
 ?"Right English"
 :"";
 if(vertical&&horizontal){
 return vertical+", "+horizontal;
 }
-}
-}
 if(vertical){
 return vertical+", no English";
+}
 if(horizontal){
-return horizontal;
+return"Center height, "+horizontal;
+}
 return"Center ball, no English";
 }
 function shortFaceText(direction){
@@ -3576,132 +2830,131 @@ if(depth==="half ball"){
 return"half ball "+side;
 return"just "+side+" of center";
 }
-function callLine(step,text,className=""){
+function callLine(step,text){
 return(
-`<div class="call-line ${className}">`+
+`<div class="call-line">`+
 `<span class="call-step">${step}</span>`+
 `<span class="call-text">${text}</span>`+
 `</div>`
 );
 }
-function scratchNotice(s){
-if(
-!s||
-!s.scratch||
-!s.scratch.pocket
-){
-return"";
-}
-const route=s.scratch.route;
-const pocketName=
-titleCasePocket(
-s.scratch.pocket.name
-);
-const highRisk=
-(s.scratch.risk||0)>=.84;
-const angleRisk=
-(s.cutDegrees||0)>=45;
-let warning;
-if(
-route&&
-route.type==="rail"
-){
-warning=
-highRisk
-?`Careful â this rebound line could result in a scratch into the ${pocketName}.`
-:`Careful â too much speed after the rebound could result in a scratch into the $
-{pocketName}.`;
-}else if(
-highRisk
-){
-warning=
-angleRisk
-?`Careful â a wider angle could result in a scratch into the ${pocketName}.`
-:`Careful â this line could result in a scratch into the ${pocketName}.`;
-}else{
-warning=
-angleRisk
-?`Careful â a wider angle could result in a scratch into the ${pocketName}.`
-:`Careful â too much speed could result in a scratch into the ${pocketName}.`;
-}
-return callLine(
-"Scratch",
-warning,
-"scratch-warning"
-);
-function withScratch(markup,s){
-return markup+scratchNotice(s);
-}
-}
 function instructionHTML(s){
 if(!s){
 if(
-state.object&&
-state.object.number===8&&
-state.tableBalls.some(
-ball=>
-ball.number!==8&&
-ball.owner==="my"
-)
+state.mode==="combo"
 ){
-}
-return callLine("8-Ball","Clear your player's balls before shooting the 8-ball.");
 return callLine(
 "Setup",
-state.mode==="combo"
-?"Choose a player's ball and a target ball on the table."
-:"Place the cue ball and target ball on the felt."
+"Place a player's ball and a target ball."
 );
 }
-const call=shotCall(s);
-const spinMarkup=`<span class="highlight">${shortSpinText(call.tipVector)}</
-span>`;
-const objectFace=shortFaceText(call.objectVector);
-const objectNumber=s.kind==="combination"
+return callLine(
+"Setup",
+"Place the cue ball and target ball."
+);
+}
+const call=
+shotCall(s);
+const pocketMarkup=
+`<span class="highlight">${pocketShortName(s.pocket)}</span>`;
+const spinMarkup=
+`<span class="highlight">${shortSpinText(call.tipVector)}</span>`;
+const objectFace=
+shortFaceText(call.objectVector);
+const objectNumber=
+s.kind==="combination"
 ?s.combinationBall.number
 :state.object.number;
-const ballMarkup=`<span class="neutral-emphasis">${objectNumber}</span>`;
-if(s.kind==="combination"){
-return withScratch(
+const ballMarkup=
+`<span class="neutral-emphasis">${objectNumber}</span>`;
+const lines=[
 callLine(
-"TIP",
-`${spinMarkup}. Send the ${ballMarkup} into ${s.targetBall.number} for $
-{pocketShortName(s.pocket)}.`
+"Cue",
+spinMarkup
+)
+];
+/*
+*/
+if(
+){
+COMBO
+s.kind==="combination"
+const second=
+`<span class="neutral-emphasis">${s.targetBall.number}</span>`;
+lines.push(
+callLine(
+"Hit",
+`the ${ballMarkup} on its `+
+`<span class="neutral-emphasis">${objectFace}</span>`
 ),
-s
-);
-}
-if(s.kind==="kick"){
-return withScratch(
 callLine(
-"TIP",
-`${spinMarkup}. Take the ${railText(s.rail)} first, then contact the ${ballMarkup} for
-${pocketShortName(s.pocket)}.`
+"Result",
+`${ballMarkup} into the ${second} on its `+
+`<span class="neutral-emphasis">${shortFaceText(call.targetVector)}</span>`+
+` &rarr; ${pocketMarkup}`
+)
+);
+return lines.join("");
+}
+/*
+KICK
+*/
+if(
+){
+s.kind==="kick"
+lines.push(
+callLine(
+"Hit",
+`the <span class="highlight">${railText(s.rail)}</span> first, `+
+`then the ${ballMarkup} on its `+
+`<span class="neutral-emphasis">${objectFace}</span>`
 ),
-s
-);
-}
-if(s.kind==="bank"){
-return withScratch(
 callLine(
-"TIP",
-`${spinMarkup}. Hit the ${ballMarkup} ${objectFace}, using the ${railText(s.rail)}
-for ${pocketShortName(s.pocket)}.`
+"Result",
+`${ballMarkup} &rarr; ${pocketMarkup}`
+)
+);
+return lines.join("");
+}
+/*
+BANK
+*/
+if(
+s.kind==="bank"
+){
+lines.push(
+callLine(
+"Hit",
+`the ${ballMarkup} on its `+
+`<span class="neutral-emphasis">${objectFace}</span>`
 ),
-s
-);
-}
-return withScratch(
 callLine(
-"TIP",
+"Result",
+`${ballMarkup} off the `+
+`<span class="highlight">${railText(s.rail)}</span>`+
+` &rarr; ${pocketMarkup}`
+)
+);
+return lines.join("");
+}
+/*
+STRAIGHT AND CUT
+*/
+lines.push(
+callLine(
+"Hit",
 s.kind==="straight"
-?`${spinMarkup}. Hit the ${ballMarkup} center for $
-{pocketShortName(s.pocket)}.`
-:`${spinMarkup}. Contact the ${ballMarkup} ${objectFace} for $
-{pocketShortName(s.pocket)}.`
+?`the ${ballMarkup} <span class="neutral-emphasis">dead center</span>
+(straight in)`
+:`the ${ballMarkup} on its `+
+`<span class="neutral-emphasis">${objectFace}</span>`
 ),
-s
+callLine(
+"Result",
+`${ballMarkup} &rarr; ${pocketMarkup}`
+)
 );
+return lines.join("");
 }
 /* ============================================================
 RAIL TEXT
@@ -3721,57 +2974,13 @@ SCREEN GEOMETRY
 function geometry(){
 const w=canvas.width;
 const h=canvas.height;
-/*
-Fit the complete physical table, including its rails, inside
-the backing canvas. The solver's coordinates still describe
-the 100 x 50 inch playing surface; the outer bounds are used
-only for the visible table geometry.
-*/
-const inset=Math.min(w,h)*.045;
-const availableW=Math.max(1,w-inset*2);
-const availableH=Math.max(1,h-inset*2);
-const scale=Math.min(
-availableW/OUTER_
-TABLE
-_W,
-availableH/OUTER_
-TABLE
-H
-_
-);
-const outerW=OUTER
-TABLE
-_
-_W*scale;
-const outerH=OUTER
-TABLE
-_
-_H*scale;
-const outerX=(w-outerW)/2;
-const outerY=(h-outerH)/2;
-const tableW=TABLE
-_W*scale;
-const tableH=TABLE
-_H*scale;
+const inset=
+Math.min(w,h)*.085;
 return{
-x:outerX+TABLE
-RAIL
-_
-_DEPTH*scale,
-y:outerY+TABLE_
-RAIL
-_DEPTH*scale,
-w:tableW,
-h:tableH,
-scale,
-outerX,
-outerY,
-outerW,
-outerH,
-railDepth:TABLE_
-RAIL
-DEPTH*scale
-_
+x:inset,
+y:inset,
+w:w-inset*2,
+h:h-inset*2
 };
 }
 function toScreen(p){
@@ -3794,10 +3003,14 @@ clientY
 const rect=
 canvas.getBoundingClientRect();
 const g=geometry();
-const scaleX=canvas.width/Math.max(1,rect.width);
-const scaleY=canvas.height/Math.max(1,rect.height);
-const px=(clientX-rect.left)*scaleX;
-const py=(clientY-rect.top)*scaleY;
+const px=
+(clientX-rect.left)*
+canvas.width/
+rect.width;
+const py=
+(clientY-rect.top)*
+canvas.height/
+rect.height;
 return V(
 (px-g.x)/
 g.w*
@@ -3888,11 +3101,11 @@ wood.addColorStop(
 ctx.fillStyle=wood;
 roundedRect(
 ctx,
-g.outerX,
-g.outerY,
-g.outerW,
-g.outerH,
-Math.min(g.outerW,g.outerH)*.035
+0,
+0,
+w,
+h,
+Math.min(w,h)*.035
 );
 ctx.fill();
 const felt=
@@ -3921,7 +3134,6 @@ g.y,
 g.w,
 g.h
 );
-drawRails(g);
 ctx.strokeStyle=
 "rgba(7,6,4,.95)";
 ctx.lineWidth=
@@ -3937,53 +3149,6 @@ g.h
 );
 drawDiamonds(g);
 drawPockets(g);
-}
-/*
-The visible cushion faces are the space between the fitted outer
-table and the playing surface. All four faces use the same
-physical depth, so the brown side rails cannot become oversized
-just because the canvas is wider than the table's true outline.
-The solver still uses the unchanged RAIL constants above.
-*/
-function drawRails(g){
-const depth=g.railDepth;
-const sideDepth=depth;
-const railGradient=ctx.createLinearGradient(0,0,0,canvas.height);
-railGradient.addColorStop(0,"#6d4a28");
-railGradient.addColorStop(.5,"#321e11");
-railGradient.addColorStop(1,"#4f3018");
-ctx.fillStyle=railGradient;
-/*
-Keep the slight corner softening purely visual. The solver still
-uses the same straight rail limits; clipping only prevents the
-visible rail fills from square-cutting the rounded outer corners.
-*/
-ctx.save();
-roundedRect(
-ctx,
-g.outerX,
-g.outerY,
-g.outerW,
-g.outerH,
-Math.min(g.outerW,g.outerH)*.035
-);
-ctx.clip();
-ctx.fillRect(g.x-depth,g.y-depth,g.w+depth*2,depth);
-ctx.fillRect(g.x-depth,g.y+g.h,g.w+depth*2,depth);
-ctx.fillRect(g.x-sideDepth,g.y,sideDepth,g.h);
-ctx.fillRect(g.x+g.w,g.y,sideDepth,g.h);
-ctx.restore();
-ctx.strokeStyle="rgba(245,204,142,.18)";
-ctx.lineWidth=Math.max(1,depth*.12);
-roundedRect(
-ctx,
-g.x-depth*.35,
-g.y-depth*.30,
-g.w+depth*.70,
-g.h+depth*.60,
-Math.min(g.outerW,g.outerH)*.028
-);
-ctx.stroke();
 }
 /* ============================================================
 DIAMONDS
@@ -4018,12 +3183,7 @@ size
 );
 ctx.restore();
 }
-/*
-*/
 [
-The long physical rails are now vertical after the 90-degree
-rotation, so they retain the larger regulation diamond count.
-The shorter horizontal rails retain the smaller count.
 .125,
 .25,
 .375,
@@ -4033,12 +3193,12 @@ The shorter horizontal rails retain the smaller count.
 .875
 ].forEach(t=>{
 diamond(
-g.x-size*.72,
-g.y+g.h*t
+g.x+g.w*t,
+g.y-size*.72
 );
 diamond(
-g.x+g.w+size*.72,
-g.y+g.h*t
+g.x+g.w*t,
+g.y+g.h+size*.72
 );
 });
 [
@@ -4047,12 +3207,12 @@ g.y+g.h*t
 .75
 ].forEach(t=>{
 diamond(
-g.x+g.w*t,
-g.y-size*.72
+g.x-size*.72,
+g.y+g.h*t
 );
 diamond(
-g.x+g.w*t,
-g.y+g.h+size*.72
+g.x+g.w+size*.72,
+g.y+g.h*t
 );
 });
 }
@@ -4193,9 +3353,9 @@ function drawGhostBall(
 position,
 emphasized=false
 ){
+}
 if(!position){
 return;
-}
 const g=geometry();
 const p=
 toScreen(position);
@@ -4395,34 +3555,6 @@ drawGhostBall(
 s.ghost,
 true
 );
-}
-function drawScratchRoute(s){
-if(
-!s||
-!s.scratch||
-!s.scratch.route||
-!s.scratch.route.points
-){
-return;
-}
-const lineWidth=Math.max(
-1.5,
-canvas.width*.0018
-);
-const points=s.scratch.route.points;
-for(
-let i=0;
-i<points.length-1;
-i+=1
-){
-drawLine(
-points[i],
-points[i+1],
-"rgba(255,70,82,.9)",
-lineWidth,
-true
-);
-}
 }
 /* ============================================================
 POOL BALLS
@@ -4951,8 +4083,11 @@ function drawContactMarker(
 c,
 ball,
 direction,
-distanceFactor=.92,
-showGuide=false
+The red dot is placed from the exact same contact vector
+that generates the written contact description.
+It is deliberately small enough to resemble a cue-tip
+contact point rather than an oversized target marker.
+distanceFactor=.78
 ){
 if(
 !ball||
@@ -4961,10 +4096,6 @@ len(direction)<.01
 ){
 return;
 }
-The red dot is placed from the exact same contact vector
-that generates the written contact description.
-It is deliberately small enough to resemble a cue-tip
-contact point rather than an oversized target marker.
 const markerDistance=
 ball.r*
 clamp(
@@ -4985,32 +4116,6 @@ const y=
 ball.y+
 direction.y*
 markerDistance;
-if(showGuide){
-c.beginPath();
-c.moveTo(
-ball.x,
-ball.y
-);
-c.lineTo(
-x,
-y
-);
-c.strokeStyle=
-"rgba(255,70,82,.58)";
-c.lineWidth=
-Math.max(
-1.2,
-ball.r*.035
-);
-c.setLineDash(
-[
-Math.max(2,ball.r*.08),
-Math.max(3,ball.r*.12)
-]
-);
-c.stroke();
-c.setLineDash([]);
-}
 c.beginPath();
 c.arc(
 x,
@@ -5103,75 +4208,6 @@ c.stroke();
 c.setLineDash([]);
 c.restore();
 }
-function renderedAimDirection(s){
-if(!s){
-return V(0,0);
-}
-const contact=s.kind==="combination"
-?s.firstContactPoint
-:s.ghost;
-if(!contact){
-return V(0,0);
-}
-/*
-Derive the aiming vector from the two points after the table's
-responsive transform has been applied. This avoids CSS-pixel
-offsets and keeps the cue dot aligned at every table size.
-*/
-const cueScreen=toScreen(state.cue);
-const contactScreen=toScreen(contact);
-const renderedVector=V(
-contactScreen.x-cueScreen.x,
-contactScreen.y-cueScreen.y
-);
-return norm(renderedVector);
-}
-/*
-The contact vector is stored in table coordinates, but a player
-sees the enlarged object ball from behind the cue. Rotate the
-marker into a view where the cue-to-object approach points up
-the ball. This is a pure basis change: no quadrant is guessed
-and no physical shot geometry is changed.
-*/
-function playerViewDirection(
-s,
-direction
-){
-if(
-!direction||
-len(direction)<.01
-){
-return V(0,0);
-}
-const approach=
-s&&
-s.cueDirection&&
-len(s.cueDirection)>.01
-?norm(s.cueDirection)
-:norm(
-sub(
-state.object,
-state.cue
-)
-);
-if(len(approach)<.01){
-return norm(direction);
-}
-const angle=
--Math.PI/2-
-Math.atan2(
-approach.y,
-approach.x
-);
-const cos=Math.cos(angle);
-const sin=Math.sin(angle);
-return norm(
-V(
-direction.x*cos-direction.y*sin,
-direction.x*sin+direction.y*cos
-)
-);
-}
 function drawCueView(c){
 const ball=
 largeBall(
@@ -5188,17 +4224,14 @@ if(!s){
 return;
 }
 /*
-For a combination the cue ball's actionable visual is the
-actual cue-to-first-contact approach. A centered tip marker
-hides the required line and makes the combo look like a
-center-ball shot even when the first-ball geometry is cut.
-Normal shots continue to use the spin/tip call.
 */
 const direction=
-cueTipViewVector(s);
+shotCall(s).tipVector;
 if(
 len(direction)<.02
 ){
+TIP PLACEMENT ONLY.
+This is the exact vector the sentence describes.
 drawCenterMarker(
 c,
 ball
@@ -5209,10 +4242,8 @@ drawContactMarker(
 c,
 ball,
 direction,
-s.kind==="combination"
-?.88
-:.48+len(direction)*.62,
-s.kind==="combination"
+.48+
+len(direction)*.62
 );
 }
 function drawObjectView(c){
@@ -5237,13 +4268,10 @@ CONTACT POINT ONLY.
 Same vector the sentence describes.
 */
 const direction=
-playerViewDirection(
-s,
-shotCall(s).objectVector
-);
+shotCall(s).objectVector;
 if(
-){
 len(direction)<.02
+){
 drawCenterMarker(
 c,
 ball
@@ -5254,8 +4282,17 @@ drawContactMarker(
 c,
 ball,
 direction,
-.92,
-false
+s.kind==="cut"
+?(
+.42+
+.54*
+clamp(
+(s.cutDegrees-12)/66,
+0,
+1
+)
+)
+:.78
 );
 }
 function drawTargetView(c){
@@ -5274,13 +4311,10 @@ c,
 s.targetBall.number
 );
 const direction=
-playerViewDirection(
-s,
-shotCall(s).targetVector
-);
+shotCall(s).targetVector;
 if(
-){
 len(direction)<.02
+){
 drawCenterMarker(
 c,
 ball
@@ -5290,9 +4324,7 @@ return;
 drawContactMarker(
 c,
 ball,
-direction,
-.92,
-true
+direction
 );
 }
 function drawBallViews(){
@@ -5334,9 +4366,6 @@ Route and ghost ball are drawn before the actual balls,
 so the ghost ball never disappears behind an object ball.
 */
 drawRoute();
-drawScratchRoute(
-state.solution
-);
 drawBalls();
 drawBallViews();
 }
@@ -5349,10 +4378,7 @@ state.solution;
 document.getElementById(
 "whereBall"
 ).textContent=
-state.object&&
-state.object.number
-?state.object.number
-:"â";
+state.object.number;
 document.getElementById(
 "shotType"
 ).textContent=
@@ -5405,20 +4431,19 @@ document.getElementById(
 ).textContent=
 s&&
 s.kind==="combination"
-?"Combo Ball"
-:"Object Ball";
+?`${s.combinationBall.number} Â· Where The Cue Ball Contacts`
+:`${state.object.number} Â· Where The Cue Ball Contacts`;
 document.getElementById(
 "targetViewLabel"
 ).textContent=
 s&&
 s.kind==="combination"
-?"Target Ball"
+?`${s.targetBall.number} Â· Where The ${s.combinationBall.number} Contacts`
 :"Target Ball";
 renderPockets();
 renderModes();
 renderRack();
 renderOwnership();
-renderTableLock();
 draw();
 }
 function capitalize(text){
@@ -5453,68 +4478,90 @@ word.slice(1).toLowerCase()
 )
 .join(" ");
 }
+/* ============================================================
+POCKET UI
+============================================================ */
+document.getElementById(
+"pocketAuto"
+).onclick=()=>{
+state.selectedPocket=null;
+solve();
+};
 function renderPockets(){
-/*
-Pocket choice is intentionally canvas-only. The six real
-pocket mouths are rendered and hit-tested in table space.
-With no selected mouth the solver remains in suggested mode.
-*/
-}
-function renderTableLock(){
+const container=
+document.getElementById(
+"pockets"
+);
+container.innerHTML="";
+for(
+const pocket of POCKETS
+){
 const button=
-document.getElementById(
-"tableLock"
+document.createElement(
+"button"
 );
-const status=
-document.getElementById(
-"tableLockStatus"
+button.className=
+"pocket";
+const active=
+state.selectedPocket&&
+state.selectedPocket.id===
+pocket.id;
+if(active){
+button.classList.add(
+"selected"
 );
-const help=
-document.getElementById(
-"tableLockHelp"
-);
-if(!button||!status||!help){
-return;
 }
-const locked=state.tableLocked;
 button.textContent=
-locked
-?"Unlock Table"
-:"Lock Table";
-button.setAttribute(
-"aria-pressed",
-String(locked)
+titleCasePocket(
+pocket.name
 );
-button.classList.toggle(
+button.onclick=()=>{
+state.selectedPocket=
+pocket;
+solve();
+};
+container.appendChild(
+button
+);
+}
+document.getElementById(
+"pocketAuto"
+).classList.toggle(
 "active",
-locked
+!state.selectedPocket
 );
-status.textContent=
-locked
-?"Table locked"
-:"Table unlocked";
-help.textContent=
-locked
-?"Balls are frozen; swipe freely to scroll."
-:"Drag balls to set up the layout.";
 }
 /* ============================================================
 MODE UI
 ============================================================ */
+document.getElementById(
+"shotAuto"
+).onclick=()=>{
+state.mode="auto";
+solve();
+};
 function renderModes(){
 document.querySelectorAll(
 ".mode"
 ).forEach(
 button=>{
-const active=state.mode===button.dataset.mode;
-button.classList.toggle("active",active);
-button.setAttribute("aria-pressed",String(active));
+button.classList.toggle(
+"active",
+state.mode===
+button.dataset.mode
+);
 button.onclick=()=>{
 state.mode=
 button.dataset.mode;
 solve();
 };
 }
+);
+document.getElementById(
+"shotAuto"
+).classList.toggle(
+"active",
+state.mode==="auto"
 );
 }
 /* ============================================================
@@ -5604,9 +4651,9 @@ button.classList.add(
 );
 }
 if(
-){
 tableBall&&
 tableBall.owner==="opponent"
+){
 button.classList.add(
 "opponent-ball"
 );
@@ -5642,12 +4689,6 @@ document.getElementById(
 state.selectedRackBall
 ?`Ball ${state.selectedRackBall} Selected`
 :"Select";
-const deleteButton=
-document.getElementById(
-"deleteBall"
-);
-deleteButton.disabled=
-!getSelectedTableBall();
 }
 /* ============================================================
 RACK SELECTION
@@ -5707,7 +4748,6 @@ state.selectedRackBall
 )||null;
 }
 function setBallOwner(owner){
-if(state.selectedRackBall===8){ owner="target"; }
 const number=
 state.selectedRackBall;
 if(!number){
@@ -5735,9 +4775,7 @@ number,
 x:state.object.x,
 y:state.object.y,
 owner:
-number===8
-?"target"
-:owner==="target"
+owner==="target"
 ?"target"
 :hasTarget
 ?owner
@@ -5785,11 +4823,11 @@ newBall
 ball=newBall;
 }
 /*
+Target must always be unique.
 */
 if(
-){
-Target must always be unique.
 owner==="target"
+){
 state.tableBalls.forEach(
 b=>{
 if(
@@ -5851,68 +4889,6 @@ number:ball.number
 }
 solve();
 }
-function deleteSelectedBall(){
-const selected=
-getSelectedTableBall();
-if(!selected){
-return;
-}
-const wasTarget=
-selected.owner==="target"||
-state.object&&
-state.object.number===
-selected.number;
-state.tableBalls=
-state.tableBalls.filter(
-ball=>
-ball.number!==
-selected.number
-);
-if(wasTarget){
-const replacement=
-state.tableBalls.find(
-ball=>
-ball.owner==="target"
-)||
-state.tableBalls[0]||
-null;
-if(replacement){
-state.tableBalls.forEach(
-ball=>{
-if(ball.number===replacement.number){
-ball.owner="target";
-ball.role="object";
-}else if(ball.owner==="target"){
-ball.owner="my";
-ball.role="blocker";
-}
-}
-);
-state.object={
-x:replacement.x,
-y:replacement.y,
-number:replacement.number
-};
-state.selectedRackBall=
-replacement.number;
-}else{
-state.object={
-x:30,
-y:65,
-number:null
-};
-state.selectedRackBall=null;
-}
-}else{
-state.selectedRackBall=null;
-}
-state.selectedBall=null;
-state.contactBall=null;
-solve();
-}
-document.getElementById(
-"deleteBall"
-).onclick=deleteSelectedBall;
 document.querySelectorAll(
 ".ownership-button"
 ).forEach(
@@ -5929,23 +4905,9 @@ button.dataset.owner
 );
 }
 );
-document.getElementById(
-"tableLock"
-).onclick=event=>{
-event.preventDefault();
-event.stopPropagation();
-state.tableLocked=
-!state.tableLocked;
-state.selectedBall=null;
-pendingPointer=null;
-dragPointerId=null;
-render();
-};
 function renderOwnership(){
 const selected=
 getSelectedTableBall();
-document.querySelector(".ownership-section")?.classList.toggle("eight-ball-auto",
-selected?.number===8);
 const buttons=
 document.querySelectorAll(
 ".ownership-button"
@@ -5962,9 +4924,23 @@ button.dataset.owner
 );
 }
 );
-}
+const accent=
+document.getElementById(
+"ownershipAccent"
+);
 if(!selected){
+accent.textContent=
+"Select a ball";
 return;
+}
+const labels={
+target:"Target Ball",
+my:"Player's Ball",
+opponent:"Opponent's Ball"
+};
+accent.textContent=
+labels[selected.owner]||
+"Select a ball";
 }
 /* ============================================================
 HIT TEST
@@ -6013,19 +4989,6 @@ role:best.role
 };
 }
 return null;
-}
-function nearestPocket(p){
-const hitRadius=Math.max(POCKET_SIZE*1.45,5.2);
-let nearest=null;
-let nearestDistance=Infinity;
-for(const pocket of POCKETS){
-const d=dist(p,pocket);
-if(d<=hitRadius&&d<nearestDistance){
-nearest=pocket;
-nearestDistance=d;
-}
-}
-return nearest;
 }
 /* ============================================================
 VALID POSITION
@@ -6119,12 +5082,6 @@ true
 ){
 return false;
 }
-/*
-Moving a ball changes the shot geometry. Return auto mode to
-the full pocket search instead of keeping a previously tapped
-pocket locked after the table layout changes.
-*/
-state.selectedPocket=null;
 state.cue=next;
 solve();
 return true;
@@ -6149,7 +5106,6 @@ number
 ){
 return false;
 }
-state.selectedPocket=null;
 existing.x=next.x;
 existing.y=next.y;
 if(
@@ -6167,7 +5123,6 @@ if(
 ){
 return false;
 }
-state.selectedPocket=null;
 const hasTarget=
 state.tableBalls.some(
 b=>
@@ -6178,36 +5133,14 @@ number,
 x:next.x,
 y:next.y,
 owner:
-number===8
-?"target"
-:hasTarget
+hasTarget
 ?"my"
 :"target",
 role:
-number===8
-?"object"
-:hasTarget
+hasTarget
 ?"blocker"
 :"object"
 };
-/*
-*/
-if(
-newBall.owner==="target"
-){
-state.tableBalls.forEach(
-ball=>{
-The 8-ball is always treated as the final target. Keep the
-target role unique when it is added or moved into play.
-if(
-ball.owner==="target"
-){
-ball.owner="my";
-ball.role="blocker";
-}
-}
-);
-}
 state.tableBalls.push(
 newBall
 );
@@ -6225,99 +5158,10 @@ solve();
 return true;
 }
 let dragPointerId=null;
-let pendingPointer=null;
-const DRAG
-_THRESHOLD=6;
-function captureForDrag(pointerId){
-dragPointerId=pointerId;
-if(
-canvas.setPointerCapture
-){
-canvas.setPointerCapture(
-pointerId
-);
-}
-}
-function pointerDistanceFromStart(event){
-if(!pendingPointer){
-return{
-x:0,
-y:0,
-distance:0
-};
-}
-const x=
-event.clientX-
-pendingPointer.startX;
-const y=
-event.clientY-
-pendingPointer.startY;
-return{
-x,
-y,
-distance:Math.hypot(x,y)
-};
-}
-function beginPendingDrag(event){
-if(
-!pendingPointer||
-pendingPointer.pointerId!==
-event.pointerId
-){
-return false;
-}
-const movement=
-pointerDistanceFromStart(event);
-if(
-movement.distance<
-DRAG
-THRESHOLD
-_
-){
-return false;
-}
-/*
-*/
-if(
-Math.abs(movement.y)>
-Math.abs(movement.x)
-){
-pendingPointer=null;
-return false;
-Keep the browser's native vertical pan. A vertical gesture
-cancels table editing and never calls preventDefault(), so the
-page can scroll even if the swipe starts over a ball.
-}
-if(
-pendingPointer.kind===
-"ball"||
-pendingPointer.kind===
-"place"
-){
-event.preventDefault();
-captureForDrag(
-event.pointerId
-);
-pendingPointer=null;
-moveSelectedBall(
-fromScreen(
-event.clientX,
-event.clientY
-)
-);
-return true;
-}
-pendingPointer=null;
-return false;
-}
 canvas.addEventListener(
 "pointerdown",
 event=>{
-/*
-A locked table has no ball-edit gesture at all. Pocket
-selection remains available, but every other pointerdown is
-left untouched so mobile scrolling stays native.
-*/
+event.preventDefault();
 const p=
 fromScreen(
 event.clientX,
@@ -6325,27 +5169,7 @@ event.clientY
 );
 const hit=
 nearestBall(p);
-if(
-hit
-state.tableLocked&&
-){
-return;
-}
 if(hit){
-const ball=
-hit.type==="cue"
-?null
-:state.tableBalls.find(
-b=>
-b.number===
-hit.number
-);
-if(
-!ball
-hit.type!=="cue"&&
-){
-return;
-}
 if(
 hit.type==="cue"
 ){
@@ -6353,65 +5177,67 @@ state.selectedBall=
 "cue";
 state.selectedRackBall=
 null;
-}else{
+dragPointerId=
+event.pointerId;
+if(
+canvas.setPointerCapture
+){
+canvas.setPointerCapture(
+event.pointerId
+);
+}
+render();
+return;
+}
+const ball=
+state.tableBalls.find(
+b=>
+b.number===
+hit.number
+);
+if(!ball){
+return;
+}
 state.selectedBall=
 "object";
 state.selectedRackBall=
 ball.number;
+dragPointerId=
+event.pointerId;
 if(
-ball.owner==="target"
+canvas.setPointerCapture
 ){
+canvas.setPointerCapture(
+event.pointerId
+);
+}
+if(
+){
+ball.owner==="target"
 state.object={
 x:ball.x,
 y:ball.y,
 number:ball.number
 };
 }
-}
-/*
-Do not cancel the browser gesture at pointerdown. The
-pointer is promoted to a drag only after a deliberate,
-mostly-horizontal movement; a vertical swipe becomes page
-scrolling instead of moving a ball.
-*/
-pendingPointer={
-kind:"ball",
-pointerId:event.pointerId,
-startX:event.clientX,
-startY:event.clientY
-};
 render();
 return;
 }
-const pocket=
-nearestPocket(p);
-if(pocket){
-pendingPointer={
-kind:"pocket",
-pointerId:event.pointerId,
-startX:event.clientX,
-startY:event.clientY,
-pocket
-};
-return;
-}
 if(
-!state.selectedBall||
-state.tableLocked
+!state.selectedBall
 ){
 return;
 }
-/*
-Preserve the original tap-a-ball-then-tap-table workflow,
-while also allowing a deliberate horizontal drag after the
-ball has been selected.
-*/
-pendingPointer={
-kind:"place",
-pointerId:event.pointerId,
-startX:event.clientX,
-startY:event.clientY
-};
+dragPointerId=
+event.pointerId;
+if(
+canvas.setPointerCapture
+){
+canvas.setPointerCapture(
+event.pointerId
+);
+}
+moveSelectedBall(p);
 },
 {
 }
@@ -6421,9 +5247,8 @@ canvas.addEventListener(
 "pointermove",
 event=>{
 if(
-dragPointerId!==null
-){
-if(
+dragPointerId===
+null||
 event.pointerId!==
 dragPointerId
 ){
@@ -6436,62 +5261,18 @@ event.clientX,
 event.clientY
 )
 );
-return;
-}
-beginPendingDrag(event);
 },
 {
 }
 passive:false
 );
-function finishPendingPointer(event){
-if(
-!pendingPointer||
-pendingPointer.pointerId!==
-event.pointerId
-){
-return;
-}
-const pending=
-pendingPointer;
-pendingPointer=null;
-if(
-pending.kind===
-"pocket"
-){
-/*
-Tapping the active mouth returns the solver to its
-suggested-pocket search, so there is no second HTML
-pocket control to hunt for on small screens.
-*/
-event.preventDefault();
-state.selectedPocket=
-state.selectedPocket&&
-state.selectedPocket.id===
-pending.pocket.id
-?null
-:pending.pocket;
-solve();
-return;
-}
-if(
-pending.kind===
-"place"
-){
-event.preventDefault();
-moveSelectedBall(
-fromScreen(
-event.clientX,
-event.clientY
-)
-);
-}
-}
 function endPointer(event){
 if(
-event.pointerId===
+event.pointerId!==
 dragPointerId
 ){
+return;
+}
 dragPointerId=null;
 if(
 canvas.releasePointerCapture
@@ -6504,9 +5285,6 @@ event.pointerId
 /* Pointer capture may already be released. */
 }
 }
-return;
-}
-finishPendingPointer(event);
 }
 canvas.addEventListener(
 "pointerup",
@@ -6514,16 +5292,7 @@ endPointer
 );
 canvas.addEventListener(
 "pointercancel",
-event=>{
-if(
-pendingPointer&&
-pendingPointer.pointerId===
-event.pointerId
-){
-pendingPointer=null;
-}
-endPointer(event);
-}
+endPointer
 );
 /* ============================================================
 RESET
@@ -6532,19 +5301,19 @@ document.getElementById(
 "reset"
 ).onclick=()=>{
 state.cue={
-x:16,
-y:22
+x:22,
+y:34
 };
 state.object={
-x:30,
-y:65,
+x:65,
+y:20,
 number:3
 };
 state.tableBalls=[
 {
 number:3,
-x:30,
-y:65,
+x:65,
+y:20,
 role:"object",
 owner:"target"
 }
@@ -6555,9 +5324,6 @@ state.selectedPocket=null;
 state.mode="auto";
 state.solution=null;
 state.contactBall=null;
-state.tableLocked=false;
-pendingPointer=null;
-dragPointerId=null;
 solve();
 };
 /* ============================================================
@@ -6575,9 +5341,7 @@ setTimeout(
 ()=>{
 DPR=Math.min(
 window.devicePixelRatio||1,
-MAX
-DPR
-_
+2
 );
 resizeCanvas();
 },
@@ -6612,8 +5376,8 @@ requestAnimationFrame(
 state.tableBalls=[
 {
 number:3,
-x:30,
-y:65,
+x:65,
+y:20,
 role:"object",
 owner:"target"
 }
