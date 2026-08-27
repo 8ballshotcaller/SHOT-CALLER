@@ -83,6 +83,18 @@ button{
   line-height:1;
 }
 
+.table-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:9px;
+}
+
+.table-actions .reset{
+  flex:1 1 0;
+  min-width:0;
+}
+
 .reset{
   border:1px solid var(--line);
   background:#141a1e;
@@ -95,6 +107,16 @@ button{
   font-weight:850;
   letter-spacing:.04em;
   text-transform:uppercase;
+  text-align:center;
+}
+
+.reset.active{
+  background:var(--lime);
+  border-color:var(--lime);
+  color:#10150b;
+  box-shadow:
+    0 0 0 1px rgba(217,255,63,.15),
+    0 2px 7px rgba(217,255,63,.12);
 }
 
 .layout{
@@ -679,44 +701,20 @@ button{
   }
 </style>
 <style>
-      /* Focused product identity: a cue-ball mark and a two-beat wordmark. */
+      /* Focused product identity: a called-shot mark and a two-beat wordmark. */
       .brand { gap: 10px; }
       .brand-mark {
         width: 30px;
         height: 30px;
-        position: relative;
+        flex: 0 0 auto;
         display: grid;
         place-items: center;
-        border: 1px solid rgba(217,255,63,.72);
-        border-radius: 50%;
-        background: radial-gradient(circle at 32% 27%, #f9fbfb 0 11%, #d2d8da 18%, #536269 64%, #151b1e 100%);
-        box-shadow: inset -3px -4px 5px rgba(0,0,0,.34), 0 0 0 3px rgba(217,255,63,.08);
-        transform: rotate(-9deg);
       }
-      .brand-mark::after {
-        content: "";
-        position: absolute;
-        inset: -5px;
-        border: 1px solid rgba(217,255,63,.20);
-        border-left-color: transparent;
-        border-bottom-color: transparent;
-        border-radius: 50%;
-        transform: rotate(28deg);
+      .brand-mark svg {
+        width: 100%;
+        height: 100%;
+        display: block;
       }
-      .mark-eight {
-        width: 17px;
-        height: 17px;
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-        background: #101518;
-        color: #eef4f1;
-        font-size: 10px;
-        line-height: 1;
-        font-weight: 950;
-        transform: rotate(9deg);
-      }
-      .mark-ring { display: none; }
       .brand-name {
         display: flex;
         align-items: baseline;
@@ -759,18 +757,33 @@ button{
 
 <header class="header">
   <div class="brand">
-    <div class="brand-mark" aria-hidden="true"><span class="mark-eight">8</span><span class="mark-ring"></span></div>
+    <div class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="14.5" fill="#101518" stroke="var(--lime)" stroke-width="1.4"/>
+        <circle cx="16" cy="16" r="4.6" fill="var(--lime)"/>
+        <path d="M16 3.6V10.4" stroke="var(--lime)" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M16 21.6V28.4" stroke="var(--lime)" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M3.6 16H10.4" stroke="var(--lime)" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M21.6 16H28.4" stroke="var(--lime)" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </div>
       <div class="brand-name"><span>Shot</span><span>Caller</span></div>
   </div>
-
-  <button class="reset" id="reset">
-    Reset
-  </button>
 </header>
 
 <main class="layout">
 
 <section class="card table-card">
+
+  <div class="table-actions">
+    <button class="reset" id="lockTable" aria-pressed="false">
+      Lock Table
+    </button>
+
+    <button class="reset" id="reset">
+      Reset
+    </button>
+  </div>
 
   <div class="table-stage">
     <canvas id="table"></canvas>
@@ -1137,7 +1150,15 @@ const state={
   selectedPocket:null,
   mode:"auto",
   solution:null,
-  contactBall:null
+  contactBall:null,
+
+  /*
+    When locked, the table stops treating touches/clicks on the
+    canvas as ball drags or pocket taps, so a touch-scroll that
+    starts on or near a ball scrolls the page instead of moving
+    the ball. Unlocked keeps the original drag/tap behavior.
+  */
+  locked:false
 };
 
 /* ============================================================
@@ -3308,10 +3329,10 @@ function solve(){
       ?[state.selectedPocket]
       :POCKETS;
 
-  const direct=[];
-  const combos=[];
-  const banks=[];
-  const kicks=[];
+  let direct=[];
+  let combos=[];
+  let banks=[];
+  let kicks=[];
 
   for(
     const pocket of pockets
@@ -3387,52 +3408,53 @@ function solve(){
   });
 
   /*
-    HARD SCRATCH REJECTION:
+    A scratch is not merely a warning: a candidate whose cue-ball
+    path has a confident route into a pocket after contact is not
+    a playable recommendation and must be rejected outright, not
+    just penalized in scoring. scratchAnalysis() only returns a
+    risk value once it has found an actual clear route into a
+    pocket, so anything at/above SCRATCH_REJECT_RISK represents a
+    high-confidence scratch, not a marginal borderline case.
 
-    scratchAnalysis() only returns a route when it has traced an
-    actual, physically valid cue-ball path into a pocket mouth
-    (checked against rails, other balls, and pocket geometry via
-    rayPocketRoute/pathClear). That is not a heuristic "risk" —
-    it is a detected scratch. Such a candidate must never be
-    recommended as the best shot, so it is removed here instead
-    of only being scored down. This runs before any sorting or
-    selection below, for every shot type (direct, combo, bank,
-    kick), so a scratching candidate can never win by default
-    when nothing safer exists — it is simply not a candidate.
+    Genuinely marginal cases (lower risk, still flagged via
+    candidate.scratch for the existing scratch-warning UI) remain
+    selectable, since those are legitimate "playable but risky"
+    shots rather than clear scratches.
+
+    The safe/unsafe split has to be resolved GLOBALLY, not per
+    category. A scratching straight shot must not be preferred
+    over a clean bank or kick just because direct shots normally
+    outrank banks/kicks in priority: selectBest() runs the exact
+    existing category-priority cascade twice, first restricted to
+    non-scratching candidates only, and only falls back to the
+    full candidate lists (including scratches) if literally no
+    category has a safe option at all.
   */
-  const rejectDefiniteScratch=
-    list=>
-      list.filter(
-        candidate=>
-          !(
-            candidate.scratch&&
-            candidate.scratch.route
-          )
-      );
+  const SCRATCH_REJECT_RISK=.65;
 
-  direct.splice(
-    0,
-    direct.length,
-    ...rejectDefiniteScratch(direct)
-  );
+  function isSafeCandidate(candidate){
+    return(
+      !candidate.scratch||
+      candidate.scratch.risk<
+      SCRATCH_REJECT_RISK
+    );
+  }
 
-  combos.splice(
-    0,
-    combos.length,
-    ...rejectDefiniteScratch(combos)
-  );
+  const safeDirect=
+    direct.filter(isSafeCandidate);
+  const safeCombos=
+    combos.filter(isSafeCandidate);
+  const safeBanks=
+    banks.filter(isSafeCandidate);
+  const safeKicks=
+    kicks.filter(isSafeCandidate);
 
-  banks.splice(
-    0,
-    banks.length,
-    ...rejectDefiniteScratch(banks)
-  );
-
-  kicks.splice(
-    0,
-    kicks.length,
-    ...rejectDefiniteScratch(kicks)
-  );
+  function selectBest(
+    direct,
+    combos,
+    banks,
+    kicks
+  ){
 
   let best=null;
 
@@ -3617,6 +3639,36 @@ function solve(){
     if(kicks.length){
       best=kicks[0];
     }
+  }
+
+  return best;
+
+  }
+
+  /*
+    Try the non-scratching candidates first, using the same
+    priority cascade as always. Only reach into the scratching
+    candidates if no category produced a safe shot at all —
+    matching "only recommend a scratch if no valid alternative
+    exists" instead of silently letting priority order override
+    safety.
+  */
+  let best=
+    selectBest(
+      safeDirect,
+      safeCombos,
+      safeBanks,
+      safeKicks
+    );
+
+  if(!best){
+    best=
+      selectBest(
+        direct,
+        combos,
+        banks,
+        kicks
+      );
   }
 
   state.solution=best;
@@ -7287,6 +7339,18 @@ canvas.addEventListener(
   "pointerdown",
   event=>{
 
+    /*
+      Locked: never intercept the gesture. Leave event.preventDefault()
+      uncalled and skip pointer capture entirely so the browser's
+      native touch-action:pan-y scrolling handles it, instead of the
+      table treating a touch-scroll near a ball as a drag start.
+    */
+    if(
+      state.locked
+    ){
+      return;
+    }
+
     const p=
       fromScreen(
         event.clientX,
@@ -7474,6 +7538,38 @@ canvas.addEventListener(
 /* ============================================================
    RESET
    ============================================================ */
+
+/* ============================================================
+   LOCK TABLE
+   ============================================================ */
+
+const lockButton=
+  document.getElementById(
+    "lockTable"
+  );
+
+lockButton.onclick=()=>{
+
+  state.locked=
+    !state.locked;
+
+  lockButton.classList.toggle(
+    "active",
+    state.locked
+  );
+
+  lockButton.setAttribute(
+    "aria-pressed",
+    state.locked
+      ?"true"
+      :"false"
+  );
+
+  lockButton.textContent=
+    state.locked
+      ?"Unlock Table"
+      :"Lock Table";
+};
 
 document.getElementById(
   "reset"
